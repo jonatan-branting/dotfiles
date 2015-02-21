@@ -1,0 +1,5 @@
+.nvimrc:$HOME
+.xinitrc:$HOME
+xcolors:$HOME/.config/
+.Xresources:$HOME
+bin:$HOME

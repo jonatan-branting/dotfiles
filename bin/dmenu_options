@@ -1,0 +1,3 @@
+#!/bin/sh
+dmenu_run -b -l 0 -fn "Ubuntu Mono:pixelsize=18" -w 500 -dim 0.15 -x 1420 -y 0 -sb "#ff6666" -sf "#ffffff"
+

@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Help functions used within the program.
+
+# Checks if the line is a valid target for processing.
+# $1 = LINE
+function validateLine {
+  if [[ -z $1 ]] || [[ ! "$1" =~ [*:*] ]]; then
+    echo "Invalid format on line"
+  else
+    FILE=$(expandToPath $(echo $1 | cut -d':' -f 1))
+    DEST=$(expandToPath $(echo $1 | cut -d':' -f 2))
+
+    if [[ -f ./$FILE || -d ./$FILE ]]; then
+      if [[ -d $DEST ]]; then
+        echo 0
+      else
+        echo "Destination folder is not a folder."
+      fi
+    else
+      echo "Target file does not exist."
+    fi
+  fi
+}
+
+# Links a dir/file to specified target destination.
+# $1 = FILE, $2 = DEST
+function linkFile {
+  mkdir -p $2
+  RESULT=$(ln -s $(pwd)/$1 $2)
+  echo $RESULT
+}
+
+# Expands a string to a path
+# $1 = STRING
+function expandToPath {
+  PATH=$1
+  eval PATH=$PATH
+  echo $PATH
+}
+
+# Set "glob" variables.
+CONF_FILE="./.dfhconf"
+
+# Make sure .dfhconf exists in the current dir.
+if [[ ! -f $CONF_FILE ]];
+then
+  echo "No .dfhconf was found."
+  exit 0
+fi
+
+NUMLINES=$(($(wc -l < $CONF_FILE) + 1))
+if [[ NUMLINES -eq 1 ]]; then
+  echo "No files to link."
+  exit 0
+fi
+
+echo "Linking $(($NUMLINES -1)) file(s) to their respective target locations."
+
+# Loop through all lines and execute program.
+COUNTER=1
+while [[ ! $COUNTER -eq $NUMLINES ]]; do
+  LINE=$(sed "${COUNTER}q;d" $CONF_FILE)
+  LINE_VALID=$(validateLine $LINE)
+
+  if [[ "$LINE_VALID" == 0 ]]; then
+    FILE=$(expandToPath $(echo $LINE | cut -d':' -f 1))
+    DEST=$(expandToPath $(echo $LINE | cut -d':' -f 2))
+
+
+    # Link and done!
+    RESULT=$(linkFile $FILE $DEST)
+    echo "$COUNTER/$((NUMLINES - 1))"
+  else
+    #Error occured.
+    echo "$LINE_VALID" "#$COUNTER: ($LINE)."
+  fi
+
+  # Counter
+  let COUNTER=COUNTER+1
+done
