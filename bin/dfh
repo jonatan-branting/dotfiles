@@ -12,11 +12,7 @@ function validateLine {
     DEST=$(expandToPath $(echo $1 | cut -d':' -f 2))
 
     if [[ -f ./$FILE || -d ./$FILE ]]; then
-      if [[ -d $DEST ]]; then
-        echo 0
-      else
-        echo "Destination folder is not a folder."
-      fi
+      echo 0
     else
       echo "Target file does not exist."
     fi
@@ -26,6 +22,7 @@ function validateLine {
 # Links a dir/file to specified target destination.
 # $1 = FILE, $2 = DEST
 function linkFile {
+  echo $2
   mkdir -p $2
   RESULT=$(ln -s $(pwd)/$1 $2)
   echo $RESULT
