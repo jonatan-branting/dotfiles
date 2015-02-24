@@ -3,3 +3,5 @@
 xcolors:$HOME/.config/
 .Xresources:$HOME
 bin:$HOME
+.compton.conf:$HOME
+.bashrc:$HOME

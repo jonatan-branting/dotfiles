@@ -1,6 +1,6 @@
 " ---- Enable plugins. ----
-call plug#begin('~/.nvim/plugged')
 
+call plug#begin('~/.nvim/plugged')
 Plug 'junegunn/vim-easy-align'
 Plug 'tomtom/tlib_vim'
 Plug 'kien/ctrlp.vim'
@@ -10,11 +10,14 @@ Plug 'honza/vim-snippets'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimfiler.vim'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'guns/vim-sexp', { 'for': 'clojure' }
+Plug 'tpope/vim-projectionist', { 'for': 'clojure' }
+Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'vim-scripts/paredit.vim', { 'for': 'clojure' }
+Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 Plug 'Valloric/YouCompleteMe'
 Plug 'SirVer/ultisnips'
-
 call plug#end()
 
 " ---- Plugin settings. ----
@@ -46,13 +49,19 @@ nmap <C-k> :SyntasticToggleMode<CR>
 " CtrlP.
 noremap <silent> <C-b> :CtrlPBuffer<CR>
 
+" EasyAlign
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+" DelimitMate
+autocmd BufNewFile,BufRead *.clj :DelimitMateOff
 
 " ---- Vim random settings. ----
+
 " Random.
 filetype plugin indent on
 syntax enable
 set shortmess+=I
-set background=light
 set relativenumber
 set nowrap
 set cursorline
@@ -76,6 +85,7 @@ autocmd filetype python set expandtab
 set t_Co=256
 colorscheme genericdc-light
 set laststatus=2
+set background=light
 
 " Buffers.
 set hidden
@@ -86,7 +96,10 @@ noremap k gk
 noremap L $
 noremap H 0
 vnoremap < <gv
-vnoremap > >gtsv
+vnoremap > >gv
+
+" Commands
+command Nt execute "!urxvtc -cd $(pwd)"
 
 " No backup.
 set nobackup
