@@ -5,3 +5,5 @@ xcolors:$HOME/.config/
 bin:$HOME
 .compton.conf:$HOME
 .bashrc:$HOME
+sxhkdrc:$HOME/.config/sxhkd/
+bspwmrc:$HOME/.config/bspwm/
