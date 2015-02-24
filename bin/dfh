@@ -22,7 +22,6 @@ function validateLine {
 # Links a dir/file to specified target destination.
 # $1 = FILE, $2 = DEST
 function linkFile {
-  echo $2
   mkdir -p $2
   RESULT=$(ln -s $(pwd)/$1 $2)
   echo $RESULT
