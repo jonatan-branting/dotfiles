@@ -23,7 +23,7 @@ sxhkd &                             # WM Keybindings.
 compton -b                          # Compositing.
 flux                                # Better color temperature.
 
-# Fix the keyboard.
+# Commands to be run on boot.
 $USERHOME/bin/boot.sh
 
 # Start WM.
