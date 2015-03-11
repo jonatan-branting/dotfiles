@@ -20,7 +20,6 @@ alias rmorphans='sudo pacman -Rns $(pkg-list_true_orphans)'
 alias sshliu='ssh -o Ciphers=arcfour -o Compression=no -Y jonbr927@astmatix.ida.liu.se'
 alias tddb68='fsliu && urxvtc -e "sshliu" &'
 alias ls='ls --color=auto'
-alias vim='nvim'
 alias sn='urxvtc -cd $(pwd)'
 
 alias buffalo='sudo mount -t cifs //192.168.10.15/Share /mnt/server -o user=admin,password=Zackattack'

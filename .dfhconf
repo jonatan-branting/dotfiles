@@ -1,4 +1,4 @@
-.nvimrc:$HOME
+.vimrc:$HOME
 .xinitrc:$HOME
 xcolors:$HOME/.config/
 .Xresources:$HOME
