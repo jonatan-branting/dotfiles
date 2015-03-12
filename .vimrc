@@ -27,6 +27,8 @@ Plug 'SirVer/ultisnips'
 Plug 'oblitum/YouCompleteMe'
 Plug 'chriskempson/base16-vim'
 Plug 'tacahiroy/ctrlp-funky'
+Plug 'justinmk/vim-sneak'
+Plug 'mbbill/undotree'
 call plug#end()
 
 " ---- Plugin settings. ----
@@ -62,6 +64,7 @@ nmap <C-k> :SyntasticToggleMode<CR>
 
 " CtrlP.
 noremap <silent> <C-b> :CtrlPBuffer<CR>
+noremap <silent> <C-h> :CtrlPMRU<CR>
 let g:ctrl_user_command = 'ag %s -i --nocolor --nogroup --hidden
       \ --ignore .git
       \ --ignore .svn
@@ -82,8 +85,23 @@ autocmd BufNewFile,BufRead *.clj :DelimitMateOff
 " ECLIM
 let g:EclimCompletionMethod = 'omnifunc'
 
-" ---- Vim random settings. ----
+" Sneak
+let g:sneak#streak = 1
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
 
+
+" ---- Vim random settings. ----
 " Random.
 filetype plugin indent on
 syntax enable
@@ -138,8 +156,6 @@ inoremap <C-l> <C-o>$
 inoremap <C-h> <C-o>0
 inoremap { {<CR>}<Esc>ko
 inoremap <C-c> <Esc>
-nmap t o<ESC>k
-nmap T O<ESC>j
 :nnoremap <silent> <Leader>ws :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Pasting.
@@ -150,4 +166,5 @@ map <F5> :w <CR>!clear <CR>:!python % <CR>
 
 " Editing a protected file as 'sudo'
 cmap w!! w !sudo tee % >/dev/null<CR>
+
 colo genericdc-light

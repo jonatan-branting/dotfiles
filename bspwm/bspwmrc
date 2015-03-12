@@ -18,6 +18,7 @@ bspc config -m eDP1 focus_follows_pointer true
 bspc config -m eDP1 focused_border_color "#ffffff"
 bspc config -m eDP1 normal_border_color  "#999999"
 
-bspc rule -a Gimp floating=on
+bspc rule -a Gimp desktop=^8 follow=on floating=on
 bspc rule -a intellij-rt-execution-application-AppMain floating=on
 wmname LG3D
+workspaces
