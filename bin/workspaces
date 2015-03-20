@@ -1,12 +1,12 @@
 #!/bin/bash
 
-focused="%{U#E1ff5f5f+u}----------%{U-}"
-normal="%{U#00000000+u}----------%{U-}"
-active="%{U#E1e4e4e4+u}----------%{U-}"
+focused="%{U#90ff5f5f+u}----------%{U-}"
+normal="%{U#65888888+u}----------%{U-}"
+active="%{U#90bbbbbb+u}----------%{U-}"
 
 desktops() {
     desktops=""
-    for e in $(echo $1 | cut -d':' -f2-6 | tr ':' '\n')
+    for e in $(echo $1 | cut -d':' -f2-5 | tr ':' '\n')
     do
         if [ "${e:0:1}" == "O" ]; then
             desktops="$desktops $focused"
@@ -28,5 +28,5 @@ while read -r line ; do
     [ $( echo $line | grep "^WM$MONITOR" ) ] || continue
 
     output=$(desktops $line)
-    echo "%{c}$output%{r}"
-done | bar -bp -g "325x8" -u 6 -F "#00000000" -B "#00000000"
+    echo "$output%{c}"
+done | bar-aint-recursive -bp -g "260x8" -u 6 -F "#00000000" -B "#00000000"

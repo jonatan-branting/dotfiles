@@ -5,7 +5,7 @@
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
 xcolorscheme=$USERHOME/.config/xcolors/grey.xresources
-wallpaper=$USERHOME/pictures/tiltcity.jpg
+wallpaper=$USERHOME/pictures/diamond.jpg
 
 # Apply system wide settings.
 xrdb -merge "$userresources"        # Merge .Xresources.

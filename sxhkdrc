@@ -84,10 +84,13 @@ super + @button{1-3}
 #
 
 super + Return
-    urxvtc
+    urxvtc -e fish
 
-super + {d,space}
+super + space
     dmenu_options
+
+super + d
+    ~/scripts/display_time.sh
 
 # make sxhkd reload its configuration files:
 super + Escape
