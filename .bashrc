@@ -6,6 +6,7 @@
 
 # Export stuff to PATH.
 export PATH=/home/nonah/lib/:$PATH
+export BROWSER=/usr/bin/dwb
 
 # Aliases
 alias pm='sudo pacman'
@@ -27,6 +28,10 @@ alias buffalo='sudo mount -t cifs //192.168.10.15/Share /mnt/server -o user=admi
 # Functions
 function fsliu {
   sshfs -o Ciphers=arcfour -o Compression=no jonbr927@astmatix.ida.liu.se:/home/$1/ ~/remote
+}
+
+function swnet {
+  sudo netctl-auto switch-to $1
 }
 
 # Fix Ctrl-W

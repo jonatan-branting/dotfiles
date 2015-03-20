@@ -1,5 +1,4 @@
 " Necessary settings for plugins.
-set nocompatible
 let mapleader=","
 
 " ---- Enable plugins. ----
@@ -54,17 +53,13 @@ noremap <C-e> :YcmDiag<CR>
 " VimFiler.
 map <silent> <C-n> :VimFiler -buffer-name=explorer -split -simple -winwidth=24 -toggle -no-quit<CR>
 
-" UltiSnips.
-let g:UltiSnipsExpandTrigger = "<nop>"
-inoremap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "\<CR>"
-let g:UltiSnipsExpandTrigger="<tab>"
-
 " Syntastic.
 nmap <C-k> :SyntasticToggleMode<CR>
 
 " CtrlP.
-noremap <silent> <C-b> :CtrlPBuffer<CR>
-noremap <silent> <C-h> :CtrlPMRU<CR>
+nnoremap <silent> <C-b> :CtrlPBuffer<CR>
+nnoremap <silent> <C-h> :CtrlPMRU<CR>
+nnoremap <silent> <C-f> :CtrlPFunky<CR>
 let g:ctrl_user_command = 'ag %s -i --nocolor --nogroup --hidden
       \ --ignore .git
       \ --ignore .svn
@@ -72,8 +67,6 @@ let g:ctrl_user_command = 'ag %s -i --nocolor --nogroup --hidden
       \ --ignore .DS_Store
       \ --ignore "**/*.pyc"
       \ -g ""'
-nnoremap <Leader>f :CtrlPFunky<CR>
-nnoremap <Leader>f :CtrlPFunky<CR>
 
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign)
@@ -99,6 +92,9 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
+
+" UndoTree
+nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 
 
 " ---- Vim random settings. ----
