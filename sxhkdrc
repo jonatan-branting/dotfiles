@@ -92,8 +92,8 @@ super + space
 super + d
     ~/scripts/display_time.sh
 
-# make sxhkd reload its configuration files:
 super + Escape
+# make sxhkd reload its configuration files:
     pkill -USR1 -x sxhkd
 
 XF86AudioLowerVolume

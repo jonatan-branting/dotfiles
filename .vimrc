@@ -28,6 +28,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'tacahiroy/ctrlp-funky'
 Plug 'justinmk/vim-sneak'
 Plug 'mbbill/undotree'
+Plug 'dag/vim-fish'
 call plug#end()
 
 " ---- Plugin settings. ----
