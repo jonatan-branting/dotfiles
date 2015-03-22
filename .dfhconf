@@ -7,3 +7,5 @@ bin:$HOME
 .bashrc:$HOME
 sxhkdrc:$HOME/.config/sxhkd/
 bspwm:$HOME/.config/
+config.fish:$HOME/.config/fish/
+aliases.fish:$HOME/.config/fish/
