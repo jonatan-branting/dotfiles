@@ -11,6 +11,7 @@ alias tddb68    'fsliu; and urxvtc -e "sshliu" &'
 alias ls        'ls --color=auto'
 alias sn        'urxvtc -cd (pwd)'
 alias buffalo   'sudo mount -t cifs //192.168.10.15/Share /mnt/server -o user=admin,password=Zackattack'
+alias chrome    'google-chrome-unstable --force-device-scale-factor=1'
 
 
 # Functions

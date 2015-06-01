@@ -22,20 +22,23 @@ Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 Plug 'SirVer/ultisnips'
-"Plug 'Valloric/YouCompleteMe'
-Plug 'oblitum/YouCompleteMe'
 Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
 Plug 'tacahiroy/ctrlp-funky'
 Plug 'justinmk/vim-sneak'
 Plug 'mbbill/undotree'
-Plug 'dag/vim-fish'
+Plug 'oblitum/YouCompleteMe'
+Plug 'itchyny/lightline.vim'
+Plug 'dgrnbrg/vim-redl'
+"Plug 'Valloric/YouCompleteMe'
+"Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
 
 " ---- Plugin settings. ----
 
 " YCM.
 let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_global_ycm_extra_conf = "/home/nonah/.vim/.ycm_extra_conf.py"
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_min_num_of_chars_for_completion = 99
 let g:ycm_disable_for_files_larger_than_kb = 2000
@@ -44,7 +47,6 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_always_populate_location_list = 1
 let g:ycm_cache_omnifunc = 0
 let g:ycm_show_diagnostics_ui = 1
-let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_cache_omnifunc = 0
 set tags+=./.tags
@@ -66,18 +68,15 @@ let g:ctrl_user_command = 'ag %s -i --nocolor --nogroup --hidden
       \ --ignore .svn
       \ --ignore .hg
       \ --ignore .DS_Store
-      \ --ignore "**/*.pyc"
-      \ -g ""'
+    \ --ignore "**/*.pyc"
+  \ -g ""'
 
 " EasyAlign
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " DelimitMate
-autocmd BufNewFile,BufRead *.clj :DelimitMateOff
-
-" ECLIM
-let g:EclimCompletionMethod = 'omnifunc'
+"autocmd BufNewFile,BufRead *.clj :DelimitMateOff
 
 " Sneak
 let g:sneak#streak = 1
@@ -97,6 +96,11 @@ omap T <Plug>Sneak_T
 " UndoTree
 nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 
+" Eclim
+let g:EclimCompletionMethod = 'omnifunc'
+
+" Fireplace
+nnoremap <Leader>re :Require! <bar> %Eval<CR>
 
 " ---- Vim random settings. ----
 " Random.
@@ -125,10 +129,10 @@ set completeopt-=preview
 set lazyredraw
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
 
-" Aethestics.
+" Aethestics.k
 set t_Co=256
-set laststatus=0
-set background=light
+set laststatus=2
+set background=dark
 
 " Buffers.
 set hidden
@@ -140,6 +144,7 @@ noremap L $
 noremap H 0
 vnoremap < <gv
 vnoremap > >gv
+inoremap jj <Esc>
 
 " No backup.
 set nobackup
@@ -151,9 +156,8 @@ set mouse=a
 " Keybindings.
 inoremap <C-l> <C-o>$
 inoremap <C-h> <C-o>0
-inoremap { {<CR>}<Esc>ko
 inoremap <C-c> <Esc>
-:nnoremap <silent> <Leader>ws :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+nnoremap <silent> <Leader>ws :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Pasting.
 au InsertLeave * set nopaste
@@ -164,4 +168,5 @@ map <F5> :w <CR>!clear <CR>:!python % <CR>
 " Editing a protected file as 'sudo'
 cmap w!! w !sudo tee % >/dev/null<CR>
 
-colo genericdc-light
+let g:gruvbox_italic=1
+colorscheme gruvbox
