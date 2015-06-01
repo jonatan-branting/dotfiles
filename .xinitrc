@@ -4,16 +4,19 @@
 # VARIABLES.
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
-xcolorscheme=$USERHOME/.config/xcolors/grey.xresources
-wallpaper=$USERHOME/pictures/diamond.jpg
+xcolorscheme=$USERHOME/.config/xcolors/gruvbox-dark.xresources
+wallpaper=$USERHOME/pictures/oranges22.jpg
 
 # Apply system wide settings.
 xrdb -merge "$userresources"        # Merge .Xresources.
 xrdb -merge "$xcolorscheme"         # Set the URXvt color scheme.
 syndaemon -t -k -i 1 -d &           # Fix cursor jumping all over the place.
 
-# Export variables
+# Export variables.
 export QT_STYLE_OVERRIDE=gtk
+
+# Set key map.
+xmodmap ~/.Xmodmap
 
 # Set WP and start programs.
 feh --bg-fill "$wallpaper"          # Setting the wallpaper.

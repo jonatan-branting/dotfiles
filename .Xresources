@@ -1,32 +1,33 @@
-!--------------------
-!-[Xdefaults file]
-!--------------------
-
 !-[Font Rendering]-----
-Xft.lcdfilter:	lcdslight
-Xft.antialias:	true
-Xft.rgba:	      rgb
-Xft.hinting:	  true
-Xft.hintstyle:  hintslight
+Xft.lcdfilter:            lcdslight
+Xft.antialias:            true
+Xft.rgba:                 rgb
+Xft.hinting:              true
+Xft.hintstyle:            hintslight
 
 !-[Fonts]----
-URxvt.font:xft:Ubuntu Mono:pixelsize=20:antialias=true
-URxvt.boldFont:xft:Ubuntu Mono:bold:pixelsize=20:antialias=true
+URxvt.font:               xft:Ubuntu Mono:pixelsize=18:antialias=true
+URxvt.boldFont:           xft:Ubuntu Mono:bold:pixelsize=18:antialias=true
+
+!-[Personal Settings]----
+URxvt.perl-lib:           ~/.config/urxvt/
 
 !-[URxvt Settings]----
-URxvt.cursorBlink: 1
-!URxvt.cursorUnderline: 1
-URxvt.perl-ext-common:  default,matcher
-URxvt.urlLauncher:	/usr/bin/dwb
-URxvt.matcher.button:	1
-URxvt.underlineColor: black
-URxvt.geometry:		85x25
-URxvt.transparent: false
-URxvt.tintColor:	#000000
-URxvt.scrollBar:	false
-URxvt.letterSpacing: 	-1
-URxvt.internalBorder: 6
-URxvt.intensityStyles: false
+URxvt.cursorBlink:        1
+URxvt.perl-ext-common:    default,matcher,clipboard
+URxvt.keysym.Control-x:   perl:clipboard:copy
+URxvt.keysym.Control-v:   perl:clipboard:paste
+URxvt.keysym.Control-X-v: perl:clipboard:paste_escaped
+URxvt.urlLauncher:        /usr/bin/dwb
+URxvt.matcher.button:     1
+URxvt.underlineColor:     white
+URxvt.geometry:           85x25
+URxvt.transparent:        false
+URxvt.tintColor:          #000000
+URxvt.scrollBar:          false
+URxvt.letterSpacing:      -1
+URxvt.internalBorder:     6
+URxvt.intensityStyles:    false
 
 ! Cursor
-Xcursor.theme: OpenZoneWS
+Xcursor.theme:            OpenZoneWS
