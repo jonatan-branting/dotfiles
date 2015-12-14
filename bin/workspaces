@@ -1,12 +1,14 @@
 #!/bin/bash
 
-focused="%{U#f5ffa500+u}----------%{U-}"
-active="%{U#f5cccccc+u}----------%{U-}"
-normal="%{U#a0aaaaaa+u}----------%{U-}"
+length="---"
+opacity="b0"
+focused_c="4580b2"
+active_c="4ca64c"
+normal_c="808080"
 
-#focused="%{U#f5ffa500+u}---------%{U-}"
-#active="%{U#f5cccccc+u}---------%{U-}"
-#normal="%{U#a0aaaaaa+u}---------%{U-}"
+focused="%{U#$opacity$focused_c+u}$length%{U-}"
+active="%{U#$opacity$active_c+u}$length%{U-}"
+normal="%{U#$opacity$normal_c+u}$length%{U-}"
 
 desktops() {
     desktops=""
@@ -33,4 +35,5 @@ while read -r line ; do
 
     output=$(desktops $line)
     echo "%{c}$output%{r}"
-done | bar-aint-recursive -bp -g "263x5+829" -u 3 -F "#00FFFFFF" -B "#00000000" 
+done | bar -bp -g "110x8" -u 6 -F "#00000000" -B "#00000000"
+#done | bar -bp -g "263x8+829" -u 6 -F "#00000000" -B "#00000000"
