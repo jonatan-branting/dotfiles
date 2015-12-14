@@ -1,0 +1,6 @@
+gtk-icon-theme-name = "Numix"
+gtk-theme-name = "Arc"
+gtk-font-name = "Roboto 8"
+gtk-button-images = 0 
+gtk-menu-images = 0
+gtk-cursor-theme-name = "OpenZoneWS"

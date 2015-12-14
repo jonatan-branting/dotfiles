@@ -20,13 +20,14 @@ URxvt.keysym.Control-v:   perl:clipboard:paste
 URxvt.keysym.Control-X-v: perl:clipboard:paste_escaped
 URxvt.urlLauncher:        /usr/bin/dwb
 URxvt.matcher.button:     1
+URxvt.internalBorder:     15
+URxvt.cursorUnderline:    true
 URxvt.underlineColor:     white
 URxvt.geometry:           85x25
 URxvt.transparent:        false
 URxvt.tintColor:          #000000
 URxvt.scrollBar:          false
 URxvt.letterSpacing:      -1
-URxvt.internalBorder:     6
 URxvt.intensityStyles:    false
 
 ! Cursor

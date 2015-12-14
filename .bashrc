@@ -4,11 +4,15 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+source /opt/ros/indigo/setup.bash
+
 # Export stuff.
-export BROWSER=/usr/bin/dwb
+export BROWSER=chrome
 export LD_LIBRARY_PATH+=~/lib/
 export PYTHONPATH+=~/lib/
 export DESKTOP_SESSION=gnome
+export JAVA_HOME=/usr/lib/jvm/java-8-jdk/
+source /opt/ros/indigo/setup.bash
 
 # Aliases
 alias pm='sudo pacman'
@@ -39,6 +43,13 @@ function swnet {
 function smbcon {
 #To get ip: nmblookup <hostname>
   sudo mount -t cifs //$1 /mnt/server
+}
+
+desktop_config(){
+  bspc config $1 $2
+  for M in $(bspc query -D); do
+    bspc config -d $M $1 $2
+  done
 }
 
 # fix ctrl-w
