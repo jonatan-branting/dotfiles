@@ -4,8 +4,8 @@
 # VARIABLES.
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
-xcolorscheme=$USERHOME/.config/xcolors/gruvbox-dark.xresources
-wallpaper=$USERHOME/pictures/oranges22.jpg
+xcolorscheme=$USERHOME/.config/xcolors/papercolor.xresources
+wallpaper=$USERHOME/pictures/colors.jpg
 
 # Apply system wide settings.
 xrdb -merge "$userresources"        # Merge .Xresources.
@@ -31,3 +31,4 @@ $USERHOME/bin/boot.sh
 
 # Start WM.
 exec bspwm
+#exec startkde
