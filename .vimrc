@@ -47,7 +47,7 @@ Plug 'dgrnbrg/vim-redl', { 'for': 'clojure '}
 Plug 'jscappini/material.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
-Plug 'itchyny/lightline.vim'
+"Plug 'itchyny/lightline.vim'
 "Plug 'bling/vim-airline'
 call plug#end()
 
@@ -137,7 +137,7 @@ set relativenumber
 
 " Disable linewrapping cause it's ugly
 set nowrap
-set cursorline
+"set cursorline
 
 " Indent rules
 set expandtab
@@ -207,3 +207,4 @@ set laststatus=2
 set background=light
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
 let g:lightline = { 'colorscheme': 'PaperColor'}
+colorscheme PaperColor

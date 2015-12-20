@@ -10,3 +10,4 @@ bspwm:$HOME/.config/
 fish:$HOME/.config/
 .gtkrc-2.0:$HOME
 scripts:$HOME/
+.Xmodmap:$HOME
