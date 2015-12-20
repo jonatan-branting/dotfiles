@@ -16,14 +16,14 @@ desktop_config(){
 
 desktop_config border_width 0
 desktop_config window_gap 20
-desktop_config monocle_gap_h 425
+desktop_config monocle_gap_h 350
 desktop_config monocle_gap_v 20
 
 bspc config -m eDP1 split_ratio           0.50
 bspc config -m eDP1 auto_alternate        false
 bspc config -m eDP1 auto_cancel           true
-bspc config -m eDP1 focused_border_color "#dd7777"
-bspc config -m eDP1 normal_border_color  "#999999"
+bspc config -m eDP1 focused_border_color "#8888ee"
+bspc config -m eDP1 normal_border_color  "#888888"
 
 bspc rule -a Gimp desktop=^8 follow=on floating=on
 bspc rule -a Visualization floating=on

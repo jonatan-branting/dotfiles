@@ -2,9 +2,9 @@
 
 length="---"
 opacity="b0"
-focused_c="4580b2"
-active_c="4ca64c"
-normal_c="808080"
+focused_c="f5f5f5"
+active_c="585858"
+normal_c="999999"
 
 focused="%{U#$opacity$focused_c+u}$length%{U-}"
 active="%{U#$opacity$active_c+u}$length%{U-}"

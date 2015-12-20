@@ -1,3 +1,3 @@
 #!/bin/sh
-dmenu_run -l 3 -fn "Roboto Regular:pixelsize=14" -w 500 -dim 0.15 -x 712 -y 8 -sb "#4d80a2" -sf "#cfcfcf" -nb "#cfcfcf" -nf "#454545"
+dmenu_run -l 3 -fn "Roboto Regular:pixelsize=14" -w 500 -x 712 -y 8 -sb "#4d80a2" -sf "#fafafa" -nb "#fafafa" -nf "#454545"
 
