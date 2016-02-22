@@ -1,0 +1,94 @@
+# Set the modifier to super
+set $mod Mod4
+
+font pango: Ubuntu Mono 8
+floating_modifier $mod
+
+bindsym $mod+Return exec urxvtc -e fish
+bindsym $mod+q kill
+bindsym $mod+Shift+c reload
+bindsym $mod+space exec rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono 14" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -440
+bindsym $mod+Shift+r restart
+bindsym $mod+b split h
+bindsym $mod+v split v
+
+# Window modes
+bindsym $mod+f fullscreen toggle
+bindsym $mod+t layout default
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+Shift+space floating toggle
+
+bindsym $mod+i exec --no-startup-id display_info
+
+# Navigation keybindings
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+a focus parent
+
+# Move windows
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Switch to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+
+client.focused  #999999 #999999 #ffffff #ffffff
+client.focused_inactive  #999999 #999999 #ffffff #ffffff
+client.background #999999
+client.unfocused #585858 #585858 #ffffff #ffffff
+client.placeholder #585858 #585858 #585858 #585858
+
+# Resize window (you can also use the mouse for that)
+mode "resize" {
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Windows should only have a border width of 2 pixels
+new_window pixel 0
+
+#exec --no-startup-id xset dpms 600
+#set $locker i3lock -c 121212 && sleep 1
+#exec --no-startup-id xautolock -time 3 -locker $locker 
+
+# Set gap
+gaps inner 15
+gaps outer 0
+
+# Audio keybindings
+bindsym XF86AudioMute exec --no-startup-id mute_volume
+bindsym XF86AudioLowerVolume exec --no-startup-id lower_volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id raise_volume
+
+# Brightness keybindings
+bindsym XF86MonBrightnessDown exec --no-startup-id decrease_brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id increase_brightness
+
+# Info keybindings
+bindsym $mod+d exec --no-startup-id display_time
+
+exec workspaces

@@ -12,3 +12,4 @@ fish:$HOME/.config/
 scripts:$HOME/
 .Xmodmap:$HOME
 dunst:$HOME/.config/
+.i3:$HOME/
