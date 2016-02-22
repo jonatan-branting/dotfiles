@@ -3,8 +3,8 @@
 length="---"
 opacity="b0"
 focused_c="f5f5f5"
-active_c="585858"
-normal_c="999999"
+normal_c="585858"
+active_c="999999"
 
 focused="%{U#$opacity$focused_c+u}$length%{U-}"
 active="%{U#$opacity$active_c+u}$length%{U-}"
@@ -36,4 +36,3 @@ while read -r line ; do
     output=$(desktops $line)
     echo "%{c}$output%{r}"
 done | bar -bp -g "110x8" -u 6 -F "#00000000" -B "#00000000"
-#done | bar -bp -g "263x8+829" -u 6 -F "#00000000" -B "#00000000"

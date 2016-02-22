@@ -2,9 +2,9 @@
 xset r rate 450 21
 xset -b
 
-# Make caps:escape + ctrl!
+# Apply modified layout
 setxkbmap -option "ctrl:nocaps"
-xcape -e 'Control_L=Escape' -t 300
-
-# Apply everything? Not sure what this is.
 xmodmap ~/.Xmodmap
+
+# Make Control (Caps Lock ) into Control + Escape!
+xcape -e 'Control_L=Escape' -t 300

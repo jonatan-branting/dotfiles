@@ -5,7 +5,7 @@
 super + alt + Escape
     bspc quit
 
-super + shift + q
+super + q
     bspc window -c
 
 super + t
@@ -93,7 +93,8 @@ super + shift + Return
     bspc rule -a urxvt floating=on && urxvtc -e fish -c "set IS_PROMPT 1"
 
 super + space
-    dmenu_options
+ rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono 14" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -440
+
     
 super + d
     ~/scripts/display_time.sh
