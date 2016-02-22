@@ -4,21 +4,28 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-source /opt/ros/indigo/setup.bash
-
 # Export stuff.
-export BROWSER=chrome
 export LD_LIBRARY_PATH+=~/lib/
 export PYTHONPATH+=~/lib/
 export DESKTOP_SESSION=gnome
 export JAVA_HOME=/usr/lib/jvm/java-8-jdk/
-source /opt/ros/indigo/setup.bash
+export WORKON_HOME=~/.virtualenvs
+export PANEL_FIFO="/tmp/panel-fifo"
+export EDITOR="vim"
+export ALTERNATE_EDITOR="emacs"
+export QT_STYLE_OVERRIDE=GTK+
+export BROWSER="qutebrowser"
+
+PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
+PATH+=":/home/nonah/bin/"
+PATH+=":/home/nonah/scripts/"
+PATH+=":/home/nonah/lib/"
+export PATH
 
 # Aliases
 alias pm='sudo pacman'
 alias reboot='sudo systemctl reboot'
 alias shutdown='sudo systemctl poweroff'
-alias vi='vim'
 alias flux='xflux -l 58.2 -g 15.4'
 alias s='sudo'
 alias flux='xflux -l 58.2 -g 15.4'
