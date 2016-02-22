@@ -52,6 +52,12 @@ function fish_prompt
 	set_color $fish_color_normal
 end
 
+#Pyenv
+set -x PATH "/home/nonah/.pyenv/bin" $PATH
+status --is-interactive; and . (pyenv init -|psub)
+status --is-interactive; and . (pyenv virtualenv-init -|psub)
+
+
 
 # Load aliases
 if [ -f $HOME/.config/fish/aliases.fish ]
