@@ -6,14 +6,10 @@ let mapleader=","
 call plug#begin('~/.vim/plugged')
 
 " General purpose and libraries
-Plug 'Shougo/unite.vim'
 Plug 'tomtom/tlib_vim'
+Plug 'jmcantrell/vim-virtualenv'
 Plug 'tpope/vim-dispatch'
-
-" Text editing
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'vim-pandoc/vim-pandoc-after'
+Plug 'lervag/vimtex'
 
 " File editing
 Plug 'Raimondi/delimitMate'
@@ -25,15 +21,15 @@ Plug 'radenling/vim-dispatch-neovim'
 " File navigation
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tacahiroy/ctrlp-funky'
+Plug 'unblevable/quick-scope'
 Plug 'Shougo/vimfiler.vim'
 
 " Autocompletion and code checking
 Plug 'honza/vim-snippets'
 Plug 'scrooloose/syntastic'
 Plug 'SirVer/ultisnips'
-Plug 'justinmk/vim-sneak'
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 
 " Clojure
 Plug 'guns/vim-sexp', { 'for': 'clojure' }
@@ -44,9 +40,9 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 Plug 'dgrnbrg/vim-redl', { 'for': 'clojure '}
 
 " Themes
-Plug 'jscappini/material.vim'
+"Plug 'jscappini/material.vim'
 Plug 'NLKNguyen/papercolor-theme'
-Plug 'morhetz/gruvbox'
+"Plug 'morhetz/gruvbox'
 "Plug 'itchyny/lightline.vim'
 "Plug 'bling/vim-airline'
 call plug#end()
@@ -56,6 +52,7 @@ call plug#end()
 " YCM.
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_min_num_of_chars_for_completion = 3
 let g:ycm_disable_for_files_larger_than_kb = 2000
@@ -64,17 +61,22 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_always_populate_location_list = 1
 let g:ycm_cache_omnifunc = 0
 let g:ycm_show_diagnostics_ui = 1
-let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_cache_omnifunc = 0
 let g:ycm_filetype_blacklist = {
   \ 'python' : 1
   \}
-set tags+=./.tags
+set tags=./tags,tags;
 nnoremap <Leader>i :YcmCompleter GoToDefinitionElseDeclaration<CR>
 noremap <C-e> :YcmDiag<CR>
 
+let g:jedi#force_py_version = 3
+
 " VimFiler.
 map <silent> <C-n> :VimFiler -buffer-name=explorer -split -simple -winwidth=24 -toggle -no-quit<CR>
+
+set cmdheight=2
+let g:echodoc_enable_at_startup = 1
 
 " CtrlP.
 nnoremap <silent> <C-b> :CtrlPBuffer<CR>
@@ -95,21 +97,6 @@ nmap ga <Plug>(EasyAlign)
 
 " DelimitMate
 autocmd BufNewFile,BufRead *.clj :DelimitMateOff
-
-" Sneak
-let g:sneak#streak = 1
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-xmap f <Plug>Sneak_f
-xmap F <Plug>Sneak_F
-omap f <Plug>Sneak_f
-omap F <Plug>Sneak_F
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
 
 " Eclim
 let g:EclimCompletionMethod = 'omnifunc'
@@ -157,7 +144,7 @@ set incsearch
 set backspace=indent,eol,start
 
 " Disable completion preview window
-set completeopt-=preview
+"set completeopt-=preview
 
 " Draw options
 set scrolloff=5
@@ -196,6 +183,7 @@ set noerrorbells
 " No backup.
 set nobackup
 set noswapfile
+set autochdir
 
 " Behaviour
 set mouse=a
@@ -203,8 +191,8 @@ au InsertLeave * set nopaste
 
 " Theme
 set t_Co=256
-set laststatus=2
+set laststatus=1
 set background=light
-set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
-let g:lightline = { 'colorscheme': 'PaperColor'}
+"set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
+"let g:airline_theme='PaperColor'
 colorscheme PaperColor
