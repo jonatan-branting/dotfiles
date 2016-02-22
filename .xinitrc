@@ -5,7 +5,7 @@
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
 xcolorscheme=$USERHOME/.config/xcolors/papercolor.xresources
-wallpaper=$USERHOME/pictures/mountainthings.jpg
+wallpaper=$USERHOME/pictures/fogwoods.jpg
 
 # Apply system wide settings.
 xrdb -merge "$userresources"        # Merge .Xresources.
@@ -22,7 +22,7 @@ xmodmap ~/.Xmodmap
 feh --bg-fill "$wallpaper"          # Setting the wallpaper.
 urxvtd -q -o -f                     # URXvt daemon.
 dunst &                             # Notification manager.
-sxhkd &                             # WM Keybindings.
+#sxhkd &                             # WM Keybindings.
 compton -b                          # Compositing.
 flux                                # Better color temperature.
 
@@ -30,5 +30,6 @@ flux                                # Better color temperature.
 $USERHOME/bin/boot.sh
 
 # Start WM.
-exec bspwm
+#exec bspwm
+exec i3
 #exec startkde
