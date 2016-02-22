@@ -13,3 +13,4 @@ scripts:$HOME/
 .Xmodmap:$HOME
 dunst:$HOME/.config/
 .i3:$HOME/
+qutebrowser:$HOME/.config/
