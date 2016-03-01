@@ -96,27 +96,28 @@ super + space
  rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono 14" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -440
 
     
-super + d
-    ~/scripts/display_time.sh
 
 super + Escape
 # make sxhkd reload its configuration files:
     pkill -USR1 -x sxhkd
 
+super + d
+    ~/scripts/display_time
+
 XF86AudioLowerVolume
-    ~/scripts/lower_volume.sh
+    ~/scripts/lower_volume
 
 XF86AudioRaiseVolume
-    ~/scripts/raise_volume.sh
+    ~/scripts/raise_volume
 
 XF86AudioMute
-    ~/scripts/mute_volume.sh
+    ~/scripts/mute_volume
 
 XF86MonBrightnessDown
-    ~/scripts/decrease_brightness.sh
+    ~/scripts/decrease_brightness
 
 super + {z,x}
-    {~/scripts/increase_brightness.sh, ~/scripts/decrease_brightness.sh}
+    {~/scripts/increase_brightness, ~/scripts/decrease_brightness}
 
 XF86MonBrightnessUp
-    ~/scripts/increase_brightness.sh
+    ~/scripts/increase_brightness

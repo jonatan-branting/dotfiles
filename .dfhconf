@@ -14,3 +14,4 @@ scripts:$HOME/
 dunst:$HOME/.config/
 .i3:$HOME/
 qutebrowser:$HOME/.config/
+.spacemacs:$HOME/
