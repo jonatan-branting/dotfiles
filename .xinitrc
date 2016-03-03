@@ -16,6 +16,7 @@ syndaemon -t -k -i 1 -d &           # Fix cursor jumping all over the place.
 export QT_STYLE_OVERRIDE=gtk
 
 # Set key map.
+setxkbmap se
 xmodmap ~/.Xmodmap
 
 # Set WP and start programs.
@@ -24,12 +25,13 @@ urxvtd -q -o -f                     # URXvt daemon.
 dunst &                             # Notification manager.
 sxhkd &                             # WM Keybindings.
 compton -b                          # Compositing.
-flux                                # Better color temperature.
+#flux                                # Better color temperature.
 
 # Commands to be run on boot.
 $USERHOME/bin/boot.sh
 
 # Start WM.
-exec bspwm
 #exec i3
+#exec bspwm
+exec i3
 #exec startkde
