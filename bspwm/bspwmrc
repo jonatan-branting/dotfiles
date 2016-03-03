@@ -22,8 +22,7 @@ desktop_config monocle_gap_v 20
 bspc config -m eDP1 split_ratio           0.50
 bspc config -m eDP1 auto_alternate        false
 bspc config -m eDP1 auto_cancel           true
-bspc config -m eDP1 focused_border_color "#8888ee"
-bspc config -m eDP1 normal_border_color  "#888888"
+bspc config -m eDP1 presel_feedback_color "#0f497b"
 
 bspc rule -a Gimp desktop=^8 follow=on floating=on
 bspc rule -a Visualization floating=on

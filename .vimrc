@@ -1,198 +1,331 @@
 " Necessary settings for plugins. (Before they load)
-let mapleader=","
+let mapleader="\<Space>"
 
-" ---- Enable plugins. ----
-
+" ---- Enable plugins. ---- "
+" {{{
 call plug#begin('~/.vim/plugged')
 
 " General purpose and libraries
 Plug 'tomtom/tlib_vim'
-Plug 'jmcantrell/vim-virtualenv'
-Plug 'tpope/vim-dispatch'
+
+" LaTeX
 Plug 'lervag/vimtex'
 
 " File editing
+" {{{
 Plug 'Raimondi/delimitMate'
 Plug 'junegunn/vim-easy-align'
+" {{{
+  vmap <Enter> <Plug>(EasyAlign)
+  nmap ga <Plug>(EasyAlign)
+" }}}
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'radenling/vim-dispatch-neovim'
+Plug 'unblevable/quick-scope'
+Plug 'wellle/targets.vim'
+Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+" {{{
+  let g:UltiSnipsExpandTrigger="<tab>"
+" }}}
+" }}}
+
+" Git
+Plug 'tpope/vim-fugitive'
+" {{{
+  let g:fugitive_git_executable = 'LANG=en_US.UTF-8 git'
+  nnoremap <silent> <Leader>gs :Gstatus<CR>
+  nnoremap <silent> <leader>gd :Gdiff<CR>
+  nnoremap <silent> <Leader>gc :Gcommit<CR>
+  nnoremap <silent> <Leader>gb :Gblame<CR>
+  nnoremap <silent> <Leader>ge :Gedit<CR>
+  nnoremap <silent> <Leader>gE :Gedit<space>
+  nnoremap <silent> <Leader>gr :Gread<CR>
+  nnoremap <silent> <Leader>gR :Gread<space>
+  nnoremap <silent> <Leader>gw :Gwrite<CR>
+  nnoremap <silent> <Leader>gW :Gwrite!<CR>
+  nnoremap <silent> <Leader>gq :Gwq<CR>
+  nnoremap <silent> <Leader>gQ :Gwq!<CR>
+" }}}
 
 " File navigation
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tacahiroy/ctrlp-funky'
-Plug 'unblevable/quick-scope'
-Plug 'Shougo/vimfiler.vim'
+" {{{
+Plug 'ap/vim-buftabline'
+Plug 'mhinz/vim-startify'
+Plug 'Shougo/unite.vim'
+" {{{
+" Could probably do more with Unite...
+  let g:unite_source_history_yank_enable = 1
+  let g:unite_enable_auto_select = 0
+  let g:unite_prompt = ': '
+  autocmd FileType unite imap <buffer> <ESC> <Plug>(unite_exit)
+  autocmd FileType unite imap <buffer> <Tab> <Plug>(unite_select_next_line)
+  nnoremap <silent> <Leader><space> :Unite file<CR>
+  "nnoremap <silent> : :Unite command<CR> " Sadly this doesnt work...
+" }}}
+" }}}
 
 " Autocompletion and code checking
+" {{{
 Plug 'honza/vim-snippets'
-Plug 'scrooloose/syntastic'
-Plug 'SirVer/ultisnips'
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
-"Plug 'Valloric/YouCompleteMe'
+"Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
+" {{{
+  let g:neomake_error_sign = {
+        \ 'text' : 'e',
+        \ 'texthl' : 'WarningMsg'
+        \ }
+  let g:neomake_warning_sign = {
+        \ 'text' : 'w',
+        \ 'texthl' : 'Normal'
+        \ }
 
-" Clojure
-Plug 'guns/vim-sexp', { 'for': 'clojure' }
-Plug 'tpope/vim-projectionist', { 'for': 'clojure' }
-Plug 'tpope/vim-leiningen', { 'for': 'clojure' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
-Plug 'dgrnbrg/vim-redl', { 'for': 'clojure '}
+  let g:neomake_verbose = -1
+  nnoremap <silent> <Leader>ml :Neomake<CR>
+  autocmd! BufEnter,BufWritePost *.py silent! Neomake
+
+  " Lint as you type!
+  "autocmd InsertChange, TextChanged * update | Neomake
+
+" }}}
+Plug 'Shougo/deoplete.nvim'
+" {{{
+  let g:deoplete#enable_at_startup = 1
+  if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+  endif
+  autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  inoremap <C-j> <C-n>
+  inoremap <C-k> <C-p>
+  let g:echodoc_enable_at_startup = 1
+" }}}
+Plug 'Shougo/echodoc.vim'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-commentary'
+" }}}
+
+"Python
+" {{{
+Plug 'fs111/pydoc.vim',              { 'for' : 'python'}
+Plug 'lambdalisue/vim-pyenv',        { 'for' : 'python'}
+Plug 'zchee/deoplete-jedi',          { 'for' : 'python'}
+Plug 'hynek/vim-python-pep8-indent', { 'for' : 'python'}
+" }}}
 
 " Themes
-"Plug 'jscappini/material.vim'
+" {{{
 Plug 'NLKNguyen/papercolor-theme'
-"Plug 'morhetz/gruvbox'
-"Plug 'itchyny/lightline.vim'
-"Plug 'bling/vim-airline'
+Plug 'itchyny/lightline.vim'
 call plug#end()
+" }}}
+" }}}
 
-" ---- Plugin settings. ----
-
-" YCM.
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_min_num_of_chars_for_completion = 3
-let g:ycm_disable_for_files_larger_than_kb = 2000
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_always_populate_location_list = 1
-let g:ycm_cache_omnifunc = 0
-let g:ycm_show_diagnostics_ui = 1
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_cache_omnifunc = 0
-let g:ycm_filetype_blacklist = {
-  \ 'python' : 1
-  \}
-set tags=./tags,tags;
-nnoremap <Leader>i :YcmCompleter GoToDefinitionElseDeclaration<CR>
-noremap <C-e> :YcmDiag<CR>
-
-let g:jedi#force_py_version = 3
-
-" VimFiler.
-map <silent> <C-n> :VimFiler -buffer-name=explorer -split -simple -winwidth=24 -toggle -no-quit<CR>
-
-set cmdheight=2
-let g:echodoc_enable_at_startup = 1
-
-" CtrlP.
-nnoremap <silent> <C-b> :CtrlPBuffer<CR>
-nnoremap <silent> <C-h> :CtrlPMRU<CR>
-nnoremap <silent> <C-f> :CtrlPFunky<CR>
-let g:ctrlp_working_path_mode = 'ca'
-let g:ctrl_user_command = 'ag %s -i --nocolor --nogroup --hidden
-      \ --ignore .git
-      \ --ignore .svn
-      \ --ignore .hg
-      \ --ignore .DS_Store
-    \ --ignore "**/*.pyc"
-  \ -g ""'
-
-" EasyAlign
-vmap <Enter> <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-" DelimitMate
-autocmd BufNewFile,BufRead *.clj :DelimitMateOff
-
-" Eclim
-let g:EclimCompletionMethod = 'omnifunc'
-
-" Fireplace
-nnoremap <Leader>re :Require! <bar> %Eval<CR>
+" ---- After plug#end -----
+" {{{
+" Unite
+call unite#custom#profile('default', 'context', {
+        \ 'start_insert' : 1,
+        \ 'direction' : 'dynamicbottom',
+        \ 'winheight' : '8',
+        \ 'matchers'  : 'matcher_fuzzy'
+        \ })
+" }}}
 
 " ---- Vim random settings. ----
+" {{{
 
-" Enable filetype detection and indention
+" Fix defaults
+" {{{
 filetype on
 filetype plugin indent on
 syntax enable
+set noshowmode
+set completeopt-=preview
+set scrolloff=15
+set lazyredraw
+set backspace=indent,eol,start
+nnoremap S i<CR><Esc>^mwgk:silent! s/\v +$//<CR>:noh<CR>
+nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
+nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
+noremap L $
+noremap H ^
+vnoremap < <gv
+vnoremap > >gv
+noremap vv 0v$
+nnoremap V y$
+inoremap <C-l> <C-o>$
+inoremap <C-h> <C-o>0
+inoremap <C-c> <Esc>
+cmap w!! w !sudo tee % >/dev/null<CR>
+" }}}
 
-" Hightlight whitespace
+" Stuff
+" {{{
 set list
 set listchars=tab:>.,trail:.,nbsp:.
-
-" Disable start message
-set shortmess+=I
-
-" Set relative number
 set number
 set relativenumber
-
-" Disable linewrapping cause it's ugly
 set nowrap
-"set cursorline
+set cursorline
+" }}}
 
 " Indent rules
+" {{{
 set expandtab
 set tabstop=4
 set shiftwidth=2
 set autoindent
 set smarttab
 set shiftround
+" }}}
 
 " Searing and case handling
+" {{{
 set smartcase
 set ignorecase
 set hlsearch
 set incsearch
+" }}}
 
-" QoL
-set backspace=indent,eol,start
 
-" Disable completion preview window
-"set completeopt-=preview
-
-" Draw options
-set scrolloff=5
-set lazyredraw
-
-" Aethestics
+" Windows
+" {{{
+nnoremap <silent> <Leader>wj <C-w>j
+nnoremap <silent> <Leader>wJ :split<CR>
+nnoremap <silent> <Leader>wk <C-w>k
+nnoremap <silent> <Leader>wh <C-w>h
+nnoremap <silent> <Leader>wl <C-w>l
+nnoremap <silent> <Leader>wL :vsplit<CR>
+nnoremap <silent> <Leader>wd :q<CR>
+nnoremap <silent> <Leader>ws :w<CR>
+" }}}
 
 " Buffers.
+" {{{
 set hidden
+nnoremap <silent> <Leader>bd :bd<CR>
+nnoremap <silent> <Leader>bn :bnext<CR>
+nnoremap <silent> <Leader>bp :bprevious<CR>
+nnoremap <Leader>bs :b 
+nnoremap <silent> <Leader>bb <C-6>
+nnoremap <silent> <Leader>bl :Unite buffer<CR>
+" }}}
 
-" Keybindings.
-nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
-nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap L $
-noremap H 0
-vnoremap < <gv
-vnoremap > >gv
-inoremap jj <Esc>
-noremap vv 0v$
-inoremap <C-l> <C-o>$
-inoremap <C-h> <C-o>0
-inoremap <C-c> <Esc>
-nnoremap <silent> <Leader>ws :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-map <F5> :w <CR>!clear <CR>:!python % <CR>
-cmap w!! w !sudo tee % >/dev/null<CR>
-
-" History 
-set history=1000
-set undolevels=1000
+" History
+" {{{
+set undofile
+set history=10000
+set undolevels=10000
 set wildignore=*.swp,*.bak,*.pyc,*.class
+set wildmenu
+set wildmode=full
+" }}}
 
-" Don't sound annoying
+" Folding
+" {{{
+set foldmethod=marker
+autocmd FileType java, c, cpp, setlocal foldmethod=syntax
+autocmd FileType python setlocal foldmethod=indent
+autocmd BufWinEnter * normal zR
+nnoremap <silent> <Leader>ff za
+nnoremap <silent> <Leader>fr zA
+nnoremap <silent> <Leader>fo zR
+nnoremap <silent> <Leader>fc zM
+nnoremap <silent> <Leader>fj zj
+nnoremap <silent> <Leader>fk zk
+" }}}
+
+" Behaviour
+" {{{
 set visualbell
+set shortmess+=I
 set noerrorbells
-
-" No backup.
+map q: :q
+set mouse=a
 set nobackup
 set noswapfile
 set autochdir
-
-" Behaviour
-set mouse=a
 au InsertLeave * set nopaste
+" }}}
+
+" Python
+" {{{
+let g:python_host_prog = '/home/nonah/.pyenv/versions/neovim2/bin/python'
+let g:python3_host_prog = '/home/nonah/.pyenv/versions/neovim3/bin/python'
+nnoremap <Leader>mr :w <CR>!clear <CR>:!python % <CR>
+" }}}
 
 " Theme
+" {{{
 set t_Co=256
-set laststatus=1
+set laststatus=2
 set background=light
-"set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
-"let g:airline_theme='PaperColor'
+set showcmd
+let g:lightline = { 'colorscheme': 'PaperColor' }
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let &t_SI = "\<Esc>[5 q"
+let &t_SR = "\<Esc>[3 q"
+let &t_EI = "\<Esc>[2 q"
 colorscheme PaperColor
+" }}}
+
+" Status bar
+" {{{
+let g:lightline = {
+      \ 'colorscheme' : 'PaperColor',
+      \ 'active' : {
+      \     'left' : [ 
+      \                 ['mode', 'paste '],
+      \                 [ 'fugitive', 'readonly', 'filename', 'modified']
+      \             ],
+      \     'right' :[
+      \                 ['neomake', 'lineinfo'],
+      \                 ['percent'],
+      \                 ['filetype'],
+      \                 ['pyenv']
+      \             ]
+      \ },
+      \ 'component_function' : {
+      \     'fugitive' : 'LLFugitive',
+      \     'readonly' : 'LLReadOnly',
+      \     'filename' : 'LLFilename',
+      \     'modified' : 'LLModified',
+      \     'neomake'  : 'LLNeomake',
+      \     'pyenv'    : 'LLPyenv',
+      \     'filetype' : 'LLFiletype'
+      \ },
+      \ 'subseparator' : { 'left' : '.', 'right': '.'}
+      \}
+
+function! LLFugitive()
+  return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function LLReadOnly()
+ return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+
+function LLModified()
+  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function LLFilename()
+  return expand('%:t')
+endfunction
+
+function LLNeomake()
+  return neomake#statusline#QflistStatus()
+endfunction
+
+function LLPyenv()
+  return $PYENV_VERSION =~ 'system' ? '' : $PYENV_VERSION
+endfunction
+
+function LLFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+" }}}
+
+" }}}
