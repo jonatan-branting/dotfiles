@@ -1,3 +1,5 @@
+" TODO add more fold keybinds
+" TODO learn fugitive better
 " Necessary settings for plugins. (Before they load)
 let mapleader="\<Space>"
 
@@ -55,14 +57,12 @@ Plug 'ap/vim-buftabline'
 Plug 'mhinz/vim-startify'
 Plug 'Shougo/unite.vim'
 " {{{
-" Could probably do more with Unite...
   let g:unite_source_history_yank_enable = 1
   let g:unite_enable_auto_select = 0
   let g:unite_prompt = ': '
   autocmd FileType unite imap <buffer> <ESC> <Plug>(unite_exit)
   autocmd FileType unite imap <buffer> <Tab> <Plug>(unite_select_next_line)
   nnoremap <silent> <Leader><space> :Unite file<CR>
-  "nnoremap <silent> : :Unite command<CR> " Sadly this doesnt work...
 " }}}
 " }}}
 
@@ -84,10 +84,6 @@ Plug 'benekastah/neomake'
   let g:neomake_verbose = -1
   nnoremap <silent> <Leader>ml :Neomake<CR>
   autocmd! BufEnter,BufWritePost *.py silent! Neomake
-
-  " Lint as you type!
-  "autocmd InsertChange, TextChanged * update | Neomake
-
 " }}}
 Plug 'Shougo/deoplete.nvim'
 " {{{
@@ -118,11 +114,67 @@ Plug 'hynek/vim-python-pep8-indent', { 'for' : 'python'}
 " {{{
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'itchyny/lightline.vim'
+" {{{
+  let g:lightline = {
+        \ 'colorscheme' : 'PaperColor',
+        \ 'active' : {
+        \     'left' : [ 
+        \                 ['mode', 'paste '],
+        \                 [ 'fugitive', 'readonly', 'filename', 'modified']
+        \             ],
+        \     'right' :[
+        \                 ['neomake', 'lineinfo'],
+        \                 ['percent'],
+        \                 ['filetype'],
+        \                 ['pyenv']
+        \             ]
+        \ },
+        \ 'component_function' : {
+        \     'fugitive' : 'LLFugitive',
+        \     'readonly' : 'LLReadOnly',
+        \     'filename' : 'LLFilename',
+        \     'modified' : 'LLModified',
+        \     'neomake'  : 'LLNeomake',
+        \     'pyenv'    : 'LLPyenv',
+        \     'filetype' : 'LLFiletype'
+        \ },
+        \ 'subseparator' : { 'left' : '|', 'right': '|'}
+        \}
+
+  function! LLFugitive()
+    return exists('*fugitive#head') ? fugitive#head() : ''
+  endfunction
+
+  function LLReadOnly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+  endfunction
+
+  function LLModified()
+    return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+  endfunction
+
+  function LLFilename()
+    return expand('%:t')
+  endfunction
+
+  function LLNeomake()
+    return neomake#statusline#QflistStatus()
+  endfunction
+
+  function LLPyenv()
+    return $PYENV_VERSION =~ 'system' ? '' : $PYENV_VERSION
+  endfunction
+
+  function LLFiletype()
+    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+  endfunction
+" }}}
+
 call plug#end()
 " }}}
 " }}}
 
-" ---- After plug#end -----
+" ---- After plug#end (call commands) -----
 " {{{
 " Unite
 call unite#custom#profile('default', 'context', {
@@ -263,69 +315,9 @@ set t_Co=256
 set laststatus=2
 set background=light
 set showcmd
-let g:lightline = { 'colorscheme': 'PaperColor' }
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 let &t_SI = "\<Esc>[5 q"
 let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[2 q"
 colorscheme PaperColor
-" }}}
-
-" Status bar
-" {{{
-let g:lightline = {
-      \ 'colorscheme' : 'PaperColor',
-      \ 'active' : {
-      \     'left' : [ 
-      \                 ['mode', 'paste '],
-      \                 [ 'fugitive', 'readonly', 'filename', 'modified']
-      \             ],
-      \     'right' :[
-      \                 ['neomake', 'lineinfo'],
-      \                 ['percent'],
-      \                 ['filetype'],
-      \                 ['pyenv']
-      \             ]
-      \ },
-      \ 'component_function' : {
-      \     'fugitive' : 'LLFugitive',
-      \     'readonly' : 'LLReadOnly',
-      \     'filename' : 'LLFilename',
-      \     'modified' : 'LLModified',
-      \     'neomake'  : 'LLNeomake',
-      \     'pyenv'    : 'LLPyenv',
-      \     'filetype' : 'LLFiletype'
-      \ },
-      \ 'subseparator' : { 'left' : '.', 'right': '.'}
-      \}
-
-function! LLFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function LLReadOnly()
- return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function LLModified()
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function LLFilename()
-  return expand('%:t')
-endfunction
-
-function LLNeomake()
-  return neomake#statusline#QflistStatus()
-endfunction
-
-function LLPyenv()
-  return $PYENV_VERSION =~ 'system' ? '' : $PYENV_VERSION
-endfunction
-
-function LLFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-" }}}
-
 " }}}
