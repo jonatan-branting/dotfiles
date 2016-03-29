@@ -7,7 +7,7 @@ floating_modifier $mod
 bindsym $mod+Return exec urxvtc -e fish
 bindsym $mod+q kill
 bindsym $mod+Shift+c reload
-bindsym $mod+space exec rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono 14" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -440
+bindsym $mod+space exec rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono Light 13" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -625
 bindsym $mod+Shift+r restart
 bindsym $mod+b split h
 bindsym $mod+v split v

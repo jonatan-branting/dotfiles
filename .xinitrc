@@ -21,7 +21,6 @@ xmodmap ~/.Xmodmap
 
 # Set WP and start programs.
 feh --bg-fill "$wallpaper"          # Setting the wallpaper.
-urxvtd -q -o -f                     # URXvt daemon.
 dunst &                             # Notification manager.
 sxhkd &                             # WM Keybindings.
 compton -b                          # Compositing.
@@ -32,6 +31,5 @@ $USERHOME/bin/boot.sh
 
 # Start WM.
 #exec i3
-#exec bspwm
-exec i3
 #exec startkde
+exec bspwm
