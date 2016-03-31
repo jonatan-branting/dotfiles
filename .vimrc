@@ -1,11 +1,9 @@
-" TODO add more fold keybinds
-" TODO learn fugitive better
 " Necessary settings for plugins. (Before they load)
 let mapleader="\<Space>"
 
 " ---- Enable plugins. ---- "
 " {{{
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 " General purpose and libraries
 Plug 'tomtom/tlib_vim'
@@ -54,15 +52,14 @@ Plug 'tpope/vim-fugitive'
 " File navigation
 " {{{
 Plug 'ap/vim-buftabline'
-Plug 'mhinz/vim-startify'
 Plug 'Shougo/unite.vim'
 " {{{
   let g:unite_source_history_yank_enable = 1
   let g:unite_enable_auto_select = 0
   let g:unite_prompt = ': '
-  autocmd FileType unite imap <buffer> <ESC> <Plug>(unite_exit)
-  autocmd FileType unite imap <buffer> <Tab> <Plug>(unite_select_next_line)
-  nnoremap <silent> <Leader><space> :Unite file<CR>
+  autocmd! FileType unite imap <buffer> <ESC> <Plug>(unite_exit)
+  autocmd! FileType unite imap <buffer> <Tab> <Plug>(unite_select_next_line)
+  nnoremap <silent> <Leader><space> :UniteWithBufferDir file<CR>
 " }}}
 " }}}
 
@@ -91,12 +88,14 @@ Plug 'Shougo/deoplete.nvim'
   if !exists('g:deoplete#omni#input_patterns')
     let g:deoplete#omni#input_patterns = {}
   endif
-  autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  autocmd! InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
   inoremap <C-j> <C-n>
   inoremap <C-k> <C-p>
-  let g:echodoc_enable_at_startup = 1
 " }}}
 Plug 'Shougo/echodoc.vim'
+" {{{
+  let g:echodoc_enable_at_startup = 1
+" }}}
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-commentary'
@@ -138,7 +137,8 @@ Plug 'itchyny/lightline.vim'
         \     'pyenv'    : 'LLPyenv',
         \     'filetype' : 'LLFiletype'
         \ },
-        \ 'subseparator' : { 'left' : '|', 'right': '|'}
+        \ 'separator': { 'left': "", 'right': "" },
+        \ 'subseparator': { 'left': "\ue0b3", 'right': "\ue0b1" }
         \}
 
   function! LLFugitive()
@@ -146,7 +146,7 @@ Plug 'itchyny/lightline.vim'
   endfunction
 
   function LLReadOnly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
+  return &ft !~? 'help' && &readonly ? '⭤' : ''
   endfunction
 
   function LLModified()
@@ -258,6 +258,7 @@ nnoremap <silent> <Leader>ws :w<CR>
 " {{{
 set hidden
 nnoremap <silent> <Leader>bd :bd<CR>
+nnoremap <silent> <Leader>bD :bd!<CR>
 nnoremap <silent> <Leader>bn :bnext<CR>
 nnoremap <silent> <Leader>bp :bprevious<CR>
 nnoremap <Leader>bs :b 
@@ -278,9 +279,9 @@ set wildmode=full
 " Folding
 " {{{
 set foldmethod=marker
-autocmd FileType java, c, cpp, setlocal foldmethod=syntax
-autocmd FileType python setlocal foldmethod=indent
-autocmd BufWinEnter * normal zR
+autocmd! FileType java, c, cpp, setlocal foldmethod=syntax
+autocmd! FileType python setlocal foldmethod=indent
+autocmd! BufWinEnter * normal zR
 nnoremap <silent> <Leader>ff za
 nnoremap <silent> <Leader>fr zA
 nnoremap <silent> <Leader>fo zR
