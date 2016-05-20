@@ -25,11 +25,6 @@ Plug 'tpope/vim-surround'
 Plug 'unblevable/quick-scope'
 Plug 'wellle/targets.vim'
 Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
-" {{{
-  let g:UltiSnipsExpandTrigger="<tab>"
-" }}}
-" }}}
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -79,16 +74,44 @@ Plug 'benekastah/neomake'
         \ }
 
   let g:neomake_verbose = -1
+  let g:neomake_logfile = "/home/nonah/neomake_log"
   nnoremap <silent> <Leader>ml :Neomake<CR>
   autocmd! BufEnter,BufWritePost *.py silent! Neomake
+
+
+  " call pylint using the current python (venv or global)
+  let g:neomake_python_venvpylint_maker = {
+      \ 'exe': 'pylint',
+      \ 'args': [
+          \ '-f', 'text',
+          \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
+          \ '-r', 'n'
+      \ ],
+      \ 'errorformat':
+          \ '%A%f:%l:%c:%t: %m,' .
+          \ '%A%f:%l: %m,' .
+          \ '%A%f:(%l): %m,' .
+          \ '%-Z%p^%.%#,' .
+          \ '%-G%.%#',
+      \ }
+
+  "let g:neomake_python_enabled_makers = ['venvpylint']
+
 " }}}
 Plug 'Shougo/deoplete.nvim'
 " {{{
+
+  " Settings
   let g:deoplete#enable_at_startup = 1
-  if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
-  endif
-  autocmd! InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+  let g:deoplete#enable_refresh_always = 0
+  let g:deoplete#enable_debug = 1
+  let g:deoplete#max_list = 200
+
+  " Manual complete
+  inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
+  imap <C-@> <C-Space>
+
+  " Keybinds
   inoremap <C-j> <C-n>
   inoremap <C-k> <C-p>
 " }}}
@@ -99,19 +122,25 @@ Plug 'Shougo/echodoc.vim'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-commentary'
+" {{{
+" }}}
 " }}}
 
 "Python
 " {{{
-Plug 'fs111/pydoc.vim',              { 'for' : 'python'}
-Plug 'lambdalisue/vim-pyenv',        { 'for' : 'python'}
-Plug 'zchee/deoplete-jedi',          { 'for' : 'python'}
-Plug 'hynek/vim-python-pep8-indent', { 'for' : 'python'}
+Plug 'fs111/pydoc.vim',                               { 'for' : 'python'}
+Plug 'lambdalisue/vim-pyenv',                         { 'for' : 'python'}
+Plug 'https://github.com/tweekmonster/deoplete-jedi.git', {'branch': 'server', 'for' : 'python'}
+" {{{
+  let g:deoplete#sources#jedi#show_docstring = 1
+" }}}
+Plug 'hynek/vim-python-pep8-indent',                  { 'for' : 'python'}
 " }}}
 
 " Themes
 " {{{
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'robertmeta/nofrils'
 Plug 'itchyny/lightline.vim'
 " {{{
   let g:lightline = {
@@ -138,7 +167,7 @@ Plug 'itchyny/lightline.vim'
         \     'filetype' : 'LLFiletype'
         \ },
         \ 'separator': { 'left': "", 'right': "" },
-        \ 'subseparator': { 'left': "\ue0b3", 'right': "\ue0b1" }
+        \ 'subseparator': { 'left': "", 'right': "" }
         \}
 
   function! LLFugitive()
@@ -177,6 +206,8 @@ call plug#end()
 " ---- After plug#end (call commands) -----
 " {{{
 " Unite
+
+
 call unite#custom#profile('default', 'context', {
         \ 'start_insert' : 1,
         \ 'direction' : 'dynamicbottom',

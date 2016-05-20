@@ -6,8 +6,8 @@ Xft.hinting:              true
 Xft.hintstyle:            hintslight
 
 !-[Fonts]----
-URxvt.font:               xft:Ubuntu Mono:pixelsize=17:antialias=true
-URxvt.boldFont:           xft:Ubuntu Mono:pixelsize=17:antialias=true
+URxvt.font:               xft:Ubuntu Mono derivative Powerline:pixelsize=17:antialias=true
+URxvt.boldFont:           xft:Ubuntu Mono derivative Powerline:pixelsize=17:antialias=true
 
 !-[Personal Settings]----
 URxvt.perl-lib:           ~/.config/urxvt/
