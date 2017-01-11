@@ -7,6 +7,10 @@ call plug#begin('~/.nvim/plugged')
 
 " General purpose and libraries
 Plug 'tomtom/tlib_vim'
+Plug 'neovim/node-host'
+Plug 'tpope/vim-dispatch'
+
+Plug 'junegunn/goyo.vim'
 
 " LaTeX
 Plug 'lervag/vimtex'
@@ -21,6 +25,7 @@ Plug 'junegunn/vim-easy-align'
 " }}}
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
+"Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
 Plug 'unblevable/quick-scope'
 Plug 'wellle/targets.vim'
@@ -46,7 +51,6 @@ Plug 'tpope/vim-fugitive'
 
 " File navigation
 " {{{
-Plug 'ap/vim-buftabline'
 Plug 'Shougo/unite.vim'
 " {{{
   let g:unite_source_history_yank_enable = 1
@@ -61,7 +65,6 @@ Plug 'Shougo/unite.vim'
 " Autocompletion and code checking
 " {{{
 Plug 'honza/vim-snippets'
-"Plug 'scrooloose/syntastic'
 Plug 'benekastah/neomake'
 " {{{
   let g:neomake_error_sign = {
@@ -95,7 +98,32 @@ Plug 'benekastah/neomake'
           \ '%-G%.%#',
       \ }
 
-  "let g:neomake_python_enabled_makers = ['venvpylint']
+
+  let g:neomake_cpp_clang_maker = {
+            \ 'args': ['-fsyntax-only', '-std=c++1z', '-Wall', '-Wextra', '-pedantic'],
+            \ 'errorformat':
+            \ '%-G%f:%s:,' .
+            \ '%f:%l:%c: %trror: %m,' .
+            \ '%f:%l:%c: %tarning: %m,' .
+            \ '%f:%l:%c: %m,'.
+            \ '%f:%l: %trror: %m,'.
+            \ '%f:%l: %tarning: %m,'.
+            \ '%f:%l: %m',
+            \ }
+
+  let g:neomake_cpp_clangtidy_maker = {
+            \ 'exe': 'clang-tidy',
+            \ 'args': ['--checks="modernize-*,readability-*,misc-*,clang-analyzer-*"'],
+            \ 'errorformat':
+            \ '%E%f:%l:%c: fatal error: %m,' .
+            \ '%E%f:%l:%c: error: %m,' .
+            \ '%W%f:%l:%c: warning: %m,' .
+            \ '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
+            \ '%E%m',
+            \ }
+
+  let g:neomake_cpp_enabled_makers = ['clang', 'clangtidy']
+  "autocmd! BufWritePost * Neomake
 
 " }}}
 Plug 'Shougo/deoplete.nvim'
@@ -119,12 +147,66 @@ Plug 'Shougo/echodoc.vim'
 " {{{
   let g:echodoc_enable_at_startup = 1
 " }}}
+Plug 'luochen1990/rainbow'
+"{{{
+  let g:rainbow_active = 1
+  let g:rainbow_conf = {
+  \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+  \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+  \   'operators': '_,_',
+  \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+  \   'separately': {
+  \       '*': {},
+  \       'tex': {
+  \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+  \       },
+  \       'lisp': {
+  \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+  \       },
+  \       'vim': {
+  \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+  \       },
+  \       'html': {
+  \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+  \       },
+  \       'css': 0,
+  \   }
+  \}
+"}}}
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-commentary'
 " {{{
 " }}}
 " }}}
+"
+"Clang
+Plug 'zchee/deoplete-clang'
+"{{{
+  let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
+  let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+"}}}
+Plug 'Shougo/neoinclude.vim'
+"Clojure
+"{{{
+Plug 'hkupty/acid.nvim', { 'for' : 'clojure'} 
+Plug 'tpope/vim-salve', { 'for' : 'clojure'}
+Plug 'snoe/clj-refactor.nvim', { 'for' : 'clojure'}
+Plug 'tpope/vim-classpath', { 'for' : 'clojure'}
+Plug 'guns/vim-sexp', { 'for' : 'clojure'}
+" {{{
+"let g:sexp_enable_insert_mode_mappings = 0
+" }}}
+"Plug 'snoe/nvim-parinfer.js', { 'for' : 'clojure'}
+Plug 'clojure-vim/async-clj-omni', { 'for' : 'clojure'}
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" {{{
+  let g:deoplete#keyword_patterns = {}
+  let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
+" }}}
+
+"}}}
 
 "Python
 " {{{
@@ -139,12 +221,26 @@ Plug 'hynek/vim-python-pep8-indent',                  { 'for' : 'python'}
 
 " Themes
 " {{{
+Plug 'w0ng/vim-hybrid'
+Plug 'cocopon/lightline-hybrid.vim'
+Plug 'altercation/vim-colors-solarized'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'robertmeta/nofrils'
+Plug 'taohex/lightline-buffer'
 Plug 'itchyny/lightline.vim'
 " {{{
   let g:lightline = {
-        \ 'colorscheme' : 'PaperColor',
+        \ 'tabline': {
+        \ 'left': [ [ 'bufferinfo' ], [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
+        \ 'right': [ ],
+        \ },
+        \ 'component_expand': {
+        \ 'buffercurrent': 'lightline#buffer#buffercurrent2',
+        \ },
+        \ 'component_type': {
+        \ 'buffercurrent': 'tabsel',
+        \ },
+        \ 'colorscheme' : 'hybrid',
         \ 'active' : {
         \     'left' : [ 
         \                 ['mode', 'paste '],
@@ -158,6 +254,9 @@ Plug 'itchyny/lightline.vim'
         \             ]
         \ },
         \ 'component_function' : {
+        \ 'bufferbefore': 'lightline#buffer#bufferbefore',
+        \ 'bufferafter': 'lightline#buffer#bufferafter',
+        \ 'bufferinfo': 'lightline#buffer#bufferinfo',
         \     'fugitive' : 'LLFugitive',
         \     'readonly' : 'LLReadOnly',
         \     'filename' : 'LLFilename',
@@ -215,6 +314,14 @@ call unite#custom#profile('default', 'context', {
         \ 'matchers'  : 'matcher_fuzzy'
         \ })
 " }}}
+
+" ---- Functions ----
+function! Csc()
+  cscope find c <cword>
+  copen
+endfunction
+command! Csc call Csc()
+
 
 " ---- Vim random settings. ----
 " {{{
@@ -299,7 +406,7 @@ nnoremap <silent> <Leader>bl :Unite buffer<CR>
 
 " History
 " {{{
-set undofile
+"set undofile
 set history=10000
 set undolevels=10000
 set wildignore=*.swp,*.bak,*.pyc,*.class
@@ -310,7 +417,7 @@ set wildmode=full
 " Folding
 " {{{
 set foldmethod=marker
-autocmd! FileType java, c, cpp, setlocal foldmethod=syntax
+"autocmd! FileType java, c, cpp, setlocal foldmethod=syntax
 autocmd! FileType python setlocal foldmethod=indent
 autocmd! BufWinEnter * normal zR
 nnoremap <silent> <Leader>ff za
@@ -345,11 +452,14 @@ nnoremap <Leader>mr :w <CR>!clear <CR>:!python % <CR>
 " {{{
 set t_Co=256
 set laststatus=2
-set background=light
+set showtabline=2
+set background=dark
 set showcmd
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 let &t_SI = "\<Esc>[5 q"
 let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[2 q"
-colorscheme PaperColor
+let g:hybrid_custom_term_colors = 1
+let g:hybrid_reduced_contrast = 1 " Remove this line if using the default palette.
+colorscheme hybrid
 " }}}
