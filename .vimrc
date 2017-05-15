@@ -84,9 +84,10 @@ Plug 'benekastah/neomake'
 
   " call pylint using the current python (venv or global)
   let g:neomake_python_venvpylint_maker = {
-      \ 'exe': 'pylint',
+      \ 'exe': 'python $(which pylint)',
       \ 'args': [
           \ '-f', 'text',
+          \ '-E',
           \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
           \ '-r', 'n'
       \ ],
@@ -190,11 +191,12 @@ Plug 'zchee/deoplete-clang'
 Plug 'Shougo/neoinclude.vim'
 "Clojure
 "{{{
-Plug 'hkupty/acid.nvim', { 'for' : 'clojure'} 
+"Plug 'hkupty/acid.nvim', { 'for' : 'clojure'} 
 Plug 'tpope/vim-salve', { 'for' : 'clojure'}
 Plug 'snoe/clj-refactor.nvim', { 'for' : 'clojure'}
 Plug 'tpope/vim-classpath', { 'for' : 'clojure'}
 Plug 'guns/vim-sexp', { 'for' : 'clojure'}
+nnoremap <Leader>r :w<CR>:Require<CR>
 " {{{
 "let g:sexp_enable_insert_mode_mappings = 0
 " }}}
@@ -212,7 +214,7 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 " {{{
 Plug 'fs111/pydoc.vim',                               { 'for' : 'python'}
 Plug 'lambdalisue/vim-pyenv',                         { 'for' : 'python'}
-Plug 'https://github.com/tweekmonster/deoplete-jedi.git', {'branch': 'server', 'for' : 'python'}
+Plug 'zchee/deoplete-jedi', {'for' : 'python'}
 " {{{
   let g:deoplete#sources#jedi#show_docstring = 1
 " }}}
@@ -380,6 +382,9 @@ set incsearch
 " }}}
 
 
+" Terminal
+tnoremap <Esc> <C-\><C-n>
+
 " Windows
 " {{{
 nnoremap <silent> <Leader>wj <C-w>j
@@ -390,6 +395,8 @@ nnoremap <silent> <Leader>wl <C-w>l
 nnoremap <silent> <Leader>wL :vsplit<CR>
 nnoremap <silent> <Leader>wd :q<CR>
 nnoremap <silent> <Leader>ws :w<CR>
+tnoremap <silent> <Left> :bp<CR>
+tnoremap <silent> <C-Right> :bn<CR>
 " }}}
 
 " Buffers.
@@ -402,6 +409,8 @@ nnoremap <silent> <Leader>bp :bprevious<CR>
 nnoremap <Leader>bs :b 
 nnoremap <silent> <Leader>bb <C-6>
 nnoremap <silent> <Leader>bl :Unite buffer<CR>
+nnoremap <silent> <Left> :bprevious<CR>
+nnoremap <silent> <Right> :bnext<CR>
 " }}}
 
 " History
