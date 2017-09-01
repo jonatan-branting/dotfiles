@@ -2,18 +2,18 @@
 let mapleader="\<Space>"
 
 " ---- Enable plugins. ---- "
-" {{{
 call plug#begin('~/.nvim/plugged')
 
 " General purpose and libraries
+" {{{
 Plug 'tomtom/tlib_vim'
 Plug 'neovim/node-host'
 Plug 'tpope/vim-dispatch'
-
 Plug 'junegunn/goyo.vim'
 
 " LaTeX
 Plug 'lervag/vimtex'
+" }}}
 
 " File editing
 " {{{
@@ -25,7 +25,6 @@ Plug 'junegunn/vim-easy-align'
 " }}}
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
-"Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
 Plug 'unblevable/quick-scope'
 Plug 'wellle/targets.vim'
@@ -37,6 +36,7 @@ Plug 'Shougo/denite.nvim'
   nnoremap <silent> <Leader><Leader> :Denite -auto-resize file_rec<CR>
   nnoremap <silent> <Leader>s :Denite -auto-resize line:all<CR>
 " }}}
+Plug 'Shougo/neoinclude.vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -73,7 +73,6 @@ Plug 'benekastah/neomake'
   let g:neomake_verbose = -1
   nnoremap <silent> <Leader>ml :Neomake<CR>
   autocmd! BufEnter,BufWritePost *.py silent! Neomake
-
 
   " call pylint using the current python (venv or global)
   let g:neomake_python_venvpylint_maker = {
@@ -117,7 +116,7 @@ Plug 'benekastah/neomake'
             \ }
 
   let g:neomake_cpp_enabled_makers = ['clang', 'clangtidy']
-  "autocmd! BufWritePost * Neomake
+  autocmd! BufWritePost * Neomake
 
 " }}}
 Plug 'Shougo/deoplete.nvim'
@@ -174,12 +173,11 @@ Plug 'tpope/vim-commentary'
 " }}}
 "
 "Clang
-Plug 'zchee/deoplete-clang'
 "{{{
+Plug 'zchee/deoplete-clang'
   let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
   let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 "}}}
-Plug 'Shougo/neoinclude.vim'
 "Clojure
 "{{{
 "Plug 'hkupty/acid.nvim', { 'for' : 'clojure'} 
@@ -318,15 +316,13 @@ autocmd FileType cpp nnoremap <Leader>r :w<CR> :!g++ -std=c++17 -pedantic -Wall 
 " }}}
 
 " ---- Functions ----
+"  {{{
 function! Csc()
   cscope find c <cword>
   copen
 endfunction
 command! Csc call Csc()
-
-command Hst execute ":split term://fish"
-command Vst execute ":vsplit term://fish"
-command Ist execute ":term://fish"
+" }}}
 
 " ---- Vim random settings. ----
 " {{{
@@ -386,7 +382,12 @@ set incsearch
 
 
 " Terminal
-tnoremap <Esc> <C-\><C-n>
+" {{{
+  tnoremap <Esc> <C-\><C-n>
+  command Hst execute ":split term://fish"
+  command Vst execute ":vsplit term://fish"
+  command Ist execute ":term://fish"
+" }}}
 
 " Windows
 " {{{
