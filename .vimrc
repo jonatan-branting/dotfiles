@@ -30,6 +30,13 @@ Plug 'tpope/vim-surround'
 Plug 'unblevable/quick-scope'
 Plug 'wellle/targets.vim'
 Plug 'honza/vim-snippets'
+Plug 'adimit/prolog.vim'
+Plug 'Shougo/neoyank.vim'
+Plug 'Shougo/denite.nvim'
+" {{{
+  nnoremap <silent> <Leader><Leader> :Denite -auto-resize file_rec<CR>
+  nnoremap <silent> <Leader>s :Denite -auto-resize line:all<CR>
+" }}}
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -49,19 +56,6 @@ Plug 'tpope/vim-fugitive'
   nnoremap <silent> <Leader>gQ :Gwq!<CR>
 " }}}
 
-" File navigation
-" {{{
-Plug 'Shougo/unite.vim'
-" {{{
-  let g:unite_source_history_yank_enable = 1
-  let g:unite_enable_auto_select = 0
-  let g:unite_prompt = ': '
-  autocmd! FileType unite imap <buffer> <ESC> <Plug>(unite_exit)
-  autocmd! FileType unite imap <buffer> <Tab> <Plug>(unite_select_next_line)
-  nnoremap <silent> <Leader><space> :UniteWithBufferDir file<CR>
-" }}}
-" }}}
-
 " Autocompletion and code checking
 " {{{
 Plug 'honza/vim-snippets'
@@ -77,7 +71,6 @@ Plug 'benekastah/neomake'
         \ }
 
   let g:neomake_verbose = -1
-  let g:neomake_logfile = "/home/nonah/neomake_log"
   nnoremap <silent> <Leader>ml :Neomake<CR>
   autocmd! BufEnter,BufWritePost *.py silent! Neomake
 
@@ -149,7 +142,7 @@ Plug 'Shougo/echodoc.vim'
   let g:echodoc_enable_at_startup = 1
 " }}}
 Plug 'luochen1990/rainbow'
-"{{{
+" {{{
   let g:rainbow_active = 1
   let g:rainbow_conf = {
   \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
@@ -178,8 +171,6 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-commentary'
-" {{{
-" }}}
 " }}}
 "
 "Clang
@@ -196,11 +187,10 @@ Plug 'tpope/vim-salve', { 'for' : 'clojure'}
 Plug 'snoe/clj-refactor.nvim', { 'for' : 'clojure'}
 Plug 'tpope/vim-classpath', { 'for' : 'clojure'}
 Plug 'guns/vim-sexp', { 'for' : 'clojure'}
-nnoremap <Leader>r :w<CR>:Require<CR>
 " {{{
-"let g:sexp_enable_insert_mode_mappings = 0
+  nnoremap <Leader>r :w<CR>:Require<CR>
+  "let g:sexp_enable_insert_mode_mappings = 0
 " }}}
-"Plug 'snoe/nvim-parinfer.js', { 'for' : 'clojure'}
 Plug 'clojure-vim/async-clj-omni', { 'for' : 'clojure'}
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 " {{{
@@ -225,6 +215,8 @@ Plug 'hynek/vim-python-pep8-indent',                  { 'for' : 'python'}
 " {{{
 Plug 'w0ng/vim-hybrid'
 Plug 'cocopon/lightline-hybrid.vim'
+Plug 'endel/vim-github-colorscheme'
+Plug 'dracula/vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'robertmeta/nofrils'
@@ -242,7 +234,7 @@ Plug 'itchyny/lightline.vim'
         \ 'component_type': {
         \ 'buffercurrent': 'tabsel',
         \ },
-        \ 'colorscheme' : 'hybrid',
+        \ 'colorscheme' : 'Dracula',
         \ 'active' : {
         \     'left' : [ 
         \                 ['mode', 'paste '],
@@ -306,15 +298,23 @@ call plug#end()
 
 " ---- After plug#end (call commands) -----
 " {{{
-" Unite
+
+  call denite#custom#source(
+      \ 'file_rec', 'matchers', ['matcher_fuzzy'])
+  call denite#custom#source(
+      \ 'file_rec', 'sorters', ['sorter_sublime'])
+
+  call denite#custom#alias('source', 'file_rec/git', 'file_rec')
+  call denite#custom#var('file_rec/git', 'command',
+  \ ['git', 'ls-files', '-co', '--exclude-standard'])
+  nnoremap <silent> <C-p> :<C-u>Denite
+  \ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
 
 
-call unite#custom#profile('default', 'context', {
-        \ 'start_insert' : 1,
-        \ 'direction' : 'dynamicbottom',
-        \ 'winheight' : '8',
-        \ 'matchers'  : 'matcher_fuzzy'
-        \ })
+" Filetype specific stuff
+autocmd FileType cpp nnoremap <Leader>b :w<CR> :!g++ -std=c++17 -pedantic -Wall -Wextra %
+autocmd FileType cpp nnoremap <Leader>r :w<CR> :!g++ -std=c++17 -pedantic -Wall -Wextra %; ./a.out
+
 " }}}
 
 " ---- Functions ----
@@ -324,6 +324,9 @@ function! Csc()
 endfunction
 command! Csc call Csc()
 
+command Hst execute ":split term://fish"
+command Vst execute ":vsplit term://fish"
+command Ist execute ":term://fish"
 
 " ---- Vim random settings. ----
 " {{{
@@ -360,7 +363,7 @@ set listchars=tab:>.,trail:.,nbsp:.
 set number
 set relativenumber
 set nowrap
-set cursorline
+set nocursorline
 " }}}
 
 " Indent rules
@@ -470,5 +473,5 @@ let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[2 q"
 let g:hybrid_custom_term_colors = 1
 let g:hybrid_reduced_contrast = 1 " Remove this line if using the default palette.
-colorscheme hybrid
+colorscheme dracula
 " }}}
