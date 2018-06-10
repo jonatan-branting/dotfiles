@@ -3,9 +3,9 @@
 bspc monitor -d 1 2 3 4
 
 # Add padding for bar
-for p in "top 0" "right 0" "bottom 0" "left 0" ; do
-	bspc config -m focused ${p% *}_padding ${p#* }
-done
+ for p in "top 0" "right 0" "bottom 0" "left 0" ; do
+ 	bspc config -m focused ${p% *}_padding ${p#* }
+ done
 
 desktop_config(){
   bspc config $1 $2
@@ -15,9 +15,11 @@ desktop_config(){
 }
 
 desktop_config border_width 0
-desktop_config window_gap 20
-desktop_config monocle_gap_h 350
-desktop_config monocle_gap_v 20
+desktop_config window_gap 12
+desktop_config click_to_focus true
+desktop_config pointer_modifier mod4
+desktop_config pointer_action1 resize_side
+desktop_config pointer_action2 move
 
 bspc config -m eDP1 split_ratio           0.50
 bspc config -m eDP1 auto_alternate        false
@@ -29,4 +31,13 @@ bspc rule -a Visualization floating=on
 bspc rule -a Main floating=on
 bspc rule -a simsoc floating=on
 wmname LG3D
+
+flashfocus &
+
 workspaces &
+
+#bspc subscribe | \
+#while read x; do
+#  ~/scripts/titlebars.sh
+#done
+

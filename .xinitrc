@@ -4,8 +4,8 @@
 # VARIABLES.
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
-xcolorscheme=$USERHOME/.config/xcolors/papercolor.xresources
-wallpaper=$USERHOME/pictures/fogwoods.jpg
+xcolorscheme=$USERHOME/.config/xcolors/hybrid.xresources
+wallpaper=$USERHOME/pictures/blurryflower.jpg
 
 # Apply system wide settings.
 xrdb -merge "$userresources"        # Merge .Xresources.
@@ -20,16 +20,20 @@ xmodmap ~/.Xmodmap
 
 # Set WP and start programs.
 feh --bg-fill "$wallpaper"          # Setting the wallpaper.
-urxvtd -q -o -f                     # URXvt daemon.
 dunst &                             # Notification manager.
-sxhkd &                             # WM Keybindings.
-compton -b                          # Compositing.
-flux                                # Better color temperature.
+#sxhkd &                             # WM Keybindings.
+#compton -b #--xrender-sync --xrender-sync-fence                          # Compositing.
+#flux                                # Better color temperature.
 
 # Commands to be run on boot.
 $USERHOME/bin/boot.sh
 
 # Start WM.
-exec bspwm
-#exec i3
+#exec gnome-session
+#exec openbox
+#exec awesome
+#exec bspwm
+#exec twm
+flashfocus &
+exec i3
 #exec startkde

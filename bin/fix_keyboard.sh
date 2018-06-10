@@ -1,5 +1,5 @@
 #!/bin/sh
-xset r rate 450 21
+xset r rate 300 30
 xset -b
 
 # Apply modified layout

@@ -2,131 +2,47 @@
 let mapleader="\<Space>"
 
 " ---- Enable plugins. ---- "
+" {{{
 call plug#begin('~/.nvim/plugged')
 
 " General purpose and libraries
 " {{{
+Plug 'terryma/vim-multiple-cursors'
+Plug 'ap/vim-buftabline'
+  let g:buftabline_show = 1
+  let g:buftabline_numbers = 2
+  let g:buftabline_indicators = 1
 Plug 'tomtom/tlib_vim'
 Plug 'neovim/node-host'
-Plug 'tpope/vim-dispatch'
 Plug 'junegunn/goyo.vim'
-
-" LaTeX
-Plug 'lervag/vimtex'
-" }}}
-
-" File editing
-" {{{
-Plug 'Raimondi/delimitMate'
-Plug 'junegunn/vim-easy-align'
-" {{{
-  vmap <Enter> <Plug>(EasyAlign)
-  nmap ga <Plug>(EasyAlign)
-" }}}
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-surround'
-Plug 'unblevable/quick-scope'
-Plug 'wellle/targets.vim'
-Plug 'honza/vim-snippets'
-Plug 'adimit/prolog.vim'
-Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/denite.nvim'
-" {{{
-  nnoremap <silent> <Leader><Leader> :Denite -auto-resize file_rec<CR>
-  nnoremap <silent> <Leader>s :Denite -auto-resize line:all<CR>
-" }}}
-Plug 'Shougo/neoinclude.vim'
+  nnoremap <silent> <Leader>l :Denite line<CR>
+  nnoremap <silent> <C-p> :Denite file<CR>
+  nnoremap <silent> <Leader>y :Denite neoyank<CR>
 
-" Git
-Plug 'tpope/vim-fugitive'
+" Themes
 " {{{
-  let g:fugitive_git_executable = 'LANG=en_US.UTF-8 git'
-  nnoremap <silent> <Leader>gs :Gstatus<CR>
-  nnoremap <silent> <leader>gd :Gdiff<CR>
-  nnoremap <silent> <Leader>gc :Gcommit<CR>
-  nnoremap <silent> <Leader>gb :Gblame<CR>
-  nnoremap <silent> <Leader>ge :Gedit<CR>
-  nnoremap <silent> <Leader>gE :Gedit<space>
-  nnoremap <silent> <Leader>gr :Gread<CR>
-  nnoremap <silent> <Leader>gR :Gread<space>
-  nnoremap <silent> <Leader>gw :Gwrite<CR>
-  nnoremap <silent> <Leader>gW :Gwrite!<CR>
-  nnoremap <silent> <Leader>gq :Gwq<CR>
-  nnoremap <silent> <Leader>gQ :Gwq!<CR>
+
+Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'dracula/vim'
+
 " }}}
 
-" Autocompletion and code checking
-" {{{
-Plug 'honza/vim-snippets'
-Plug 'benekastah/neomake'
-" {{{
-  let g:neomake_error_sign = {
-        \ 'text' : 'e',
-        \ 'texthl' : 'WarningMsg'
-        \ }
-  let g:neomake_warning_sign = {
-        \ 'text' : 'w',
-        \ 'texthl' : 'Normal'
-        \ }
+" Auto completion
 
-  let g:neomake_verbose = -1
-  nnoremap <silent> <Leader>ml :Neomake<CR>
-  autocmd! BufEnter,BufWritePost *.py silent! Neomake
-
-  " call pylint using the current python (venv or global)
-  let g:neomake_python_venvpylint_maker = {
-      \ 'exe': 'python $(which pylint)',
-      \ 'args': [
-          \ '-f', 'text',
-          \ '-E',
-          \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
-          \ '-r', 'n'
-      \ ],
-      \ 'errorformat':
-          \ '%A%f:%l:%c:%t: %m,' .
-          \ '%A%f:%l: %m,' .
-          \ '%A%f:(%l): %m,' .
-          \ '%-Z%p^%.%#,' .
-          \ '%-G%.%#',
-      \ }
-
-
-  let g:neomake_cpp_clang_maker = {
-            \ 'args': ['-fsyntax-only', '-std=c++1z', '-Wall', '-Wextra', '-pedantic'],
-            \ 'errorformat':
-            \ '%-G%f:%s:,' .
-            \ '%f:%l:%c: %trror: %m,' .
-            \ '%f:%l:%c: %tarning: %m,' .
-            \ '%f:%l:%c: %m,'.
-            \ '%f:%l: %trror: %m,'.
-            \ '%f:%l: %tarning: %m,'.
-            \ '%f:%l: %m',
-            \ }
-
-  let g:neomake_cpp_clangtidy_maker = {
-            \ 'exe': 'clang-tidy',
-            \ 'args': ['--checks="modernize-*,readability-*,misc-*,clang-analyzer-*"'],
-            \ 'errorformat':
-            \ '%E%f:%l:%c: fatal error: %m,' .
-            \ '%E%f:%l:%c: error: %m,' .
-            \ '%W%f:%l:%c: warning: %m,' .
-            \ '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
-            \ '%E%m',
-            \ }
-
-  let g:neomake_cpp_enabled_makers = ['clang', 'clangtidy']
-  autocmd! BufWritePost * Neomake
-
-" }}}
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 " {{{
 
   " Settings
   let g:deoplete#enable_at_startup = 1
-  let g:deoplete#enable_refresh_always = 0
-  let g:deoplete#enable_debug = 1
-  let g:deoplete#max_list = 200
+
+  let g:deoplete#sources = {}
+  let g:deoplete#sources.cpp = ['LanguageClient']
+  let g:deoplete#sources.python = ['LanguageClient']
+  let g:deoplete#sources.python3 = ['LanguageClient']
+  let g:deoplete#sources.rust = ['LanguageClient']
+  let g:deoplete#sources.c = ['LanguageClient']
+  let g:deoplete#sources.vim = ['vim']
 
   " Manual complete
   inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
@@ -136,183 +52,81 @@ Plug 'Shougo/deoplete.nvim'
   inoremap <C-j> <C-n>
   inoremap <C-k> <C-p>
 " }}}
-Plug 'Shougo/echodoc.vim'
+
+Plug 'Shougo/echodoc'
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#enable_force_overwrite = 1
+Plug 'sbdchd/neoformat'
+Plug 'Shougo/neoyank.vim'
+Plug 'Shougo/neoinclude.vim'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'wokalski/autocomplete-flow'
+  let g:neosnippet#enable_completed_snippet = 1
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio'],
+    \ 'python': ['pyls']
+    \ }
+
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_hoverPreview = "Never"
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+
+" File editing
 " {{{
-  let g:echodoc_enable_at_startup = 1
+Plug 'junegunn/fzf'
+Plug 'junegunn/vim-easy-align'
+" {{{
+  vmap <Enter> <Plug>(EasyAlign)
+  nmap ga <Plug>(EasyAlign)
 " }}}
-Plug 'luochen1990/rainbow'
-" {{{
-  let g:rainbow_active = 1
-  let g:rainbow_conf = {
-  \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-  \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-  \   'operators': '_,_',
-  \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-  \   'separately': {
-  \       '*': {},
-  \       'tex': {
-  \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
-  \       },
-  \       'lisp': {
-  \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-  \       },
-  \       'vim': {
-  \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-  \       },
-  \       'html': {
-  \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-  \       },
-  \       'css': 0,
-  \   }
-  \}
-"}}}
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rsi'
-Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-commentary'
 " }}}
-"
+
 "Clang
 "{{{
 Plug 'zchee/deoplete-clang'
   let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
   let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 "}}}
-"Clojure
-"{{{
-"Plug 'hkupty/acid.nvim', { 'for' : 'clojure'} 
-Plug 'tpope/vim-salve', { 'for' : 'clojure'}
-Plug 'snoe/clj-refactor.nvim', { 'for' : 'clojure'}
-Plug 'tpope/vim-classpath', { 'for' : 'clojure'}
-Plug 'guns/vim-sexp', { 'for' : 'clojure'}
-" {{{
-  nnoremap <Leader>r :w<CR>:Require<CR>
-  "let g:sexp_enable_insert_mode_mappings = 0
-" }}}
-Plug 'clojure-vim/async-clj-omni', { 'for' : 'clojure'}
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
-" {{{
-  let g:deoplete#keyword_patterns = {}
-  let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
-" }}}
-
-"}}}
-
-"Python
-" {{{
-Plug 'fs111/pydoc.vim',                               { 'for' : 'python'}
-Plug 'lambdalisue/vim-pyenv',                         { 'for' : 'python'}
-Plug 'zchee/deoplete-jedi', {'for' : 'python'}
-" {{{
-  let g:deoplete#sources#jedi#show_docstring = 1
-" }}}
-Plug 'hynek/vim-python-pep8-indent',                  { 'for' : 'python'}
-" }}}
-
-" Themes
-" {{{
-Plug 'w0ng/vim-hybrid'
-Plug 'cocopon/lightline-hybrid.vim'
-Plug 'endel/vim-github-colorscheme'
-Plug 'dracula/vim'
-Plug 'altercation/vim-colors-solarized'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'robertmeta/nofrils'
-Plug 'taohex/lightline-buffer'
-Plug 'itchyny/lightline.vim'
-" {{{
-  let g:lightline = {
-        \ 'tabline': {
-        \ 'left': [ [ 'bufferinfo' ], [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
-        \ 'right': [ ],
-        \ },
-        \ 'component_expand': {
-        \ 'buffercurrent': 'lightline#buffer#buffercurrent2',
-        \ },
-        \ 'component_type': {
-        \ 'buffercurrent': 'tabsel',
-        \ },
-        \ 'colorscheme' : 'Dracula',
-        \ 'active' : {
-        \     'left' : [ 
-        \                 ['mode', 'paste '],
-        \                 [ 'fugitive', 'readonly', 'filename', 'modified']
-        \             ],
-        \     'right' :[
-        \                 ['neomake', 'lineinfo'],
-        \                 ['percent'],
-        \                 ['filetype'],
-        \                 ['pyenv']
-        \             ]
-        \ },
-        \ 'component_function' : {
-        \ 'bufferbefore': 'lightline#buffer#bufferbefore',
-        \ 'bufferafter': 'lightline#buffer#bufferafter',
-        \ 'bufferinfo': 'lightline#buffer#bufferinfo',
-        \     'fugitive' : 'LLFugitive',
-        \     'readonly' : 'LLReadOnly',
-        \     'filename' : 'LLFilename',
-        \     'modified' : 'LLModified',
-        \     'neomake'  : 'LLNeomake',
-        \     'pyenv'    : 'LLPyenv',
-        \     'filetype' : 'LLFiletype'
-        \ },
-        \ 'separator': { 'left': "", 'right': "" },
-        \ 'subseparator': { 'left': "", 'right': "" }
-        \}
-
-  function! LLFugitive()
-    return exists('*fugitive#head') ? fugitive#head() : ''
-  endfunction
-
-  function LLReadOnly()
-  return &ft !~? 'help' && &readonly ? '⭤' : ''
-  endfunction
-
-  function LLModified()
-    return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-  endfunction
-
-  function LLFilename()
-    return expand('%:t')
-  endfunction
-
-  function LLNeomake()
-    return neomake#statusline#QflistStatus()
-  endfunction
-
-  function LLPyenv()
-    return $PYENV_VERSION =~ 'system' ? '' : $PYENV_VERSION
-  endfunction
-
-  function LLFiletype()
-    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-  endfunction
-" }}}
 
 call plug#end()
 " }}}
-" }}}
+"
+"
 
-" ---- After plug#end (call commands) -----
-" {{{
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
 
-  call denite#custom#source(
-      \ 'file_rec', 'matchers', ['matcher_fuzzy'])
-  call denite#custom#source(
-      \ 'file_rec', 'sorters', ['sorter_sublime'])
+" Disable the candidates in Comment/String syntaxes.
+call deoplete#custom#source('_',
+            \ 'disabled_syntaxes', ['Comment', 'String'])
 
-  call denite#custom#alias('source', 'file_rec/git', 'file_rec')
-  call denite#custom#var('file_rec/git', 'command',
-  \ ['git', 'ls-files', '-co', '--exclude-standard'])
-  nnoremap <silent> <C-p> :<C-u>Denite
-  \ `finddir('.git', ';') != '' ? 'file_rec/git' : 'file_rec'`<CR>
-
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Filetype specific stuff
+" {{{
 autocmd FileType cpp nnoremap <Leader>b :w<CR> :!g++ -std=c++17 -pedantic -Wall -Wextra %
 autocmd FileType cpp nnoremap <Leader>r :w<CR> :!g++ -std=c++17 -pedantic -Wall -Wextra %; ./a.out
-
+au bufread *.py nnoremap <Leader>r :w<CR> :!python %<CR>
 " }}}
 
 " ---- Functions ----
@@ -410,11 +224,21 @@ nnoremap <silent> <Leader>bd :bd<CR>
 nnoremap <silent> <Leader>bD :bd!<CR>
 nnoremap <silent> <Leader>bn :bnext<CR>
 nnoremap <silent> <Leader>bp :bprevious<CR>
-nnoremap <Leader>bs :b 
+nnoremap <Leader>bs :b
 nnoremap <silent> <Leader>bb <C-6>
 nnoremap <silent> <Leader>bl :Unite buffer<CR>
 nnoremap <silent> <Left> :bprevious<CR>
 nnoremap <silent> <Right> :bnext<CR>
+nnoremap <silent> <C-1> :b 1<CR>
+nmap <Leader>1 <Plug>BufTabLine.Go(1)
+nmap <Leader>2 <Plug>BufTabLine.Go(2)
+nmap <Leader>3 <Plug>BufTabLine.Go(3)
+nmap <Leader>4 <Plug>BufTabLine.Go(4)
+nmap <Leader>5 <Plug>BufTabLine.Go(5)
+nmap <Leader>6 <Plug>BufTabLine.Go(6)
+nmap <Leader>7 <Plug>BufTabLine.Go(7)
+nmap <Leader>8 <Plug>BufTabLine.Go(8)
+nmap <Leader>9 <Plug>BufTabLine.Go(9)
 " }}}
 
 " History
@@ -457,22 +281,28 @@ au InsertLeave * set nopaste
 " Python
 " {{{
 let g:python_host_prog = '/home/nonah/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/home/nonah/.pyenv/versions/neovim3/bin/python'
+let g:python3_host_prog = '/home/nonah/.pyenv/versions/neovim3.6/bin/python'
 nnoremap <Leader>mr :w <CR>!clear <CR>:!python % <CR>
 " }}}
 
 " Theme
 " {{{
+" Enable true color support 
+if (empty($TMUX))
+  if (has("nvim"))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
+
 set t_Co=256
-set laststatus=2
-set showtabline=2
+set laststatus=0
 set background=dark
 set showcmd
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=2
 let &t_SI = "\<Esc>[5 q"
 let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[2 q"
-let g:hybrid_custom_term_colors = 1
-let g:hybrid_reduced_contrast = 1 " Remove this line if using the default palette.
-colorscheme dracula
-" }}}
+colo solarized

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 length="---"
-opacity="b0"
+opacity="f7"
 focused_c="f5f5f5"
 normal_c="585858"
 active_c="999999"
@@ -35,4 +35,4 @@ while read -r line ; do
 
     output=$(desktops $line)
     echo "%{c}$output%{r}"
-done | bar -bp -g "110x8" -u 6 -F "#00000000" -B "#00000000"
+done | bar -bp -g "110x2" -u 2 -F "#00000000" -B "#00000000"

@@ -1,22 +1,24 @@
 # Set the modifier to super
 set $mod Mod4
+set $scripts $HOME/scripts
 
-font pango: Ubuntu Mono 8
+font pango: Fira Code Bold 8
+font pango: UW ttyp0 11
 floating_modifier $mod
 
-bindsym $mod+Return exec urxvtc -e fish
+bindsym $mod+Return exec kitty
 bindsym $mod+q kill
 bindsym $mod+Shift+c reload
-bindsym $mod+space exec rofi -show run -fg "#505050" -bg "#eeeeee" -hlfg "#505050" -hlbg "#dddddd" -opacity 98 -sidebar-mode -bw 0 -scrollbar-width 0 -threads 4 -font "Ubuntu Mono 14" -lines 5 -width 30 -separator-style none -sidebar-mode -yoffset -440
+bindsym $mod+space exec rofi -show run
 bindsym $mod+Shift+r restart
-bindsym $mod+b split h
+bindsym $mod+o split h
 bindsym $mod+v split v
 
 # Window modes
 bindsym $mod+f fullscreen toggle
 bindsym $mod+t layout default
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+#bindsym $mod+b layout tabbed
 bindsym $mod+Shift+space floating toggle
 
 bindsym $mod+i exec --no-startup-id display_info
@@ -35,49 +37,80 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 # Switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
+bindsym $mod+1 exec $scripts/changeWorkspace.sh 0
+bindsym $mod+2 exec $scripts/changeWorkspace.sh 1
+bindsym $mod+3 exec $scripts/changeWorkspace.sh 2
+bindsym $mod+4 exec $scripts/changeWorkspace.sh 3
 
 # Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+1 exec $scripts/moveToWorkspace.sh 0
+bindsym $mod+Shift+2 exec $scripts/moveToWorkspace.sh 1
+bindsym $mod+Shift+3 exec $scripts/moveToWorkspace.sh 2
+bindsym $mod+Shift+4 exec $scripts/moveToWorkspace.sh 3
 
-client.focused  #999999 #999999 #ffffff #ffffff
-client.focused_inactive  #999999 #999999 #ffffff #ffffff
-client.background #999999
-client.unfocused #585858 #585858 #ffffff #ffffff
-client.placeholder #585858 #585858 #585858 #585858
 
-# Resize window (you can also use the mouse for that)
-mode "resize" {
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+client.focused          #999999 #999999 #ffffff #ffffff
+client.focused_inactive #787878 #787878 #ffffff #ffffff
+client.background       #999999
+client.unfocused        #585858 #585858 #ffffff #ffffff
+client.placeholder      #585858 #585858 #585858 #585858
+
+client.focused #333030 #403d3d #e8e8e8 #333030 #333030
+client.focused_inactive #333030 #403d3d #a6a9ab #333030 #333030
+client.unfocused #333030 #403d3d #a6a9ab #333030 #333030
+
+# move focused window to scratchpad
+bindsym $mod+Shift+x exec $scripts/minimize.sh
+
+# restor window from scratchpad
+mode "restore" {
+        bindsym 1 exec $scripts/restore.sh 0; mode "default"
+        bindsym 2 exec $scripts/restore.sh 1; mode "default"
+        bindsym 3 exec $scripts/restore.sh 2; mode "default"
+        bindsym 4 exec $scripts/restore.sh 3; mode "default"
+        bindsym 5 exec $scripts/restore.sh 4; mode "default"
+        bindsym 6 exec $scripts/restore.sh 5; mode "default"
+        bindsym 7 exec $scripts/restore.sh 6; mode "default"
+        bindsym 8 exec $scripts/restore.sh 7; mode "default"
+        bindsym 9 exec $scripts/restore.sh 8; mode "default"
+        bindsym 10 exec $scripts/restore.sh 9; mode "default"
+
+        bindsym x exec $scripts/restore.sh last; mode "default"
+        bindsym $mod+x exec $scripts/restore.sh last; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
 
+bindsym $mod+x mode "restore"
+
+# Resize window (you can also use the mouse for that)
+mode "resize" {
+        bindsym h resize shrink width 1 px or 1 ppt
+        bindsym j resize grow height 1 px or 1 ppt
+        bindsym k resize shrink height 1 px or 1 ppt
+        bindsym l resize grow width 1 px or 1 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+
 bindsym $mod+r mode "resize"
+bindsym $mod+Tab exec rofi -show window
+bindsym $mod+d exec ~/scripts/display_time
+focus_wrapping false
 
-# Windows should only have a border width of 2 pixels
-new_window pixel 0
+# Window appearance
+gaps inner 10
+gaps outer 20
+dumb_gaps yes
 
-#exec --no-startup-id xset dpms 600
-#set $locker i3lock -c 121212 && sleep 1
-#exec --no-startup-id xautolock -time 3 -locker $locker 
-
-# Set gap
-gaps inner 15
-gaps outer 0
+#for_window [class="^.*"] normal 1
+#for_window [class="^.*"] title_format " %title"
+for_window [class=".*"] title_format "<span font='8'> %title </span>"
 
 # Audio keybindings
 bindsym XF86AudioMute exec --no-startup-id mute_volume
@@ -88,7 +121,4 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id raise_volume
 bindsym XF86MonBrightnessDown exec --no-startup-id decrease_brightness
 bindsym XF86MonBrightnessUp exec --no-startup-id increase_brightness
 
-# Info keybindings
-bindsym $mod+d exec --no-startup-id display_time
-
-exec workspaces
+exec --no-startup-id $scripts/autostart.sh
