@@ -281,7 +281,7 @@ au InsertLeave * set nopaste
 " Python
 " {{{
 let g:python_host_prog = '/home/nonah/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/home/nonah/.pyenv/versions/neovim3.6/bin/python'
+let g:python3_host_prog = '/home/nonah/.pyenv/versions/neovim3/bin/python'
 nnoremap <Leader>mr :w <CR>!clear <CR>:!python % <CR>
 " }}}
 
@@ -299,7 +299,7 @@ endif
 
 set t_Co=256
 set laststatus=0
-set background=dark
+set background=light
 set showcmd
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=2
 let &t_SI = "\<Esc>[5 q"

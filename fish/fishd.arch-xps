@@ -7,7 +7,7 @@ SET __fish_init_1_50_0:\x1d
 SET __fish_init_2_39_8:\x1d
 SET __fish_init_2_3_0:\x1d
 SET fish_color_autosuggestion:yellow\x1elight
-SET fish_color_command:yellow
+SET fish_color_command:orange
 SET fish_color_comment:990000
 SET fish_color_cwd_root:red
 SET fish_color_end:009900
@@ -25,7 +25,8 @@ SET fish_color_search_match:white
 SET fish_color_selection:white\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dbrblack
 SET fish_color_status:red
 SET fish_color_user:\x2do\x1egreen
-SET fish_color_valid_path:white
+SET fish_color_valid_path:blue
+SET fish_greeting:
 SET fish_key_bindings:fish_default_key_bindings
 SET fish_pager_color_completion:normal
 SET fish_pager_color_description:555\x1eyellow

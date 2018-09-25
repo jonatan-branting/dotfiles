@@ -6,22 +6,24 @@ font pango: Fira Code Bold 8
 font pango: UW ttyp0 11
 floating_modifier $mod
 
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec termite
 bindsym $mod+q kill
 bindsym $mod+Shift+c reload
 bindsym $mod+space exec rofi -show run
 bindsym $mod+Shift+r restart
 bindsym $mod+o split h
 bindsym $mod+v split v
+bindsym $mod+minus move scratchpad
 
 # Window modes
 bindsym $mod+f fullscreen toggle
 bindsym $mod+t layout default
 bindsym $mod+s layout stacking
-#bindsym $mod+b layout tabbed
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space "mark --add _; [con_mark=f] floating disable, border pixel 1, mark --add --toggle _; [con_mark=_] floating enable, border normal 1; mark --add --toggle f;"
+bindsym $mod+b exec python $HOME/.i3/toggle_border.py
 
-bindsym $mod+i exec --no-startup-id display_info
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
 
 # Navigation keybindings
 bindsym $mod+h focus left
@@ -35,90 +37,77 @@ bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
+bindsym $mod+Shift+button1 move
 
 # Switch to workspace
-bindsym $mod+1 exec $scripts/changeWorkspace.sh 0
-bindsym $mod+2 exec $scripts/changeWorkspace.sh 1
-bindsym $mod+3 exec $scripts/changeWorkspace.sh 2
-bindsym $mod+4 exec $scripts/changeWorkspace.sh 3
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
 
 # Move focused container to workspace
-bindsym $mod+Shift+1 exec $scripts/moveToWorkspace.sh 0
-bindsym $mod+Shift+2 exec $scripts/moveToWorkspace.sh 1
-bindsym $mod+Shift+3 exec $scripts/moveToWorkspace.sh 2
-bindsym $mod+Shift+4 exec $scripts/moveToWorkspace.sh 3
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
 
-
-client.focused          #999999 #999999 #ffffff #ffffff
-client.focused_inactive #787878 #787878 #ffffff #ffffff
-client.background       #999999
-client.unfocused        #585858 #585858 #ffffff #ffffff
-client.placeholder      #585858 #585858 #585858 #585858
-
-client.focused #333030 #403d3d #e8e8e8 #333030 #333030
+client.focused          #434040 #504d4d #e8e8e8 #434040 #434040
 client.focused_inactive #333030 #403d3d #a6a9ab #333030 #333030
-client.unfocused #333030 #403d3d #a6a9ab #333030 #333030
+client.unfocused        #333030 #403d3d #a6a9ab #333030 #333030
+client.background       #999999
+client.placeholder      #585858 #585858 #585858 #585858 #585858
 
-# move focused window to scratchpad
-bindsym $mod+Shift+x exec $scripts/minimize.sh
-
-# restor window from scratchpad
-mode "restore" {
-        bindsym 1 exec $scripts/restore.sh 0; mode "default"
-        bindsym 2 exec $scripts/restore.sh 1; mode "default"
-        bindsym 3 exec $scripts/restore.sh 2; mode "default"
-        bindsym 4 exec $scripts/restore.sh 3; mode "default"
-        bindsym 5 exec $scripts/restore.sh 4; mode "default"
-        bindsym 6 exec $scripts/restore.sh 5; mode "default"
-        bindsym 7 exec $scripts/restore.sh 6; mode "default"
-        bindsym 8 exec $scripts/restore.sh 7; mode "default"
-        bindsym 9 exec $scripts/restore.sh 8; mode "default"
-        bindsym 10 exec $scripts/restore.sh 9; mode "default"
-
-        bindsym x exec $scripts/restore.sh last; mode "default"
-        bindsym $mod+x exec $scripts/restore.sh last; mode "default"
-
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+bar {
+        colors {
+        }
+        status_command i3status
+        font pango: UW ttyp0 11
+        mode hide
+        binding_mode_indicator yes
 }
 
-bindsym $mod+x mode "restore"
 
 # Resize window (you can also use the mouse for that)
 mode "resize" {
-        bindsym h resize shrink width 1 px or 1 ppt
-        bindsym j resize grow height 1 px or 1 ppt
-        bindsym k resize shrink height 1 px or 1 ppt
-        bindsym l resize grow width 1 px or 1 ppt
+        bindsym h resize shrink width 5 px or 1 ppt
+        bindsym j resize shrink height 5 px or 1 ppt
+        bindsym k resize grow height 5 px or 1 ppt
+        bindsym l resize grow width 5 px or 1 ppt
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
 
-
 bindsym $mod+r mode "resize"
 bindsym $mod+Tab exec rofi -show window
-bindsym $mod+d exec ~/scripts/display_time
+
 focus_wrapping false
 
 # Window appearance
 gaps inner 10
-gaps outer 20
-dumb_gaps yes
-
-#for_window [class="^.*"] normal 1
-#for_window [class="^.*"] title_format " %title"
+new_window pixel 1
+new_float normal 1
 for_window [class=".*"] title_format "<span font='8'> %title </span>"
+for_window [class="Nightly"] border pixel 1
 
 # Audio keybindings
-bindsym XF86AudioMute exec --no-startup-id mute_volume
-bindsym XF86AudioLowerVolume exec --no-startup-id lower_volume
-bindsym XF86AudioRaiseVolume exec --no-startup-id raise_volume
+bindsym XF86AudioMute exec --no-startup-id volume.sh mute
+bindsym XF86AudioLowerVolume exec --no-startup-id volume.sh down
+bindsym XF86AudioRaiseVolume exec --no-startup-id volume.sh up
 
 # Brightness keybindings
-bindsym XF86MonBrightnessDown exec --no-startup-id decrease_brightness
-bindsym XF86MonBrightnessUp exec --no-startup-id increase_brightness
+bindsym XF86MonBrightnessDown exec --no-startup-id brightness.sh down
+bindsym XF86MonBrightnessUp exec --no-startup-id brightness.sh up
 
-exec --no-startup-id $scripts/autostart.sh
+# Scratchpad terminal
+bindsym $mod+Shift+i exec termite --name dropdown; exec --no-startup-id dunstify "" "Scratchpad terminal created"
+bindsym $mod+i [instance="(?i)dropdown"] scratchpad show
+for_window [instance="(?i)dropdown"] border normal 1, floating enable, move position 0px 630px, resize set 1920 450, move scratchpad, sticky enable
+
+
+exec --no-startup-id dunst &
+exec --no-startup-id python $HOME/.i3/i3mm.py &
+exec --no-startup-id flashfocus &

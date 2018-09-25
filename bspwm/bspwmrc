@@ -14,7 +14,7 @@ desktop_config(){
   done
 }
 
-desktop_config border_width 0
+desktop_config border_width 3
 desktop_config window_gap 12
 desktop_config click_to_focus true
 desktop_config pointer_modifier mod4

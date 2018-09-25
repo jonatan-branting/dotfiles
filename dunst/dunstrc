@@ -1,60 +1,64 @@
 [global]
-    font = lemon 8
-    allow_markup = yes
-    format = "%b %p"
+    font = UW ttyp0 8
+    markup = yes
+    format = "%s %b"
     sort = yes
     indicate_hidden = yes
-    alignment = center
-    shrink = Yes
+    alignment = left
+    shrink = no
+    frame_color = "#303030"
     bounce_freq = 0
     show_age_threshold = 60
     word_wrap = yes
     ignore_newline = no
-    geometry = "500x10-10+10"
-    ##transparency = 25
-    transparency = 0
+    geometry = "220x18-3+3"
+    ellipsize = end
+    transparency = 15
     idle_threshold = 120
-    max_icon_size = 32
+    max_icon_size = 16
     monitor = 0
     follow = mouse
     sticky_history = yes
     line_height = 5
     separator_height = 2
     padding = 10
-    horizontal_padding = 20
+    horizontal_padding = 10
     separator_color = #bfbfbf
-    startup_notification = false
-    show_indicators = yes
+    startup_notification = yes
+    show_indicators = true
     dmenu = /usr/bin/dmenu -p dunst
-    browser = /usr/bin/google-chrome-beta -new-tab
-    icon_position = left
-    icon_folders = /usr/share/icons/Notifications
- 
-[frame]
-    color = "#ffffff"
-    width = 0
- 
+    browser = /usr/bin/firefox-nightly
+    icon_position = off
+    icon_path = /usr/share/icons/Numix-Light/16x16/status/:/usr/share/icons/Numix-Light/16x16/panel/:/usr/share/icons/Notifications/
+
 [shortcuts]
     close = ctrl+space
     close_all = ctrl+shift+space
     context = ctrl+shift+period
-    history = ctrl+shift
+    history = ctrl+shift+h
  
 [urgency_low]
-    background = "#ffffff"
-    foreground = "#595959"
+    background = "#434040"
+    foreground = "#aeaeae"
     timeout = 5
  
 [urgency_normal]
-    background = "#ffffff"
-    foreground = "#595959"
+    background = "#434040"
+    foreground = "#aeaeae"
     timeout = 5
  
 [urgency_critical]
-    background = "#ffffff"
-    foreground = "#595959"
+    background = "#734040"
+    foreground = "#aeaeae"
     timeout = 5
  
+
+[Telegram]
+  appname = Nightly
+  background= "#535384"
+  format = "%s: %b"
+  markup=no
+
 [Discord]
     appname = Discord Canary
     format = "<b>%s</b>\n%b"
@@ -73,6 +77,11 @@
     new_icon = NCMPCPP
     timeout = 10
  
+[local]
+  appname = local
+  shrink = no
+  geometry = "220x18-2+1045"
+
 [Spotify]
     appname = Spotify
     format = "<b>Now Playing:</b>\n%s\n%b"
