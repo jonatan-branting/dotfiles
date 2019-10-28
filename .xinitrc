@@ -4,7 +4,7 @@
 # VARIABLES.
 USERHOME=/home/nonah/
 userresources=$USERHOME/.Xresources
-xcolorscheme=$USERHOME/.config/xcolors/hybrid.xresources
+xcolorscheme=$USERHOME/.config/xcolors/distilled.xresources
 wallpaper=$USERHOME/pictures/frozengrass.jpg
 
 # Apply system wide settings.
