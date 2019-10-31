@@ -2,3 +2,4 @@
 *.swo
 fish_history
 *.elc
+__pycache__
