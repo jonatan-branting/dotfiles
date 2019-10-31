@@ -1,0 +1,21 @@
+{
+  "latex.build.args": [
+    "-pdf",
+    "-interaction=nonstopmode",
+    "-use-make",
+    "-shell-escape",
+    "-synctex=1"
+  ],
+  "python.autoComplete.addBrackets": true,
+  "python.formatting.provider": "black",
+  "suggest.noselect": false,
+  "python.venvPath": "~/.pyenv",
+  "python.pythonPath": "python",
+  "python.jediEnabled": false,
+  "coc.preferences.rootPatterns": [".vim", ".python-version", ".git", ".hg", ".projections.json", ".vim_root"],
+  "suggest.maxCompleteItemCount": 20,
+  "coc.preferences.formatOnSaveFiletypes": ["javascript", "typescript", "typescriptreact", "json", "javascriptreact"],
+  "diagnostic.errorSign": "•",
+  "diagnostic.warningSign": "•",
+  "diagnostic.infoSign": "•"
+}
