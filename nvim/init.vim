@@ -1,1 +1,0 @@
-/home/nonah/.config/nvim/init.vim
