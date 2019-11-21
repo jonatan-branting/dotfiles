@@ -1,0 +1,42 @@
+{
+    "workbench.colorTheme": "Dainty Dark",
+    "editor.fontFamily": "Consolas, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "vim.camelCaseMotion.enable": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+        "before": ["H"],
+        "after": ["^"]
+        },
+        {
+        "before": ["L"],
+        "after": ["$"]
+        }
+    ],
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j", "j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "window.zoomLevel": 0,
+    "editor.renderIndentGuides": false,
+    "editor.minimap.enabled": false,
+    "editor.autoClosingBrackets": "languageDefined",
+    "workbench.editor.showIcons": false,
+    "vim.visualstar": true,
+    "breadcrumbs.enabled": false,
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": true,
+    "workbench.activityBar.visible": true,
+    "workbench.statusBar.visible": false,
+    "workbench.iconTheme": "verdandi",
+    "editor.renderLineHighlight": "gutter",
+    "debug.toolBarLocation": "docked",
+    "C_Cpp.updateChannel": "Insiders",
+    "http.systemCertificates": false,
+    "workbench.sideBar.location": "right",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "editor.lineNumbers": "relative"
+    // "vim.statusBarColorControl": true
+}
