@@ -127,7 +127,7 @@ alt - y : yabai -m window --toggle split
 alt - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
 
-alt - m : /Users/jonatanbranting/bin/move_window_to_display.sh
+alt - m : $HOME/bin/move_window_to_display.sh
 
 # change layout of desktop
 ctrl + alt - a : yabai -m space --layout bsp
