@@ -1,18 +1,17 @@
 # hyper/meh keybindings
 
-cmd + alt + ctrl - j : skhd -t "("
-cmd + alt + ctrl - z : skhd -t "("
-cmd + alt + ctrl - k : skhd -t "["
-cmd + alt + ctrl - l : skhd -t "{"
-cmd + alt + ctrl + shift - j : skhd -t ")"
-cmd + alt + ctrl + shift - k : skhd -t "]"
-cmd + alt + ctrl + shift - l : skhd -t "}"
+meh - j : skhd -t "("
+meh - k : skhd -t "["
+meh - l : skhd -t "{"
+hyper - j : skhd -t ")"
+hyper - k : skhd -t "]"
+hyper - l : skhd -t "}"
 
-cmd + alt + ctrl - 0x2B: skhd -t "<"
-cmd + alt + ctrl - 0x2F: skhd -t ">"
+meh - 0x2B: skhd -t "<"
+meh - 0x2F: skhd -t ">"
 
-cmd + alt + ctrl + shift - u: skhd -t "\\"
-cmd + alt + ctrl - u: skhd -t "/"
+hyper - u: skhd -t "\\"
+meh - u: skhd -t "/"
 
 # fn - hjkl > arrow keys
 fn - k: skhd -k up
