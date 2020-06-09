@@ -1,4 +1,5 @@
 #! /bin/bash
+# TODO this needs work
 
 cd $HOME
 mkdir git

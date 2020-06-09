@@ -1,0 +1,143 @@
+# hyper/meh keybindings
+
+cmd + alt + ctrl - j : skhd -t "("
+cmd + alt + ctrl - z : skhd -t "("
+cmd + alt + ctrl - k : skhd -t "["
+cmd + alt + ctrl - l : skhd -t "{"
+cmd + alt + ctrl + shift - j : skhd -t ")"
+cmd + alt + ctrl + shift - k : skhd -t "]"
+cmd + alt + ctrl + shift - l : skhd -t "}"
+
+cmd + alt + ctrl - 0x2B: skhd -t "<"
+cmd + alt + ctrl - 0x2F: skhd -t ">"
+
+cmd + alt + ctrl + shift - u: skhd -t "\\"
+cmd + alt + ctrl - u: skhd -t "/"
+
+# fn - hjkl > arrow keys
+fn - k: skhd -k up
+fn - h: skhd -k left
+fn - l: skhd -k right
+fn - j: skhd -k down
+
+
+alt - return : $HOME/bin/start_iterm.sh
+alt + shift - return : $HOME/bin/start_iterm.sh Floating
+
+# close
+alt - q: yabai -m window --close && yabai -m window --focus recent
+
+# cycle
+alt - c : yabai -m window --focus next || yabai -m window --focus first
+shift + alt - c : yabai -m window --focus prev || yabai -m window --focus last
+
+
+# swap monitors / space
+alt - tab : $HOME/bin/focus_recent_monitor.sh || yabai -m space --focus recent
+cmd - tab : yabai -m display --focus recent
+
+
+# swap spaces
+alt - right : $HOME/bin/space_dir.sh next
+alt - left : $HOME/bin/space_dir.sh prev
+
+alt - p : $HOME/bin/space_dir.sh prev
+alt - n : $HOME/bin/space_dir.sh next
+
+# focus window
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
+
+
+# swap window
+shift + alt - h : yabai -m window --swap west
+shift + alt - j : yabai -m window --swap south
+shift + alt - k : yabai -m window --swap north
+shift + alt - l : yabai -m window --swap east
+
+# move window
+shift + cmd - h : yabai -m window --warp west
+shift + cmd - j : yabai -m window --warp south
+shift + cmd - k : yabai -m window --warp north
+shift + cmd - l : yabai -m window --warp east
+
+# balance size of windows
+shift + cmd - b : yabai -m space --balance
+
+# create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
+shift + cmd - n : yabai -m space --create && \
+                  index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
+                  yabai -m window --space "${index}" && \
+                  yabai -m space --focus "${index}"
+
+# create desktop and follow focus - uses jq for parsing json (brew install jq)
+cmd + alt - n : yabai -m space --create && \
+                index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
+                yabai -m space --focus "${index}"
+
+
+shift + alt - left : yabai -m window --space prev; yabai -m space --focus prev 
+shift + alt - right : yabai -m window --space next; yabai -m space --focus next 
+
+# move window
+shift + ctrl - a : yabai -m window --move rel:-20:0
+shift + ctrl - s : yabai -m window --move rel:0:20
+shift + ctrl - w : yabai -m window --move rel:0:-20
+shift + ctrl - d : yabai -m window --move rel:20:0
+
+# increase window size
+shift + alt - a : yabai -m window --resize left:-20:0
+shift + alt - s : yabai -m window --resize bottom:0:20
+shift + alt - w : yabai -m window --resize top:0:-20
+shift + alt - d : yabai -m window --resize right:20:0
+
+# decrease window size
+shift + cmd - a : yabai -m window --resize left:20:0
+shift + cmd - s : yabai -m window --resize bottom:0:-20
+shift + cmd - w : yabai -m window --resize top:0:20
+shift + cmd - d : yabai -m window --resize right:-20:0
+
+# set insertion point in focused container
+ctrl + alt - h : yabai -m window --insert west
+ctrl + alt - j : yabai -m window --insert south
+ctrl + alt - k : yabai -m window --insert north
+ctrl + alt - l : yabai -m window --insert east
+
+# rotate tree
+alt - r : yabai -m space --rotate 90
+
+# mirror tree x-axis
+alt - x : yabai -m space --mirror x-axis
+
+# toggle window parent zoom
+alt - d : yabai -m window --toggle zoom-parent
+
+# toggle window fullscreen zoom
+alt - f : yabai -m window --toggle zoom-fullscreen
+
+# toggle window native fullscreen
+shift + alt - f : yabai -m window --toggle native-fullscreen
+
+# toggle window split type
+alt - y : yabai -m window --toggle split
+
+# float / unfloat window and center on screen
+alt - t : yabai -m window --toggle float;\
+          yabai -m window --grid 4:4:1:1:2:2
+
+alt - m : /Users/jonatanbranting/bin/move_window_to_display.sh
+
+# change layout of desktop
+ctrl + alt - a : yabai -m space --layout bsp
+ctrl + alt - d : yabai -m space --layout float
+
+
+# overrides
+cmd - h: echo "override"
+cmd - return: echo "override"
+
+# TODO
+# resize windows...
+# modes? Resize mode, etc.
