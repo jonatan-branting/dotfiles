@@ -51,7 +51,7 @@ end
 set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin
 set -x PATH "$HOME/.pyenv/bin" $PATH
 bax source "$HOME/.config/fish/protected.env"
-export EDITOR "nvim"
-
+set EDITOR "nvim"
 
 function __fish_describe_command; end
+source (brew --prefix asdf)/asdf.fish
