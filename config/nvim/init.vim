@@ -1,5 +1,9 @@
 " Necessary settings for plugins. (Before they load)
 let mapleader="\<Space>"
+" TODO
+" 1. submodes for windows and chunks
+" 2. Fix the statusbar (Changes when not in focus, etc.)
+" 3. Better usage of CocNext, etc. + quickfix
 
 " ---- Enable plugins. ---- "
 
@@ -7,38 +11,40 @@ call plug#begin('~/.nvim/plugged')
 
 " General purpose and libraries
 Plug 'svermeulen/vim-macrobatics'
+Plug 'justinmk/vim-sneak'
+  let g:sneak#label = 1
+Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-rails'
+Plug 'tpope/vim-projectionist'
 Plug 'neovim/node-host'
 Plug 'tpope/vim-dispatch'
-Plug 'radenling/vim-dispatch-neovim'
-Plug 'stillwwater/vim-nebula'
-Plug 'airblade/vim-gitgutter'
-  " Let coc-git handle the signs, as they work in real time
-  let g:gitgutter_signs = 0
 Plug 'tomtom/tlib_vim'
 Plug 'xolox/vim-misc'
 Plug 'mhinz/neovim-remote'
+Plug 'dhruvasagar/vim-zoom'
+
+" UI
 Plug 'ap/vim-buftabline'
   let g:buftabline_show = 1
   let g:buftabline_numbers = 1
   let g:buftabline_indicators = 1
 
-Plug 'ncm2/float-preview.nvim'
-"
 " Session
 Plug 'mhinz/vim-startify'
 Plug 'xolox/vim-session'
   let g:session_autoload = 'no'
 
 " Git
-
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-bundler'
+Plug 'airblade/vim-gitgutter'
+  let g:gitgutter_signs = 0
 
 " Auto completion, snippets and linting 
-Plug 'unblevable/quick-scope'
 Plug 'sheerun/vim-polyglot'
 
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'ncm2/float-preview.nvim'
 Plug 'sbdchd/neoformat'
   let g:neoformat_enabled_python = ['black']
   let g:neoformat_enabled_ruby = ['rubocop']
@@ -61,9 +67,8 @@ Plug 'tmsvg/pear-tree'
   let g:pear_tree_smart_closers = 1
   let g:pear_tree_smart_openers = 1
   let g:pear_tree_smart_backspace = 1
+
 Plug 'junegunn/vim-easy-align'
-  vmap <Enter> <Plug>(EasyAlign)
-  nmap ga <Plug>(EasyAlign)
 Plug 'wellle/targets.vim'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
@@ -85,6 +90,16 @@ autocmd FileType tikz set syntax=tex
 
 " ---- Remaps ----
 
+" Easy Align
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+" Sneak
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
+
 " Macros using macrobatics
 nmap <nowait> q <plug>(Mac_Play)
 nmap <nowait> gq <plug>(Mac_RecordNew)
@@ -103,7 +118,6 @@ nnoremap <silent> K :call CocAction('doHover')<CR>
 nnoremap gw :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 vnoremap gw :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
 
-" Continue the CocList TODO disable gitgutter signs
 nmap <Leader>c :CocListResume<CR>
 
 " Lists
@@ -136,16 +150,18 @@ let g:which_key_map.w = {
       \'w' : ['<C-W>w'     , 'other-window'],
       \'d' : ['<C-W>c'     , 'delete-window'],
       \'-' : ['<C-W>s'     , 'split-window-below'],
-      \'|' : ['<C-W>v'     , 'split-window-right'],
+      \'/' : ['<C-W>v'     , 'split-window-right'],
       \'2' : ['<C-W>v'     , 'layout-double-columns'],
       \'h' : ['<C-W>h'     , 'window-left'],
       \'j' : ['<C-W>j'     , 'window-below'],
+      \' ' : ['<C-W>m'     , 'zoom-current-window'],
       \'l' : ['<C-W>l'     , 'window-right'],
       \'k' : ['<C-W>k'     , 'window-up'],
       \'H' : ['<C-W>5<'    , 'expand-window-left'],
-      \'J' : [':resize +5'  , 'expand-window-below'],
+      \'y' : ['<C-W>H'     , 'flip-layout'],
+      \'J' : [':resize +5' , 'expand-window-below'],
       \'L' : ['<C-W>5>'    , 'expand-window-right'],
-      \'K' : [':resize -5'  , 'expand-window-up'],
+      \'K' : [':resize -5' , 'expand-window-up'],
       \'=' : ['<C-W>='     , 'balance-window'],
       \'s' : ['<C-W>s'     , 'split-window-below'],
       \'v' : ['<C-W>v'     , 'split-window-below'],
@@ -161,21 +177,8 @@ let g:which_key_map.f = {
 
 let g:which_key_map.l = {
       \'name' : '+Lists',
-      \'f'  : [':CocList quickfix', 'quickfix'],
-      \'w'  : [':CocList workspace', 'workspace'],
-      \'k'  : [':CocList links', 'links'],
-      \'s'  : [':CocList sessions', 'sessions'],
-      \'l'  : [':CocList lines', 'lines'],
-      \}
-
-
-let g:which_key_map.l = {
-      \'name' : '+Lists',
       \'e'  : [':CocList extensions', 'extensions'],
-      \'o'  : [':CocList outline', 'outline'],
-      \'w'  : [':CocList workspace', 'workspace'],
-      \'k'  : [':CocList links', 'links'],
-      \'s'  : [':CocList service', 'service'],
+      \'s'  : [':CocList sessions', 'sessions'],
       \'l'  : [':CocList lines', 'lines'],
       \}
 
@@ -205,30 +208,37 @@ let g:which_key_map.b = {
 
 
 " git bindings
-nmap <Leader>gl :call <SID>ListGitChanges()<CR>
-nmap <Leader>ga :CocCommand git.diffCached<CR>
 nmap <Leader>gc :Git commit<CR>
-nmap <Leader>gi <Plug>(coc-git-chunkinfo)
-nmap <Leader>gs :CocCommand git.chunkStage<CR>
-nmap <Leader>gu :CocCommand git.chunkUndo<CR>
-nmap <Leader>go :CocCommand git.showCommit<CR>
-nmap <Leader>gS :GStatus<CR>
-nmap <Leader>gr :Git reset<CR>
+nmap <Leader>gs :Gstatus<CR>
+nmap <Leader>gm :Git mergetool<CR>
+nmap <Leader>gd :Git diff<CR>
 let g:which_key_map.g = { 'name' : '+git',}
-let g:which_key_map.g.l = 'list-git-diff'
-let g:which_key_map.g.c = 'show-diff-cached'
-let g:which_key_map.g.i = 'show-chunk-info'
-let g:which_key_map.g.s = 'stage-chunk'
-let g:which_key_map.g.S = 'fugitive-status'
-let g:which_key_map.g.u = 'undo-chunk'
-let g:which_key_map.g.r = 'git-soft-reset'
-let g:which_key_map.g.o = 'show-commit-for-chunk'
+let g:which_key_map.g.s = 'git-status'
+let g:which_key_map.g.c = 'git-commit'
+let g:which_key_map.g.m = 'git-merge'
+
+nmap <Leader>hs :CocCommand git.chunkStage<CR>
+nmap <Leader>hu :CocCommand git.chunkUndo<CR>
+nmap <Leader>hl :call <SID>ListGitChanges()<CR>
+nmap <Leader>hb :CocCommand git.showCommit<CR>
+nmap <Leader>hn <Plug>(GitGutterNextHunk)
+nmap <Leader>hp <Plug>(GitGutterPrevHunk)
+let g:which_key_map.h = { 'name' : '+hunks',}
+let g:which_key_map.h.u = 'undo-chunk'
+let g:which_key_map.h.l = 'list-git-diff'
+let g:which_key_map.h.s = 'stage-chunk'
+let g:which_key_map.h.b = 'show-blame-info'
+let g:which_key_map.h.n = 'next-chunk'
+let g:which_key_map.h.p = 'prev-chunk'
 
 " create text object for git chunks
 omap ic <Plug>(coc-git-chunk-inner)
 xmap ic <Plug>(coc-git-chunk-inner)
 omap ac <Plug>(coc-git-chunk-outer)
 xmap ac <Plug>(coc-git-chunk-outer)
+
+" show chunkinfo easily
+nmap gh <Plug>(coc-git-chunkinfo)
 
 
 " Register which-key
@@ -257,35 +267,6 @@ function! s:GrepFromSelected(type)
   let @@ = saved_unnamed_register
   execute 'CocList -I grep '.word
 endfunction
-
-" ---- REMAPPING DEFAULTS ----
-
-tnoremap <Esc> <C-\><C-n>
-nnoremap S i<CR><Esc>^mwgk:silent! s/\v +$//<CR>:noh<CR>
-nnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
-nnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
-vnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
-vnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
-inoremap jj <Esc>
-noremap L g$
-nnoremap X vaw
-vnoremap H g^
-vnoremap L g$
-nnoremap , ;
-noremap H g^
-vnoremap < <gv
-vnoremap > >gv
-noremap vv 0v$
-nnoremap Y y$
-inoremap <C-l> <C-o>$
-inoremap <C-h> <C-o>0
-inoremap <C-c> <Esc>
-
-nnoremap <silent> <Left> :bprevious<CR>
-nnoremap <silent> <Right> :bnext<CR>
-tnoremap <silent> <Left> :bprevious<CR>
-tnoremap <silent> <Right> :bnext<CR>
-
 
 " --- Load other settings ---
 
