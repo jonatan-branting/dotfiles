@@ -75,3 +75,38 @@ set guioptions-=L
 set guioptions-=r
 set laststatus=2
 set showcmd
+
+
+
+" Remapping default keybindings
+
+" if has("nvim")
+"   au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
+"   au FileType fzf tunmap <buffer> <Esc>
+" endif
+
+nnoremap S i<CR><Esc>^mwgk:silent! s/\v +$//<CR>:noh<CR>
+nnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
+nnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
+vnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
+vnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
+inoremap jj <Esc>
+noremap L g$
+nnoremap X vaw
+vnoremap H g^
+vnoremap L g$
+nnoremap , ;
+noremap H g^
+vnoremap < <gv
+vnoremap > >gv
+noremap vv 0v$
+nnoremap Y y$
+inoremap <C-l> <C-o>$
+inoremap <C-h> <C-o>0
+inoremap <C-c> <Esc>
+
+nnoremap <silent> <Left> :bprevious<CR>
+nnoremap <silent> <Right> :bnext<CR>
+
+nnoremap p p`[v`]=
+vnoremap d d==
