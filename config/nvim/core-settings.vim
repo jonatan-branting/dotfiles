@@ -76,8 +76,6 @@ set guioptions-=r
 set laststatus=2
 set showcmd
 
-
-
 " Remapping default keybindings
 
 " if has("nvim")
@@ -104,9 +102,6 @@ nnoremap Y y$
 inoremap <C-l> <C-o>$
 inoremap <C-h> <C-o>0
 inoremap <C-c> <Esc>
-
-nnoremap <silent> <Left> :bprevious<CR>
-nnoremap <silent> <Right> :bnext<CR>
 
 nnoremap p p`[v`]=
 vnoremap d d==
