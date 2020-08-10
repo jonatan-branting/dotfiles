@@ -18,13 +18,8 @@ vnoremap gw :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
 xmap <leader>af <Plug>(coc-format-selected)
 nmap <leader>af <Plug>(coc-format-selected)
 
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Show chunkinfo easily
 nmap gh <Plug>(coc-git-chunkinfo)
-
-nmap <Leader>c :CocFzfListResume<CR>
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
@@ -41,22 +36,35 @@ let g:which_key_map.s = [':w', 'save']
 let g:which_key_map.x = [':x', 'save-exit']
 let g:which_key_map.q = [':q', 'quit']
 
+let shorten_file_paths = escape(" | awk -F: 'BEGIN {OFS = FS} {$3 = $3 \":\" gensub(/([^/])[^/]*\\//, \"\\\\1/\", \"g\", $1) ; print}'", "\\")
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --glob=!tags --column --line-number --no-heading --color=never --follow --smart-case -- '.shellescape(<q-args>)..shorten_file_paths, 0,
+      \   fzf#vim#with_preview({'options': ['--preview-window=noborder', '--delimiter', ':', '--with-nth=4..']}), <bang>0)
+
+command! -bang -nargs=* GGrep
+      \ call fzf#vim#grep(
+      \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+      \   fzf#vim#with_preview({'options': ['--preview-window=noborder'], 'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+
 " File jumping
 noremap <silent> <Leader>p :Files<CR>
 noremap <silent> <C-p> :Files<CR>
 
-nnoremap <silent> <C-f> :Rg<CR>
-noremap <silent> <Leader>f :Rg<CR>
+nnoremap <C-f> :Rg<CR>
+nnoremap <silent><Leader>f :Rg<CR>
 nnoremap <silent> <Leader>e :Buffers<CR>
-nnoremap <silent> <Leader>i :exe ':Files '. expand("%:p:h")<CR>
-let g:which_key_map.i =  'files-from-cwd'
-let g:which_key_map.p =  'files-from-workspace'
-let g:which_key_map.f = 'grep'
+nnoremap <silent> <Leader>i :Files <C-R>=expand('%:h')<CR><CR>
+let g:which_key_map.i = 'files-from-cwd'
+let g:which_key_map.e = 'buffers'
+let g:which_key_map.p = 'files-from-workspace'
+let g:which_key_map.f = 'grep-from-workspace'
 
-nmap <Leader>/ <Plug>AgRawSearch
-vmap <Leader>/ <Plug>AgRawVisualSelection
-nmap <Leader>* <Plug>AgRawWordUnderCursor
-nmap <silent> <Leader><Leader>c :ToggleCamelCaseMotions<CR>
+nmap <Leader>/ <Plug>RgRawSearch
+vmap <Leader>/ <Plug>RgRawVisualSelection
+nmap <Leader>* <Plug>RgRawWordUnderCursor
+let g:which_key_map['*'] = 'rg-cursor-word'
+let g:which_key_map['/'] = 'rg-search'
 
 "Open lines but stay in insert
 nmap <S-CR> O<Esc>
@@ -72,11 +80,9 @@ inoremap . .<C-g>u
 inoremap ! !<C-g>u
 inoremap ? ?<C-g>u
 
-nnoremap <Leader>B :Breakpoint<CR>
-nnoremap <Leader>V :VdebugStart<CR>
-
 " Open line below, with an extra blank line below that one
 nnoremap <Leader><CR> o<C-o>O
+let g:which_key_map['<CR>'] = 'open-line-below'
 
 nnoremap <Leader>rc :Econtroller<CR>
 nnoremap <Leader>rm :Emodel<CR>
@@ -84,8 +90,9 @@ nnoremap <Leader>rs :Espec<CR>
 nnoremap <Leader>rv :Eview
 nnoremap <Leader>rl :Elayout<CR>
 nnoremap <Leader>rj :Ejavascript<CR>
+let g:which_key_map.R = 'reload-chrome'
 let g:which_key_map.r = {
-      \'name': 'ruby',
+      \'name': '+Ruby',
       \'r': [':R', 'open-related'],
       \'a': [':A', 'open-alternate'],
       \'f': ['gf', 'goto-file-under-cursor'],
@@ -100,7 +107,7 @@ let g:which_key_map.r = {
       \}
 
 let g:which_key_map.w = {
-      \'name' : '+windows',
+      \'name' : '+Windows',
       \'w' : ['<C-W>w'     , 'other-window'],
       \'d' : ['<C-W>c'     , 'delete-window'],
       \'-' : ['<C-W>s'     , 'split-window-below'],
@@ -127,6 +134,7 @@ let g:which_key_map.l = {
       \'s'  : [':CocFzfList sessions', 'sessions'],
       \'d'  : [':CocFzfList diagnostics', 'diagnostics'],
       \'l'  : [':Lines', 'lines'],
+      \'b'  : [':BLines', 'buffer-lines'],
       \}
 
 let g:which_key_map.a = {
@@ -139,7 +147,7 @@ let g:which_key_map.a = {
       \}
 
 let g:which_key_map.b = {
-      \'name' : '+buffer',
+      \'name' : '+Buffer',
       \'1' : ['b1'        , 'buffer 1'],
       \'2' : ['b2'        , 'buffer 2'],
       \'d' : ['bd'        , 'delete-buffer'],
@@ -157,17 +165,19 @@ nmap <Leader>gc :Git commit<CR>
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gm :Git mergetool<CR>
 nmap <Leader>gd :Git diff<CR>
-let g:which_key_map.g = { 'name' : '+git',}
+nmap <Leader>gf :GFiles<CR>
+let g:which_key_map.g = { 'name' : '+Git',}
 let g:which_key_map.g.s = 'git-status'
 let g:which_key_map.g.c = 'git-commit'
 let g:which_key_map.g.m = 'git-merge'
+let g:which_key_map.g.f = 'git-list-files'
 
 nmap <Leader>hs :CocCommand git.chunkStage<CR>
 nmap <Leader>hu :CocCommand git.chunkUndo<CR>
 nmap <Leader>hb :CocCommand git.showCommit<CR>
 nmap <Leader>hn <Plug>(GitGutterNextHunk)
 nmap <Leader>hp <Plug>(GitGutterPrevHunk)
-let g:which_key_map.h = { 'name' : '+hunks',}
+let g:which_key_map.h = { 'name' : '+Hunks',}
 let g:which_key_map.h.u = 'undo-chunk'
 let g:which_key_map.h.s = 'stage-chunk'
 let g:which_key_map.h.b = 'show-blame-info'
@@ -178,7 +188,7 @@ nmap <Leader>tn :TestNearest<CR>
 nmap <Leader>tf :TestFile<CR>
 nmap <Leader>tr :TestLast<CR>
 nmap <Leader>tv :TestVisit<CR>
-let g:which_key_map.t = { 'name' : '+test',}
+let g:which_key_map.t = { 'name' : '+Test',}
 let g:which_key_map.t.f = 'test-current-file'
 let g:which_key_map.t.n = 'test-nearest'
 let g:which_key_map.t.r = 'rerun-last-test'
