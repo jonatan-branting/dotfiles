@@ -19,6 +19,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'sotte/presenting.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
+Plug 'TimUntersberger/neogit'
 Plug 'mattn/emmet-vim'
 
 Plug 'kchmck/vim-coffee-script'
