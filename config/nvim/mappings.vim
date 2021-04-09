@@ -96,18 +96,10 @@ function! s:calculate_preview_window()
   endif
 endfunction
 
-" command! -bang -nargs=? -complete=dir Files
-"       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': []}), <bang>0)
-
 " File jumping
-noremap <silent> <Leader>p :Files<CR>
-noremap <silent> <C-p> :Files<CR>
-
-nnoremap <C-f> :Rg<CR>
-nnoremap <silent><Leader>f :Rg<CR>
-nnoremap <silent><Leader>v :BRg<CR>
-nnoremap <silent> <Leader>e :Buffers<CR>
-nnoremap <silent> <Leader>i :Files <C-R>=expand('%:h')<CR><CR>
+noremap <silent> <Leader>p :Telescope find_files<CR>
+nnoremap <silent><Leader>f :Telescope live_grep<CR>
+nnoremap <silent> <Leader>e :Telescope buffers<CR>
 let g:which_key_map.i = 'files-from-cwd'
 let g:which_key_map.e = 'buffers'
 let g:which_key_map.p = 'files-from-workspace'
