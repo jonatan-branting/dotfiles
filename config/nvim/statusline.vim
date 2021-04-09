@@ -1,14 +1,16 @@
 set laststatus=2
-
-set statusline=%!statusline#active()
 augroup vimrc_statusline
   autocmd!
+  " autocmd BufEnter,WinEnter * if &filetype == "coc-explorer" | setlocal statusline=%!statusline#coc_explorer()
+
   " WinLeave = Before we change focused buffer/window
   autocmd WinLeave * if &filetype != "list" | setlocal statusline=%!statusline#inactive()
 
   " On WinEnter, set statusLine to the active version
   autocmd WinEnter,BufEnter * if &filetype != "list" | setlocal statusline=%!statusline#active()
-augroup END
+
+  " Filetype specific
+augroup end
 
 function! statusline#active() abort
   try
@@ -19,6 +21,10 @@ function! statusline#active() abort
     let statuslinetext .= statusline#temporary()
     let statuslinetext .= statusline#warnings()
     let statuslinetext .= statusline#errors()
+
+    " Italize and grey out
+    " let statuslinetext .= get(g:, 'coc_status', '') . ' '
+
     let statuslinetext .= statusline#gitinfo()
 
     return statuslinetext
@@ -26,6 +32,10 @@ function! statusline#active() abort
     echom "catch"
     return ""
   endtry
+endfunction
+
+function! statusline#coc_explorer() abort
+  return "%#EndOfBuffer#" . "~"
 endfunction
 
 function! statusline#inactive() abort
@@ -113,7 +123,7 @@ endfunction
 
 function! statusline#gitinfo() abort
   let l:color = '%#stlColumnInfo# '
-  return l:color . "%{((exists('g:loaded_fugitive') && &modifiable) ? fugitive#head() : 'source') . ' '}"
+  return l:color . "%{(exists('g:loaded_fugitive') ? fugitive#head() : 'source') . ' '}"
 endfunction
 
 function! statusline#fileinfo(active) abort

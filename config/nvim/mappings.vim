@@ -2,6 +2,31 @@
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
+" Emmet, make ,j not remove ,
+imap ,, <C-y>,
+
+inoremap <silent> kk <C-R>=UltiSnips#ExpandSnippetOrJump()<CR>
+
+inoremap jj <Esc>
+cnoremap jj <Esc>
+tnoremap jj <Esc>
+noremap L g$
+nnoremap X vaw
+vnoremap H g^
+vnoremap L g$
+nnoremap , ;
+noremap H g^
+vnoremap < <gv
+vnoremap > >gv
+noremap vv 0v$
+nnoremap Y y$
+inoremap <C-l> <C-o>$
+inoremap <C-h> <C-o>0
+inoremap <C-c> <Esc>
+
+nnoremap p p`[v`]=`.
+vnoremap d d==
+
 " coc.nvim popups
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "j"
@@ -15,8 +40,9 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call CocAction('doHover')<CR>
 nnoremap gw :exe ':Rg '.expand('<cword>')<CR>
 vnoremap gw :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
-xmap <leader>af <Plug>(coc-format-selected)
-nmap <leader>af <Plug>(coc-format-selected)
+
+nnoremap <C-e> $
+nnoremap <C-a> 0
 
 " Show chunkinfo easily
 nmap gh <Plug>(coc-git-chunkinfo)
@@ -33,19 +59,45 @@ command! -nargs=0 Fimport :call CocAction('runCommand', 'editor.action.organizeI
 " Replace which-key with quickui!
 let g:which_key_map = {}
 let g:which_key_map.s = [':w', 'save']
+let g:which_key_map.j = ['<Esc>', 'exit-which-key']
 let g:which_key_map.x = [':x', 'save-exit']
 let g:which_key_map.q = [':q', 'quit']
+let g:which_key_map.o = [':Fern . -drawer -toggle -width=32 -reveal=%', 'explore-project']
 
-let shorten_file_paths = escape(" | awk -F: 'BEGIN {OFS = FS} {$3 = $3 \":\" gensub(/([^/])[^/]*\\//, \"\\\\1/\", \"g\", $1) ; print}'", "\\")
-command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg --glob=!tags --column --line-number --no-heading --color=never --follow --smart-case -- '.shellescape(<q-args>)..shorten_file_paths, 0,
-      \   fzf#vim#with_preview({'options': ['--preview-window=noborder', '--delimiter', ':', '--with-nth=4..']}), <bang>0)
+function! RipgrepFzf(query, fullscreen, only_in_buffers)
+  let shorten_file_paths = escape(" | awk -F: 'BEGIN {OFS = FS} {$3 = $3 \":\" gensub(/([^/])[^/]*\\//, \"\\\\1/\", \"g\", $1) ; print}'", "\\")
 
-command! -bang -nargs=* GGrep
-      \ call fzf#vim#grep(
-      \   'git grep --line-number -- '.shellescape(<q-args>), 0,
-      \   fzf#vim#with_preview({'options': ['--preview-window=noborder'], 'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+  if a:only_in_buffers
+    let buffer_paths = join(map(filter(range(0,bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), ' ')
+  else
+    let buffer_paths = ''
+  endif
+
+  let command_fmt = 'rg --column --line-number --no-heading --smart-case -- %s '..buffer_paths..shorten_file_paths
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+
+  let preview_window = s:calculate_preview_window()
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command, '--preview-window='..preview_window, '--delimiter', ':', '--with-nth=4..', '--no-sort']}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0, 0)
+command! -nargs=* -bang BRg call RipgrepFzf(<q-args>, <bang>0, 1)
+
+function! s:calculate_preview_window()
+  return 'up:50%:rounded'
+  if &columns > 200
+    return 'up:50%:rounded'
+  elseif &lines > 50
+    return 'up:50%:rounded'
+  else
+    return 'up:50%:rounded'
+  endif
+endfunction
+
+" command! -bang -nargs=? -complete=dir Files
+"       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': []}), <bang>0)
 
 " File jumping
 noremap <silent> <Leader>p :Files<CR>
@@ -53,26 +105,18 @@ noremap <silent> <C-p> :Files<CR>
 
 nnoremap <C-f> :Rg<CR>
 nnoremap <silent><Leader>f :Rg<CR>
+nnoremap <silent><Leader>v :BRg<CR>
 nnoremap <silent> <Leader>e :Buffers<CR>
 nnoremap <silent> <Leader>i :Files <C-R>=expand('%:h')<CR><CR>
 let g:which_key_map.i = 'files-from-cwd'
 let g:which_key_map.e = 'buffers'
 let g:which_key_map.p = 'files-from-workspace'
 let g:which_key_map.f = 'grep-from-workspace'
-
-nmap <Leader>/ <Plug>RgRawSearch
-vmap <Leader>/ <Plug>RgRawVisualSelection
-nmap <Leader>* <Plug>RgRawWordUnderCursor
-let g:which_key_map['*'] = 'rg-cursor-word'
-let g:which_key_map['/'] = 'rg-search'
+let g:which_key_map.v = 'grep-from-buffers'
 
 "Open lines but stay in insert
 nmap <S-CR> O<Esc>
 nmap <CR> o<Esc>
-
-" Quickly append semicolon or comma
-imap ;; <Esc>A;<Esc>
-imap ,, <Esc>A,<Esc>
 
 " Break undo sequence on specific characters
 inoremap , ,<C-g>u
@@ -93,17 +137,20 @@ nnoremap <Leader>rj :Ejavascript<CR>
 let g:which_key_map.R = 'reload-chrome'
 let g:which_key_map.r = {
       \'name': '+Ruby',
-      \'r': [':R', 'open-related'],
+      \'r': [':Rails', 'run-file'],
+      \'c': [':.Rails', 'run-current'],
       \'a': [':A', 'open-alternate'],
       \'f': ['gf', 'goto-file-under-cursor'],
       \'t': [':.Runner', 'run-closest-test'],
       \'T': [':Runner', 'run-file-test'],
-      \'c': 'goto-controller',
-      \'m': 'goto-model',
-      \'s': 'goto-spec',
-      \'v': 'goto-view-<insert>',
-      \'l': 'goto-layout',
-      \'j': 'goto-js',
+      \'g': { 'name': 'goto' },
+      \'gc': 'goto-controller',
+      \'gr': 'goto-related',
+      \'gm': 'goto-model',
+      \'gs': 'goto-spec',
+      \'gv': 'goto-view-<insert>',
+      \'gl': 'goto-layout',
+      \'gj': 'goto-js',
       \}
 
 let g:which_key_map.w = {
@@ -143,7 +190,7 @@ let g:which_key_map.a = {
       \'l'  : ['<Plug>(coc-codeaction)',          'coc-codeaction-line'],
       \'s'  : ['<Plug>(coc-codeaction-selected)', 'coc-codeaction-selected'],
       \'r'  : ['<Plug>(coc-rename)',              'rename-at-cursor'],
-      \'f'  : ['<Plug>(coc-format)',              'coc-format'],
+      \'f'  : [':Format',                         'format'],
       \}
 
 let g:which_key_map.b = {
@@ -162,6 +209,8 @@ let g:which_key_map.b = {
 
 " git bindings
 nmap <Leader>gc :Git commit<CR>
+nmap <Leader>gl :Git log<CR>
+nmap <Leader>gp :Git push<CR>
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gm :Git mergetool<CR>
 nmap <Leader>gd :Git diff<CR>
@@ -170,6 +219,8 @@ let g:which_key_map.g = { 'name' : '+Git',}
 let g:which_key_map.g.s = 'git-status'
 let g:which_key_map.g.c = 'git-commit'
 let g:which_key_map.g.m = 'git-merge'
+let g:which_key_map.g.p = 'git-push'
+let g:which_key_map.g.l = 'git-log'
 let g:which_key_map.g.f = 'git-list-files'
 
 nmap <Leader>hs :CocCommand git.chunkStage<CR>
@@ -222,7 +273,7 @@ vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
 nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
 vnoremap <silent> <localleader> :<c-u>WhichKeyVisual ','<CR>
 
-" ---- HELPER FUNCTIONS USED ABOVE ----
+ " ---- HELPER FUNCTIONS USED ABOVE ----
 
 function! s:GrepFromSelected(type)
   let saved_unnamed_register = @@
