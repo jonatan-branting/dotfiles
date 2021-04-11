@@ -8,8 +8,12 @@ call plug#begin('~/.nvim/plugged')
 " General purpose and libraries
 Plug 'svermeulen/vimpeccable'
 Plug 'kevinhwang91/nvim-bqf'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'tjdevries/astronauta.nvim'
+Plug 'dstein64/nvim-scrollview'
+  let g:scrollview_winblend = 90
+  let g:scrollview_column = 1
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -229,6 +233,8 @@ Plug 'tpope/vim-commentary'
 
 " Themes
 Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
+Plug 'embark-theme/vim', { 'as': 'embark' }
 Plug 'dracula/vim'
 Plug 'voldikss/vim-floaterm'
 

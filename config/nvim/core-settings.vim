@@ -12,7 +12,7 @@ set completeopt-=preview
 set updatetime=300
 set shortmess+=c
 set scrolloff=7
-set lazyredraw
+set nolazyredraw
 set backspace=indent,eol,start
 
 " Visuals
@@ -22,6 +22,7 @@ set fillchars+=vert:\|
 set nocursorline
 set relativenumber
 set number
+set pumblend=10
 
 " Indent rules
 set expandtab
@@ -63,7 +64,6 @@ au InsertLeave * set nopaste
 " Theme
 set termguicolors
 set t_Co=256
-set background=light
 set noshowmode
 set shortmess+=c
 " set signcolumn=yes

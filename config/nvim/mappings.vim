@@ -53,8 +53,6 @@ command! -nargs=0 Format :call CocAction('format')
 " Organize imports
 command! -nargs=0 Fimport :call CocAction('runCommand', 'editor.action.organizeImport')
 
-" Lists
-
 " Which-key
 " Replace which-key with quickui!
 let g:which_key_map = {}
@@ -63,38 +61,6 @@ let g:which_key_map.j = ['<Esc>', 'exit-which-key']
 let g:which_key_map.x = [':x', 'save-exit']
 let g:which_key_map.q = [':q', 'quit']
 let g:which_key_map.o = [':Fern . -drawer -toggle -width=32 -reveal=%', 'explore-project']
-
-function! RipgrepFzf(query, fullscreen, only_in_buffers)
-  let shorten_file_paths = escape(" | awk -F: 'BEGIN {OFS = FS} {$3 = $3 \":\" gensub(/([^/])[^/]*\\//, \"\\\\1/\", \"g\", $1) ; print}'", "\\")
-
-  if a:only_in_buffers
-    let buffer_paths = join(map(filter(range(0,bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), ' ')
-  else
-    let buffer_paths = ''
-  endif
-
-  let command_fmt = 'rg --column --line-number --no-heading --smart-case -- %s '..buffer_paths..shorten_file_paths
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-
-  let preview_window = s:calculate_preview_window()
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command, '--preview-window='..preview_window, '--delimiter', ':', '--with-nth=4..', '--no-sort']}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0, 0)
-command! -nargs=* -bang BRg call RipgrepFzf(<q-args>, <bang>0, 1)
-
-function! s:calculate_preview_window()
-  return 'up:50%:rounded'
-  if &columns > 200
-    return 'up:50%:rounded'
-  elseif &lines > 50
-    return 'up:50%:rounded'
-  else
-    return 'up:50%:rounded'
-  endif
-endfunction
 
 " File jumping
 noremap <silent> <Leader>p :Telescope find_files<CR>
@@ -207,6 +173,7 @@ nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gm :Git mergetool<CR>
 nmap <Leader>gd :Git diff<CR>
 nmap <Leader>gf :GFiles<CR>
+nmap <Leader>gg :Neogit<CR>
 let g:which_key_map.g = { 'name' : '+Git',}
 let g:which_key_map.g.s = 'git-status'
 let g:which_key_map.g.c = 'git-commit'
@@ -214,6 +181,7 @@ let g:which_key_map.g.m = 'git-merge'
 let g:which_key_map.g.p = 'git-push'
 let g:which_key_map.g.l = 'git-log'
 let g:which_key_map.g.f = 'git-list-files'
+let g:which_key_map.g.g = 'neogit'
 
 nmap <Leader>hs :CocCommand git.chunkStage<CR>
 nmap <Leader>hu :CocCommand git.chunkUndo<CR>

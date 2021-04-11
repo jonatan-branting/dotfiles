@@ -68,18 +68,15 @@ require'telescope.pickers.layout_strategies'.current_horizontal_buffer = functio
 
   -- Height
   local height_padding = math.max(
-  1, resolve.resolve_height(4)(self, columns, lines)
+  1, resolve.resolve_height(math.min(4, math.floor(lines / 10)))(self, columns, lines)
   )
 
-  results.height = 20
+  min_preview_height = 20
+  min_results_height = 20
+  results.height = math.floor((lines)/ 2)
   prompt.height = 1
 
-  -- The last 2 * 2 is for the extra borders
-  if self.previewer then
-    preview.height = window_height - results.height - prompt.height - 2 * 2 - height_padding * 2
-  else
-    results.height = window_height - prompt.height - 2 - height_padding * 2
-  end
+  preview.height = window_height - results.height - prompt.height - 2 - height_padding * 2
 
 
   local line = 0
@@ -94,6 +91,8 @@ require'telescope.pickers.layout_strategies'.current_horizontal_buffer = functio
 
   col = math.ceil((columns / 2) - (width / 2) - 1)
   preview.col, results.col, prompt.col = col, col, col
+
+  results.title = false
 
   return {
     preview = preview.width > 0 and preview,
@@ -113,11 +112,15 @@ nnoremap { '<leader>c', function()
 end }
 
 
+local actions = require('telescope.actions')
+
 require('telescope').setup{
   defaults = {
     mappings = {
       i = {
-        ["<esc>"] = actions.close
+        ["<esc>"] = actions.close,
+        ["<C-j>"] = actions.preview_scrolling_down,
+        ["<C-k>"] = actions.preview_scrolling_up,
       },
     },
     vimgrep_arguments = {
@@ -134,14 +137,14 @@ require('telescope').setup{
     layout_strategy = "current_horizontal_buffer",
     results_title = false,
     preview_title = "Preview",
-    preview_cutoff = 1, -- Preview should always show (unless previewer = false)
+    preview_cutoff = 50, -- Preview should always show (unless previewer = false)
     width = 100,
-    winblend = 3,
+    winblend = 8,
     borderchars = {
       { "─", "│", "─", "│", "╭", "╮", "╯", "╰"},
-      prompt = {"─", "│", " ", "│", "├", "┤", "│", "│"},
-      results = {"─", "│", "─", "│", "├", "┤", "╯", "╰"},
-      preview = { "─", "│", " ", "│", "╭", "╮", "│", "│"},
+      prompt = {"━", "│", " ", "│", "┍", "┑", "│", "│"},
+      results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
+      preview = { "━", "│", "─", "│", "┍", "┑", "┘", "└"},
     },
 
     file_sorter =  require'telescope.sorters'.get_fuzzy_file,
