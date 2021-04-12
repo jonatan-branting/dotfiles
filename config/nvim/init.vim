@@ -11,9 +11,7 @@ Plug 'kevinhwang91/nvim-bqf'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'tjdevries/astronauta.nvim'
-Plug 'dstein64/nvim-scrollview'
-  let g:scrollview_winblend = 90
-  let g:scrollview_column = 1
+Plug 'nvim-lua/lsp_extensions.nvim'
 
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -28,9 +26,19 @@ Plug 'mattn/emmet-vim'
 
 Plug 'kchmck/vim-coffee-script'
 Plug 'leafOfTree/vim-vue-plugin'
-  let g:vim_vue_plugin_use_scss = 1
-  let g:vim_vue_plugin_has_init_indent = 1
-  let g:vim_vue_plugin_highlight_vue_keyword = 1
+  let g:vim_vue_plugin_config = {
+      \'syntax': {
+      \   'template': ['html'],
+      \   'script': ['javascript'],
+      \   'style': ['css'],
+      \},
+      \'full_syntax': [],
+      \'attribute': 0,
+      \'keyword': 1,
+      \'foldexpr': 0,
+      \'debug': 0,
+      \'init_indent': 1,
+      \}
 
 Plug 'romgrk/barbar.nvim'
   let g:bufferline = {}
