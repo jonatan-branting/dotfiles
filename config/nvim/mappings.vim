@@ -38,7 +38,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call CocAction('doHover')<CR>
-nnoremap gw :exe ':Rg '.expand('<cword>')<CR>
+nnoremap gw :exe ':Telescope grep_string search='.expand('<cword>')<CR>
 vnoremap gw :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
 
 nnoremap <C-e> $
@@ -64,8 +64,9 @@ let g:which_key_map.o = [':Fern . -drawer -toggle -width=32 -reveal=%', 'explore
 
 " File jumping
 noremap <silent> <Leader>p :Telescope find_files<CR>
-nnoremap <silent><Leader>f :Telescope live_grep<CR>
-nnoremap <silent> <Leader>e :Telescope buffers<CR>
+nnoremap <silent><Leader>f :Telescope live_grep_raw<CR>
+nnoremap <silent> <Leader>e :Telescope buffers sort_lastused=true<CR>
+nnoremap <silent> <Leader>i :Telescope find_files cwd=<C-R>=expand('%:h')<CR><CR>
 let g:which_key_map.i = 'files-from-cwd'
 let g:which_key_map.e = 'buffers'
 let g:which_key_map.p = 'files-from-workspace'
@@ -247,7 +248,7 @@ function! s:GrepFromSelected(type)
   let word = substitute(@@, '\n$', '', 'g')
   let word = escape(word, '| ')
   let @@ = saved_unnamed_register
-  execute 'Rg '.word
+  execute 'Telescope grep_string search='.word
 endfunction
 
 " Search and repace selection
