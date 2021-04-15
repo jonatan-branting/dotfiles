@@ -52,6 +52,10 @@ local colors = {
 }
 
 local bg_sides = colors.fg2
+local bg_active = colors.bg3
+local bg_inactive = colors.bg2
+local fg_active = colors.fg0
+local fg_inactive = colors.fg2
 
 local properties = {
   force_inactive = {
@@ -79,7 +83,7 @@ properties.force_inactive.filetypes = {
   'startify',
   'fugitive',
   'fugitiveblame',
-  'help'
+  -- 'help'
 }
 
 properties.force_inactive.buftypes = {
@@ -89,12 +93,15 @@ properties.force_inactive.buftypes = {
 function column_component(active)
   return {
     provider = function()
+      if not (vim.wo.number or vim.wo.relativenumber) then return '' end
+
       local col = vim.fn.col('.')
 
-      local total_width = math.max(vim.fn.strlen(vim.fn.line('$')) + 1, vim.wo.numberwidth)
+      local number = vim.wo.number
+      local total_width = vim.fn.wincol() - vim.fn.virtcol('.') - 1
 
-      if active then
-        local padding_width = total_width - vim.fn.strlen(vim.fn.col('.')) + 1
+      if true or active then
+        local padding_width = total_width - vim.fn.strlen(vim.fn.col('.'))
         local padding = string.rep(" ", padding_width)
         return padding .. tostring(col) .. " "
       else
@@ -110,12 +117,12 @@ end
 
 function file_info_component(active)
   inactive_hl = {
-    fg = colors.fg2,
-    bg = colors.bg2,
+    fg = fg_inactive,
+    bg = bg_inactive
   }
   active_hl = {
-    fg = colors.fg0,
-    bg = colors.bg4,
+    fg = fg_active,
+    bg = bg_active
   }
 
   return {
@@ -128,7 +135,8 @@ function file_info_component(active)
       if string.len(relative_filename) > 34 then
         file_string = path:new(relative_filename):shorten()
       elseif string.len(relative_filename) == 0 then
-        file_string = vim.bo.filetype
+        local filetype = vim.bo.filetype
+        file_string = string.len(filetype) > 0 and filetype or 'no name'
       else
         file_string = relative_filename
       end
@@ -159,29 +167,52 @@ local file_size_component = {
   }
 }
 
-local diagnostic_errors_component = {
-  provider = 'diagnostic_errors',
-  enabled = function() return lsp.diagnostics_exist('Error') end,
-  hl = { fg = 'red' }
-}
+local ale_counts = function()
+  return vim.fn["ale#statusline#Count"](vim.api.nvim_get_current_buf())
+end
 
-local diagnostic_warnings_component = {
-  provider = 'diagnostic_warnings',
-  enabled = function() return lsp.diagnostics_exist('Warning') end,
-  hl = { fg = 'yellow' }
-}
+local diagnostic_errors_component = function(active)
+  return {
+    provider = function ()
+      local counts = ale_counts()
+      local errors = counts.error + counts.style_error
 
-local diagnostic_hints_component = {
-  provider = 'diagnostic_hints',
-  enabled = function() return lsp.diagnostics_exist('Hint') end,
-  hl = { fg = 'cyan' }
-}
+      return errors > 0 and '  ' .. errors or ''
+    end,
+    -- enabled = function() return lsp.diagnostics_exist('Error') end,
+    hl = { fg = colors.bright_red, bg = active and bg_active or bg_inactive}
+  }
+end
 
-local diagnostic_info_component = {
-  provider = 'diagnostic_info',
-  enabled = function() return lsp.diagnostics_exist('Information') end,
-  hl = { fg = 'skyblue' }
-}
+local diagnostic_warnings_component = function(active)
+  return {
+    provider = function()
+      local counts = ale_counts()
+      local warnings = counts.warning + counts.style_warning
+
+      return warnings > 0 and ' ' .. warnings or ''
+    end,
+    hl = { fg = colors.bright_yellow, bg = active and bg_active or bg_inactive}
+  }
+end
+
+local diagnostic_hints_component = function(_active)
+  return {
+    provider = 'diagnostic_hints',
+    enabled = function() return lsp.diagnostics_exist('Hint') end,
+    hl = { fg = 'cyan' }
+  }
+end
+
+local diagnostic_info_component = function(active) 
+  return {
+    provider = function()
+      local info = ale_counts().info
+      return info > 0 and '  ' .. info or ''
+    end,
+    hl = { fg = colors.bright_aqua, bg = active and bg_active or bg_inactive}
+  }
+end
 
 local git_branch_component = {
   provider = function()
@@ -241,6 +272,7 @@ local file_diff_component = function()
   }
 end
 
+
 local spacing_component  = {
   provider = ' ',
   hl = { bg = bg_sides }
@@ -259,19 +291,19 @@ local line_percentage_component = {
 components.left.active = {
   column_component(true),
   file_info_component(true),
-  diagnostic_errors_component,
-  diagnostic_warnings_component,
-  diagnostic_info_component,
-  diagnostic_hints_component
+  diagnostic_errors_component(true),
+  diagnostic_warnings_component(true),
+  diagnostic_info_component(true),
+  diagnostic_hints_component(true)
 }
 
 components.left.inactive = {
   column_component(false),
   file_info_component(false),
-  diagnostic_errors_component,
-  diagnostic_warnings_component,
-  diagnostic_info_component,
-  diagnostic_hints_component
+  diagnostic_errors_component(false),
+  diagnostic_warnings_component(false),
+  diagnostic_info_component(false),
+  diagnostic_hints_component(false)
 }
 
 components.right.active = {
@@ -294,7 +326,7 @@ components.right.inactive = {
 
 
 require('feline').setup({
-    default_bg = colors.bg2,
+    default_bg = colors.bg3,
     default_fg = colors.fg0,
     components = components,
     properties = properties,
