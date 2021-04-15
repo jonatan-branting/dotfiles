@@ -6,6 +6,7 @@ local path = require('plenary.path')
 local fn = vim.fn
 local o = vim.o
 local bo = vim.bo
+local b = vim.b
 
 nnoremap { '<leader>a', function()
   vim.cmd("w")
@@ -90,18 +91,14 @@ function column_component(active)
     provider = function()
       local col = vim.fn.col('.')
 
-      local numberwidth = vim.wo.numberwidth
+      local total_width = math.max(vim.fn.strlen(vim.fn.line('$')) + 1, vim.wo.numberwidth)
 
       if active then
-        local padding_width = math.max(
-          vim.fn.strlen(vim.fn.line('$')) + 1, numberwidth
-        ) - vim.fn.strlen(vim.fn.col('.')) + 1
-
+        local padding_width = total_width - vim.fn.strlen(vim.fn.col('.')) + 1
         local padding = string.rep(" ", padding_width)
         return padding .. tostring(col) .. " "
       else
-        local width = vim.fn.strlen(math.max(vim.fn.line('$') + 1, numberwidth))
-        return " " .. string.rep("-", width + 1) .. " "
+        return " " .. string.rep("-", total_width) .. " "
       end
     end,
     hl = {
@@ -137,20 +134,10 @@ function file_info_component(active)
       end
 
       if active then
-        file_string =  " ›› "  .. file_string .. " ‹‹ "
+        return  " ›› "  .. file_string  .. " ‹‹ "
       else
-        file_string = " ‹‹ " .. file_string .. " ›› "
+        return " ‹‹ " .. file_string .. " ›› "
       end
-
-      local modified
-
-      if bo.modified then
-        modified = '+' .. ' '
-      else
-        modified = ''
-      end
-
-      return file_string .. ' ' .. modified
     end,
     hl = active and active_hl or inactive_hl,
   }
@@ -197,7 +184,17 @@ local diagnostic_info_component = {
 }
 
 local git_branch_component = {
-  provider = 'git_branch',
+  provider = function()
+    if not b.gitsigns_status_dict then return ' <untracked>' end
+
+    local head = b.gitsigns_status_dict.head
+
+    if #head > 0 then
+      return '  ' .. head
+    else
+      return ''
+    end
+  end,
   hl = {
     fg = colors.bg1,
     bg = bg_sides,
@@ -221,18 +218,32 @@ local git_diff_changed_component = {
   }
 }
 
+
 local git_diff_removed_component = {
   provider = 'git_diff_removed',
   hl = {
     fg = colors.faded_red,
     bg = bg_sides,
-  },
-  right_sep = function()
-    local val = { hl = { bg = bg_sides } }
-    if vim.b.gitsigns_status_dict then val.str = ' ' else val.str = '' end
+  }
+}
 
-    return val
+local file_diff_component = function()
+  local provider
+  if not b.gitsigns_status_dict or not bo.modified then
+    provider = ''
+  else
+    provider = '  '
   end
+
+  return {
+    provider = provider,
+    hl = { fg = colors.faded_yellow, bg = bg_sides }
+  }
+end
+
+local spacing_component  = {
+  provider = ' ',
+  hl = { bg = bg_sides }
 }
 
 local line_percentage_component = {
@@ -268,6 +279,8 @@ components.right.active = {
   git_diff_added_component,
   git_diff_changed_component,
   git_diff_removed_component,
+  file_diff_component(),
+  spacing_component
 }
 
 components.right.inactive = {
@@ -275,6 +288,8 @@ components.right.inactive = {
   git_diff_added_component,
   git_diff_changed_component,
   git_diff_removed_component,
+  file_diff_component(),
+  spacing_component
 }
 
 
