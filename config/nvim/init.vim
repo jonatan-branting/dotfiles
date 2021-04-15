@@ -16,6 +16,7 @@ Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
+Plug 'famiu/feline.nvim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'sotte/presenting.vim'
@@ -26,19 +27,9 @@ Plug 'mattn/emmet-vim'
 
 Plug 'kchmck/vim-coffee-script'
 Plug 'leafOfTree/vim-vue-plugin'
-  let g:vim_vue_plugin_config = {
-      \'syntax': {
-      \   'template': ['html'],
-      \   'script': ['javascript'],
-      \   'style': ['css'],
-      \},
-      \'full_syntax': [],
-      \'attribute': 0,
-      \'keyword': 1,
-      \'foldexpr': 0,
-      \'debug': 0,
-      \'init_indent': 1,
-      \}
+  let g:vim_vue_plugin_use_scss = 1
+  let g:vim_vue_plugin_has_init_indent = 1
+  let g:vim_vue_plugin_highlight_vue_keyword = 1
 
 Plug 'romgrk/barbar.nvim'
   let g:bufferline = {}
@@ -281,6 +272,5 @@ augroup end
 runtime mappings.vim
 runtime core-settings.vim
 runtime colorscheme.vim
-runtime statusline.vim
 
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'ruby']
