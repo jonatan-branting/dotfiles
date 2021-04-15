@@ -69,7 +69,7 @@ require'telescope.pickers.layout_strategies'.current_horizontal_buffer = functio
 
   -- Height
   local height_padding = math.max(
-  1, resolve.resolve_height(math.min(4, math.floor(lines / 10)))(self, columns, lines)
+    1, resolve.resolve_height(math.min(4, math.floor(lines / 10)))(self, columns, lines)
   )
 
   min_preview_height = 20
@@ -222,21 +222,25 @@ require('telescope').setup{
     winblend = 8,
     borderchars = {
       { "─", "│", "─", "│", "╭", "╮", "╯", "╰"},
-      prompt = {"━", "│", " ", "│", "┍", "┑", "│", "│"},
-      results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
-      preview = { "━", "│", "─", "│", "┍", "┑", "┘", "└"},
+      -- prompt = {"━", "│", " ", "│", "┍", "┑", "│", "│"},
+      -- results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
+      -- preview = { "━", "│", "─", "│", "┍", "┑", "┘", "└"},
+      preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰"},
+      prompt = {" ", " ", " ", " ", " ", " ", " ", " "},
+      results = {" ", " ", " ", " ", " ", " ", " ", " "},
+      -- preview = { " ", " ", " ", " ", " ", " ", " ", " "},
     },
 
     file_sorter =  require'telescope.sorters'.get_fuzzy_file,
     file_ignore_patterns = {},
     generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
     shorten_path = true,
-    color_devicons = true,
+    color_devicons = false,
     use_less = true,
     set_env = { ['COLORTERM'] = 'truecolor' }, -- default { }, currently unsupported for shells like cmd.exe / powershell.exe
-    file_previewer = require'telescope.previewers'.vim_buffer_cat.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_cat.new`
-    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_vimgrep.new`
-    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_qflist.new`
+    -- file_previewer = require'telescope.previewers'.vim_buffer_cat.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_cat.new`
+    -- grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_vimgrep.new`
+    -- qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_qflist.new`
 
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
