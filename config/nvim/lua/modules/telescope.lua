@@ -1,13 +1,5 @@
-local actions = require('telescope.actions')
 local telescope = require('telescope')
-
-local layout = function(picker, columns, lines)
-  return {
-    preview = self.previewer and preview.width > 0 and preview,
-    results = results,
-    prompt = prompt
-  }
-end
+telescope.load_extension("frecency")
 
 local resolve = require("telescope.config.resolve")
 local finders = require('telescope.finders')
@@ -72,8 +64,6 @@ require'telescope.pickers.layout_strategies'.current_horizontal_buffer = functio
     1, resolve.resolve_height(math.min(4, math.floor(lines / 10)))(self, columns, lines)
   )
 
-  min_preview_height = 20
-  min_results_height = 20
   results.height = math.floor((lines)/ 2)
   prompt.height = 1
 
@@ -125,7 +115,7 @@ sorters.grep_highlighter_only = function(opts)
   return sorters.Sorter:new {
     scoring_function = function() return 0 end,
 
-    highlighter = function(_, prompt, display)
+    highlighter = function(_, _prompt, _display)
       return {}
     end,
   }
@@ -216,19 +206,15 @@ require('telescope').setup{
     scroll_strategy = "cycle",
     layout_strategy = "current_horizontal_buffer",
     results_title = false,
+    initial_mode = "insert",
     preview_title = "Preview",
     preview_cutoff = 50, -- Preview should always show (unless previewer = false)
     width = 100,
     winblend = 8,
     borderchars = {
-      { "─", "│", "─", "│", "╭", "╮", "╯", "╰"},
-      -- prompt = {"━", "│", " ", "│", "┍", "┑", "│", "│"},
-      -- results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
-      -- preview = { "━", "│", "─", "│", "┍", "┑", "┘", "└"},
       preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰"},
       prompt = {" ", " ", " ", " ", " ", " ", " ", " "},
       results = {" ", " ", " ", " ", " ", " ", " ", " "},
-      -- preview = { " ", " ", " ", " ", " ", " ", " ", " "},
     },
 
     file_sorter =  require'telescope.sorters'.get_fuzzy_file,
@@ -237,10 +223,7 @@ require('telescope').setup{
     shorten_path = true,
     color_devicons = false,
     use_less = true,
-    set_env = { ['COLORTERM'] = 'truecolor' }, -- default { }, currently unsupported for shells like cmd.exe / powershell.exe
-    -- file_previewer = require'telescope.previewers'.vim_buffer_cat.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_cat.new`
-    -- grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_vimgrep.new`
-    -- qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new, -- For buffer previewer use `require'telescope.previewers'.vim_buffer_qflist.new`
+    set_env = { ['COLORTERM'] = 'truecolor' },
 
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
