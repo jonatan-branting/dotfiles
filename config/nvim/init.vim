@@ -269,7 +269,6 @@ augroup coc
 augroup end
 
 " Import other setting-files
-runtime mappings.vim
 runtime core-settings.vim
 runtime colorscheme.vim
 
