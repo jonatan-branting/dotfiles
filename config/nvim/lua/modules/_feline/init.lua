@@ -102,11 +102,25 @@ local right_inner = {
 
 local sections = {left_edge, left_inner, right_inner, right_edge}
 
+local function separator_with_highlight(sep, hl)
+  if type(sep) == "string" then
+    return { str = sep, hl = hl }
+  elseif type(sep) == "table" then
+    local new_hl = sep.hl or {}
+    new_hl.bg = sep.hl.bg or hl.bg
+    new_hl.fg = sep.hl.fg or hl.fg
+    return new_hl
+  end
+end
+
 local generate_component = function(component_func, is_active, hl)
   local component = component_func(is_active)
   component.hl = component.hl or {}
   component.hl.bg = component.hl and component.hl.bg or hl.bg
   component.hl.fg = component.hl and component.hl.fg or hl.fg
+
+  component.left_sep = separator_with_highlight(component.left_sep, hl)
+  component.right_sep = separator_with_highlight(component.right_sep, hl)
 
   return component
 end
@@ -116,10 +130,10 @@ for _, section in ipairs(sections) do
 
   for _, component in ipairs(_components) do
     statusline_components[side].active[#statusline_components[side].active + 1] =
-    generate_component(component, true, hl.active)
+      generate_component(component, true, hl.active)
 
     statusline_components[side].inactive[#statusline_components[side].inactive + 1] =
-    generate_component(component, false, hl.inactive)
+      generate_component(component, false, hl.inactive)
   end
 end
 
