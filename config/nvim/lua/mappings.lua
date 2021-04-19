@@ -93,7 +93,7 @@ local telescope = require('telescope.builtin')
 
 nnoremap { '<leader>p', function() telescope.find_files() end }
 nnoremap { '<leader>f', function() telescope.live_grep() end }
-nnoremap { '<leader>e', function() telescope.buffers() end }
+nnoremap { '<leader>e', function() telescope.buffers({ sort_lastused = true, ignore_current_buffer = true }) end }
 nnoremap { '<leader>m', function() telescope.frecency() end }
 nnoremap { 'gw', function() telescope.grep_string({ search = vim.fn.expand('<cword>') }) end }
 
