@@ -47,6 +47,8 @@ vnoremap({ 'H', 'g^' })
 vnoremap({ '>', '>gv' })
 vnoremap({ '<', '<gv' })
 
+nnoremap({ 'p', 'p`[v`]=' })
+
 -- Allow terminal style navigation in insert mode
 inoremap({ '<c-e>', '<c-o>g$' }, 'end-of-line')
 inoremap({ '<c-a>', '<c-o>g0' }, 'start-of-line')
