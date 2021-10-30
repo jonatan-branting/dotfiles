@@ -3,3 +3,8 @@
 fish_history
 *.elc
 __pycache__
+config/fish/functions/*
+config/fish/conf.d/*
+config/fish/completions/*
+config/fish/protected.env
+**/*/.netrwhist
