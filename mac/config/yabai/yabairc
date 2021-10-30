@@ -1,79 +1,70 @@
 #!/usr/bin/env sh
 
-find "${TMPDIR}" -type f -perm +111 -name "yabai_${USER}_monocle_mode_*" -delete
+sudo yabai --load-sa
 
 # global settings
 yabai -m config mouse_follows_focus          off
-yabai -m config focus_follows_mouse          autofocus
+yabai -m config focus_follows_mouse          off
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               on
 yabai -m config window_opacity               off
+# yabai -m config external_bar all:15:0
 yabai -m config window_opacity_duration      0.1
 yabai -m config window_shadow                on
 yabai -m config window_border                off
-yabai -m config window_border_placement      inset
-yabai -m config window_border_width          2
-yabai -m config window_border_radius         -1.0
+yabai -m config window_border_width          5
 yabai -m config active_window_border_topmost on
-yabai -m config active_window_border_color   0xff775759
+yabai -m config active_window_border_color   0xff6DB3CE
 yabai -m config normal_window_border_color   0xff505050
 yabai -m config insert_window_border_color   0xffd75f5f
 yabai -m config active_window_opacity        1.0
 yabai -m config normal_window_opacity        0.90
 yabai -m config split_ratio                  0.50
 yabai -m config auto_balance                 off
-yabai -m config mouse_modifier               fn
+yabai -m config mouse_modifier               alt
 yabai -m config mouse_action1                move
 yabai -m config mouse_action2                resize
+yabai -m config mouse_drop_action            stack
 
 # general space settings
 yabai -m config layout                       bsp
-yabai -m config top_padding                  12
-yabai -m config bottom_padding               12
-yabai -m config left_padding                 12
-yabai -m config right_padding                12
-yabai -m config window_gap                   10
-
-# yabai -m rule --add title='^Activity Monitor .*' manage=off topmost=on
-# yabai -m rule --add title='^Wireless Diagnostics$' manage=off topmost=on
-# yabai -m rule --add title='Privacy$' manage=off topmost=on
-# yabai -m rule --add title='Dock' manage=off topmost=on
-# yabai -m rule --add title='Reminders' manage=off topmost=on
-# yabai -m rule --add title='.*Exchange.*' manage=off topmost=on
-# yabai -m rule --add title='Ukelele' manage=off topmost=on
+yabai -m config top_padding                  10
+yabai -m config bottom_padding               10
+yabai -m config left_padding                 10
+yabai -m config right_padding                10
+yabai -m config window_gap                   11
 
 # Exclude by default
 yabai -m rule --add app='.*' manage=off
 
 # Add applications to tile.
 yabai -m rule --add app='IntelliJ IDEA' title=".* - .*" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^iTerm2$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Google Chrome$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^iTerm2$' title!="Scratchpad" role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^alacritty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^Kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^Alacritty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add title='.*Google Chrome.*' app='^Google Chrome$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^Code$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^Safari$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^XCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Cypress$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^python$' role="AXWindow" subrole="AXStandardWindow" manage=on
 # yabai -m rule --add app='^Slack$' role="AXWindow" subrole="AXStandardWindow" manage=on
 
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
 # Float and center Floating terminals
-yabai -m rule --add app='^iTerm2$' title="Floating" role="AXWindow" subrole="AXStandardWindow" manage=off
+# yabai -m rule --add app='^iTerm2$' title="Floating" role="AXWindow" subrole="AXStandardWindow" manage=off
 # TODO move to center instead
 
 # Center windows which started as floating.
-# TODO fix this, resize if possible and move to the actual center, instead of using grid
-# yabai -m signal --add event=window_created action="maybe_float.sh 'w' \$YABAI_WINDOW_ID"
-# yabai -m signal --add event=application_launched action="maybe_float.sh 'p' \$YABAI_PROCESS_ID"
-# yabai -m signal --add event=window_deminimized action="maybe_float.sh 'p' \$YABAI_WINDOW_ID"
+# yabai -m signal --add event=window_deminimized action="center_if_floating.sh \$YABAI_WINDOW_ID"
+# yabai -m signal --add event=window_created action="center_if_floating.sh \$YABAI_WINDOW_ID"
+# yabai -m signal --add event=application_launched action="center_window.sh 'p' \$YABAI_PROCESS_ID"
 # yabai -m signal --add event=window_deminimized action="maybe_float.sh \$YABAI_WINDOW_ID"
 
-yabai -m signal --add event=window_created app="iTerm2" title="Floating" action="yabai -m window \$YABAI_WINDOW_ID --grid 10:10:3:3:4:4" 
-
-# Remove preferences from launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"those apps
-
-# TODO add small toolbar at the dock-location containing information regarding spaces and such
-# TODO make cmd-12345 jump to a specific workspace on the current screen!
-
+# yabai -m signal --add event=window_created app="iTerm2" title="Floating" action="yabai -m window \$YABAI_WINDOW_ID --grid 10:10:3:3:4:4" 
 
 echo "yabai configuration loaded.."

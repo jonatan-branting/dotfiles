@@ -1,5 +1,5 @@
 let g:python3_host_prog = '$HOME/.pyenv/versions/neovim3/bin/python'
-set shell=/bin/zsh
+set shell=fish
 
 " Fix general stuff
 autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -85,17 +85,7 @@ set exrc
 set secure
 
 " Remapping default keybindings
-
-" if has("nvim")
-"   au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
-"   au FileType fzf tunmap <buffer> <Esc>
-" endif
-
-au! FileType qf setlocal nonumber norelativenumber wrap
-au! TermOpen * vert | setlocal nonumber norelativenumber | exec "normal! G"
-
-nnoremap S i<CR><Esc>^mwgk:silent! s/\v +$//<CR>:noh<CR>
-nnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
-nnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
 vnoremap <silent><expr> k (v:count == 0 ? 'gk' : 'k')
 vnoremap <silent><expr> j (v:count == 0 ? 'gj' : 'j')
+nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'gk'
+nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'gj'

@@ -1,66 +1,74 @@
-# hyper/meh keybindings
-
-meh - j : skhd -t "("
-meh - k : skhd -t "["
-meh - l : skhd -t "{"
-hyper - j : skhd -t ")"
-hyper - k : skhd -t "]"
-hyper - l : skhd -t "}"
-
-meh - 0x2B: skhd -t "<"
-meh - 0x2F: skhd -t ">"
-
-hyper - u: skhd -t "\\"
-meh - u: skhd -t "/"
-
 # fn - hjkl > arrow keys
 fn - k: skhd -k up
 fn - h: skhd -k left
 fn - l: skhd -k right
 fn - j: skhd -k down
 
-
+# terminal
 alt - return : $HOME/bin/start_iterm.sh
-alt + shift - return : $HOME/bin/start_iterm.sh Floating
+# alt + shift - return : $HOME/bin/start_iterm.sh Floating
+alt - b: open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 
 # close
 alt - q: yabai -m window --close && yabai -m window --focus recent
+alt - w: yabai -m window --close && yabai -m window --focus recent
+
+alt - g: yabai -m window --swap largest
 
 # cycle
-alt - c : yabai -m window --focus next || yabai -m window --focus first
-shift + alt - c : yabai -m window --focus prev || yabai -m window --focus last
+alt - c : yabai -m window --focus stack.next || yabai -m window --focus stack.first || yabai -m window --focus next || yabai -m window --focus first
+shift + alt - c : yabai -m window --focus stack.prev || yabai -m window --focus stack.last || yabai -m window --focus prev || yabai -m window --focus last
 
+
+alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end')
 
 # swap monitors / space
 alt - tab : $HOME/bin/focus_recent_monitor.sh || yabai -m space --focus recent
-cmd - tab : yabai -m display --focus recent
+cmd - tab : yabai -m window --focus stack.recent || yabai -m space --focus recent
+# forward
+alt - c: yabai -m query --spaces --space \
+                | jq -re ".index" \
+                | xargs -I{} yabai -m query --windows --space {} \
+                | jq -sre "add | map(select(.minimized != 1)) | sort_by(.display, .frame.y, .frame.x, .id) | reverse | nth(index(map(select(.focused == 1))) - 1).id" \
+                | xargs -I{} yabai -m window --focus {}
 
+# backward
+shift + alt - c : yabai -m query --spaces --space \
+                          | jq -re ".index" \
+                          | xargs -I{} yabai -m query --windows --space {} \
+                          | jq -sre "add | map(select(.minimized != 1)) | sort_by(.display, .frame.y, .frame.y, .id) | nth(index(map(select(.focused == 1))) - 1).id" \
+                          | xargs -I{} yabai -m window --focus {}
 
 # swap spaces
 alt - right : $HOME/bin/space_dir.sh next
 alt - left : $HOME/bin/space_dir.sh prev
 
-alt - p : $HOME/bin/space_dir.sh prev
-alt - n : $HOME/bin/space_dir.sh next
+alt - p : skhd -k ctrl-left #$HOME/bin/space_dir.sh prev
+alt - n : skhd -k ctrl-right # $HOME/bin/space_dir.sh next
 
 # focus window
-alt - h : yabai -m window --focus west
-alt - j : yabai -m window --focus south
-alt - k : yabai -m window --focus north
-alt - l : yabai -m window --focus east
-
+alt - h : yabai -m window --focus west  || yabai -m display --focus west
+alt - j : yabai -m window --focus stack.next || yabai -m window --focus south || yabai -m display --focus south
+alt - k : yabai -m window --focus stack.prev || yabai -m window --focus north || yabai -m display --focus north
+alt - l : yabai -m window --focus east  || yabai -m display --focus east
 
 # swap window
-shift + alt - h : yabai -m window --swap west
-shift + alt - j : yabai -m window --swap south
-shift + alt - k : yabai -m window --swap north
-shift + alt - l : yabai -m window --swap east
+shift + alt - h : yabai -m window --swap west || yabai -m window --display west
+shift + alt - j : yabai -m window --swap south || yabai -m window --display south
+shift + alt - k : yabai -m window --swap north || yabai -m window --display north
+shift + alt - l : yabai -m window --swap east || yabai -m window --display east
 
 # move window
 shift + cmd - h : yabai -m window --warp west
 shift + cmd - j : yabai -m window --warp south
 shift + cmd - k : yabai -m window --warp north
 shift + cmd - l : yabai -m window --warp east
+shift + cmd - u : yabai -m window --warp stack.recent
+
+ctrl + cmd - h : yabai -m window --stack west
+ctrl + cmd - j : yabai -m window --stack south
+ctrl + cmd - k : yabai -m window --stack north
+ctrl + cmd - l : yabai -m window --stack east
 
 # balance size of windows
 shift + cmd - b : yabai -m space --balance
@@ -77,8 +85,10 @@ cmd + alt - n : yabai -m space --create && \
                 yabai -m space --focus "${index}"
 
 
-shift + alt - left : yabai -m window --space prev; yabai -m space --focus prev 
-shift + alt - right : yabai -m window --space next; yabai -m space --focus next 
+shift + alt - right : yabai -m window --space next; yabai -m space --focus next
+shift + alt - left : yabai -m window --space prev; yabai -m space --focus prev
+shift + alt - n : yabai -m window --space next; yabai -m space --focus next
+shift + alt - p : yabai -m window --space prev; yabai -m space --focus prev
 
 # move window
 shift + ctrl - a : yabai -m window --move rel:-20:0
@@ -126,7 +136,7 @@ alt - y : yabai -m window --toggle split
 alt - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
 
-alt - m : $HOME/bin/move_window_to_display.sh
+# alt - m : $HOME/bin/move_window_to_display.sh
 
 # change layout of desktop
 ctrl + alt - a : yabai -m space --layout bsp
@@ -136,7 +146,7 @@ ctrl + alt - d : yabai -m space --layout float
 # overrides
 cmd - h: echo "override"
 cmd - return: echo "override"
+cmd - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
 
-# TODO
 # resize windows...
 # modes? Resize mode, etc.

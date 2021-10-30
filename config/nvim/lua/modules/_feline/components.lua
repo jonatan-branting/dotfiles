@@ -1,9 +1,8 @@
-local colors = require('plugins._feline.colors')
+local colors = require('modules._feline.colors')
 local path = require('plenary.path')
 
 local fn = vim.fn
 local b = vim.b
-local bo = vim.bo
 
 local M = {}
 
@@ -12,46 +11,76 @@ function M.column_component(active)
     provider = function()
       if not (vim.wo.number or vim.wo.relativenumber) then return '' end
 
-      local col = vim.fn.col('.')
-
-      local total_width = vim.fn.wincol() - vim.fn.virtcol('.') - 1
-
-      if true or active then
-        local padding_width = total_width - vim.fn.strlen(vim.fn.col('.'))
-        local padding = string.rep(" ", padding_width)
-        return padding .. tostring(col) .. " "
+      if active then
+        local padding_width = string.len(vim.fn.line('$')) - string.len(vim.fn.col('.'))
+        return " " .. string.rep(" ", padding_width) .. tostring(vim.fn.virtcol('.')) .. " "
       else
-        return " " .. string.rep("-", total_width) .. " "
+        return " " .. string.rep("-", string.len(vim.fn.line('$'))) .. " "
       end
     end,
-    hl = {
-      fg = colors.bg1,
-    }
+    hl = function()
+      return {
+        fg = colors.bg1,
+        style = "bold",
+        bg = require('feline.providers.vi_mode').get_mode_color()
+      }
+    end
   }
 end
 
 function M.file_info_component(active)
   return {
     provider = function()
+      local filetype = vim.bo.filetype
+
       local filename = fn.expand('%')
-      local relative_filename = path:new(filename):make_relative()
+      local relative_filename = ""
+      if filetype == "fzf" then
+        relative_filename = "fzf"
+      else
+        relative_filename = path:new(filename):make_relative()
+      end
 
       local file_string
-      if string.len(relative_filename) > 34 then
+      if string.len(relative_filename) > 35 then
         file_string = path:new(relative_filename):shorten()
       elseif string.len(relative_filename) == 0 then
-        local filetype = vim.bo.filetype
         file_string = string.len(filetype) > 0 and filetype or 'no name'
       else
         file_string = relative_filename
       end
 
-      if active then
-        return  " ››"  .. file_string  .. "‹‹ "
-      else
-        return " ‹‹" .. file_string .. "›› "
+      local left_sep = active and "››" or "‹‹"
+      local right_sep = active and "‹‹" or "››"
+
+      if vim.bo.modified then
+        return " " .. left_sep ..file_string .. right_sep .. "_ "
       end
+
+      return " " .. left_sep ..file_string .. right_sep .. " "
     end
+  }
+end
+
+-- TODO: Split this into multiple parts to properly HL the neomake component
+local neomake_status = function()
+  return vim.fn["neomake#statusline#get"](
+    vim.api.nvim_get_current_buf(), {
+      format_running = '...({{running_job_names}})',
+      format_loclist_ok = '..›ok',
+      format_quickfix_ok = '',
+      format_quickfix_issues = '%s',
+      format_loclist_unknown = '',
+      format_quickfix_unknown = '',
+      format_loclist_type_default = 'e^{{count}}',
+      format_quickfix_type_default = 'e^{{count}}'
+    }
+  )
+end
+
+function M.neomake_component(active)
+  return {
+    provider = neomake_status
   }
 end
 
@@ -96,14 +125,22 @@ end
 function M.git_branch_component()
   return {
     provider = function()
-      if not b.gitsigns_status_dict then return ' <untracked>' end
+      local cwd = fn.getcwd():gsub('^.*/', '')
+
+      if not b.gitsigns_status_dict then return ' ' .. cwd end
+
 
       local head = b.gitsigns_status_dict.head
 
+      local max_head_len = 20
+      if string.len(head) > max_head_len then
+        head = head:sub(1, max_head_len - 3) .. '...'
+      end
+
       if head and #head > 0 then
-        return '  ' .. head
+        return '  ' .. cwd .. '/' .. head
       else
-        return ''
+        return ' '
       end
     end,
     hl = {
@@ -172,21 +209,21 @@ function M.git_diff_total_edited_component()
       ) or 0
 
       if total_edited > 0 then
-        local icon = ' 柳'
+        local icon = ' ± '
         return icon .. total_edited
       else
         return ''
       end
     end,
     hl = {
-      fg = colors.faded_yellow,
+      fg = colors.fg_sides,
     }
   }
 end
 
 function M.file_diff_component()
   local provider
-  if not b.gitsigns_status_dict or not bo.modified then
+  if not b.gitsigns_status_dict or not vim.bo.modified then
     provider = ''
   else
     provider = '  '
@@ -204,13 +241,33 @@ function M.spacing_component()
   }
 end
 
+function M.lsp_status_component()
+  return {
+    provider = function() return require('lsp-status').status() or '' end
+  }
+end
+
 function M.lsp_client_names_component()
   return {
     provider = 'lsp_client_names',
-    icon = '‹',
+    icon = '',
     left_sep = ' ',
-    right_sep = ' '
+    right_sep = '',
+    hl = { style = "italic" }
   }
 end
+
+-- -- local gps = require("nvim-gps")
+-- function M.treesitter_location()
+--   return {
+--     provider = function ()
+--       if gps.is_available() then
+--         return gps.get_location()
+--       else
+--         return ''
+--       end
+--     end
+--   }
+-- end
 
 return M

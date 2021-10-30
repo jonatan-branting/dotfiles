@@ -1,5 +1,18 @@
 # Disable greeting message
 set fish_greeting ""
+# theme_gruvbox dark hard
+
+function _git_branch_name
+  echo (git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
+end
+
+function _is_git_dirty
+  echo (git status -s --ignore-submodules=dirty ^/dev/null)
+end
+
+function _rb_prompt
+  echo (rbenv version | awk '{print $1}')
+end
 
 # Change colors
 set fish_color_command orange
@@ -24,15 +37,13 @@ end
 
 function fish_prompt
 	fish_error
+	set -g __fish_git_prompt_showupstream auto
 	set_color $fish_color_regular
 	printf '%s' (prompt_pwd)
-	if [ "$USER" = "root" ];
-		set_color $fish_color_root --bold
-			printf " # "
-		else
-			set_color normal --bold
-			printf " \$ "
-	end
+	set_color grey -i
+	printf '%s' (fish_git_prompt)
+	set_color $fish_color_normal
+	printf ' $ '
 	set_color $fish_color_normal
 end
 
@@ -48,10 +59,40 @@ if [ -f $HOME/.config/fish/localaliases.fish ]
 end
 
 # Paths
-set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin
+set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin $HOME/.local/bin
 set -x PATH "$HOME/.pyenv/bin" $PATH
-bax source "$HOME/.config/fish/protected.env"
+replay source "$HOME/.config/fish/protected.env"
 set EDITOR "nvim"
 
+# set BAT_THEME  'zenburn'
+# set BAT_STYLE  'changes,header'
+
+set FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git --exclude tags'
+set FZF_DEFAULT_OPTS '--margin=1,1 --preview-window="right:50%:noborder" --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up'
+set VISUAL 'nvim'
+
+status is-login; and pyenv init --path | source
+set -gx EDITOR nvim
+
+if set -q NVIM_LISTEN_ADDRESS
+	alias nvim "nvr"
+	alias vim "nvr"
+	export MANPAGER="nvr +Man! -"
+	export EDITOR="nvr"
+else
+	export EDITOR="nvim"
+	export MANPAGER="nvim +Man! -"
+end
+
+export VISUAL="$EDITOR"
+export GIT_EDITOR="$EDITOR"
+
+pyenv init - | source
+
 function __fish_describe_command; end
-source (brew --prefix asdf)/asdf.fish
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+#eval /usr/local/Caskroom/miniconda/base/bin/conda "shell.fish" "hook" $argv | source
+# <<< conda initialize <<<
+

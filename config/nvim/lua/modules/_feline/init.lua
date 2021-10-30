@@ -1,12 +1,19 @@
 local nnoremap = require('astronauta.keymap').nnoremap
-local components = require('plugins._feline.components')
-local colors = require('plugins._feline.colors')
+local components = require('modules._feline.components')
+local lsp_progress = require('modules._feline.lsp_progress_component')
+local colors = require('modules._feline.colors')
+
+local function lsp_progress_component(active)
+  return {
+    provider = function() return lsp_progress.status() end
+  }
+end
 
 -- Reload changes easily while editing plugin settings!
-nnoremap { '<leader>a', function()
+nnoremap { '<leader>c', function()
   vim.cmd("w")
   require('plenary.reload').reload_module('feline')
-  vim.cmd("luafile ~/.config/nvim/lua/plugins/_feline/init.lua")
+  vim.cmd("luafile ~/.config/nvim/lua/modules/_feline/init.lua")
 end }
 
 local properties = {
@@ -22,6 +29,7 @@ local statusline_components = {
     active = {},
     inactive = {}
   },
+  mid = { active = {}, inactive = {}},
   right = {
     active = {},
     inactive = {}
@@ -32,16 +40,16 @@ properties.force_inactive.filetypes = {
   'NvimTree',
   'dbui',
   'packer',
-  'startify',
+  -- 'startify',
   'fugitive',
   'fugitiveblame',
+  'fzf'
   -- 'help'
 }
 
 properties.force_inactive.buftypes = {
   'terminal'
 }
-
 
 local active_inner_hl = {
   fg = colors.fg_active,
@@ -54,7 +62,7 @@ local inactive_inner_hl = {
 }
 
 local active_edge_hl = {
-  fg = colors.bg1,
+  fg = colors.fg_side,
   bg = colors.bg_sides
 }
 
@@ -70,7 +78,8 @@ local left_edge = {
 
 local left_inner = {
   components = {
-    components.file_info_component
+    components.file_info_component,
+    -- components.treesitter_location
   },
   side = 'left',
   hl = { active = active_inner_hl, inactive = inactive_inner_hl }
@@ -79,7 +88,7 @@ local left_inner = {
 
 local right_edge = {
   components = {
-    components.git_diff_total_edited_component,
+    -- components.git_diff_total_edited_component,
     components.git_branch_component,
     components.spacing_component,
   },
@@ -89,12 +98,13 @@ local right_edge = {
 
 local right_inner = {
   components = {
-    components.diagnostic_errors_component,
-    components.diagnostic_warnings_component,
-    components.diagnostic_info_component,
+    -- components.diagnostic_errors_component,
+    -- components.diagnostic_warnings_component,
+    -- components.diagnostic_info_component,
     components.lsp_client_names_component,
-    components.file_diff_component,
-    components.spacing_component
+    components.spacing_component,
+    -- function() return { provider = '', left_sep = 'slant_left' } end,
+    lsp_progress_component,
   },
   side = 'right',
   hl = {active = active_inner_hl, inactive = inactive_inner_hl}
@@ -115,9 +125,18 @@ end
 
 local generate_component = function(component_func, is_active, hl)
   local component = component_func(is_active)
-  component.hl = component.hl or {}
-  component.hl.bg = component.hl and component.hl.bg or hl.bg
-  component.hl.fg = component.hl and component.hl.fg or hl.fg
+
+  component.hl_inner = component.hl
+
+  component.hl = function()
+    local current_hl = type(component.hl_inner) == "function" and component.hl_inner() or component.hl_inner or {}
+
+    return {
+      bg = current_hl.bg or hl.bg,
+      fg = current_hl.fg or hl.fg,
+      style = current_hl.style or hl.style
+    }
+  end
 
   component.left_sep = separator_with_highlight(component.left_sep, hl)
   component.right_sep = separator_with_highlight(component.right_sep, hl)
@@ -137,9 +156,24 @@ for _, section in ipairs(sections) do
   end
 end
 
+local c = {
+  active = {},
+  inactive = {}
+}
+table.insert(c.active, statusline_components.left.active)
+table.insert(c.active, statusline_components.mid.active)
+table.insert(c.active, statusline_components.right.active)
+
+table.insert(c.inactive, statusline_components.left.inactive)
+table.insert(c.inactive, statusline_components.mid.inactive)
+table.insert(c.inactive, statusline_components.right.inactive)
+
 require('feline').setup({
     default_bg = colors.bg_active,
     default_fg = colors.fg_active,
-    components = statusline_components,
+    vi_mode_colors = {
+      INSERT = "#f7768e"
+    },
+    components = c,
     properties = properties,
 })

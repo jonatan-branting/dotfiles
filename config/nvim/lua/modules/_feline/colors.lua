@@ -38,6 +38,17 @@ M = {
   faded_orange   = '#af3a03',
 }
 
+-- local tokyonight_colors = require("tokyonight.colors").setup()
+ 
+-- M.faded_yellow = "#e0af68"
+-- M.fg_sides = tokyonight_colors.terminal_black
+-- M.bg_sides = "#9aa5ce"
+-- M.bg_inactive = "#343b58"
+-- M.bg_active = "#465170"
+-- M.fg_active = "#db5d6db"
+-- M.fg_inactive = tokyonight_colors.blue3
+
+M.fg_sides = M.bg1
 M.bg_sides = M.fg2
 M.bg_active = M.bg3
 M.bg_inactive = M.bg2
