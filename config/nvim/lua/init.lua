@@ -159,3 +159,13 @@ opt.termguicolors = true
 opt.wrap = false
 
 vim.g.vimsyn_embed = 'l' -- Highlight Lua code inside .vim files
+
+vim.cmd [[
+command! -complete=command -nargs=+ PopupNext :lua require("plenary.reload").reload_module("modules.popup", true); require("modules.popup").popup_next(<q-args>)
+]]
+
+vim.cmd [[
+command! -nargs=? PopupCurrent :lua require("plenary.reload").reload_module("modules.popup", true); require("modules.popup").popup_current(<q-args>)
+]]
+
+vim.g.vimsyn_embed = 'l' -- Highlight Lua code inside .vim files
