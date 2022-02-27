@@ -2,12 +2,6 @@ local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
 local au = require("modules.au")
 
-R = R or {
-  store = {
-    loading = {}
-  }
-}
-
 local function has_value (tab, val)
   for index, value in ipairs(tab) do
     if value[1] == val then
@@ -95,12 +89,6 @@ local create_popup_for_buffer = function(buf, command, delete_on_close)
   delete_on_close = delete_on_close or false
   buf = tonumber(buf)
 
-  if R.store.loading then
-    return
-  end
-
-  R.store.loading = true
-
   local popup = Popup(popup_config(command, buf))
 
   popup:mount()
@@ -127,13 +115,6 @@ local close_split = function()
   vim.cmd("exe _popup_next_restore_win_cmd")
 end
 
-
-local extract_as_float = function(command, before_buf, after_buf)
-  if before_buf == after_buf then return end
-
-  create_popup_for_buffer(after_buf, command, true)
-end
-
 local restore_window = function (win, buf)
   vim.api.nvim_win_set_buf(win, buf)
 end
@@ -146,12 +127,6 @@ local popup_next = function(command)
 
   local setup_autocommands = augroup(
     "_popup_autocommands",
-    autocommand("BufNew", "*",
-      string.format(
-        [[lua require"modules.popup"._extract_as_float('%s', '%s', vim.fn.expand("<abuf>"))]],
-        command, before_buf
-      )
-    ),
     autocommand("WinEnter", "*",
       string.format(
         [[lua require"modules.popup"._create_popup_for_window(vim.fn.expand("<abuf>"), '%s')]],
@@ -160,13 +135,9 @@ local popup_next = function(command)
     ),
     autocommand("WinNew", "*",
       string.format([[lua require"modules.popup"._close_split()]])
-    ),
-    autocommand("BufLeave", string.format("<buffer=%s>", before_buf),
-      string.format([[lua require"modules.popup"._restore_window(%s, %s)]], before_win, before_buf)
     )
   )
 
-  R.store.loading = false
 
   vim.cmd(setup_autocommands)
   vim.cmd(command)
@@ -178,7 +149,6 @@ return {
   popup_next = popup_next,
   popup_current = popup_current,
   _create_popup_for_window = create_popup_for_buffer,
-  _extract_as_float = extract_as_float,
   _close_split = close_split,
   _restore_window = restore_window
 }
