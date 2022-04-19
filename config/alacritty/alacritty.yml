@@ -33,7 +33,7 @@ window:
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
-  decorations: full
+  decorations: buttonless
 
 # Display tabs using this many cells (changes require restart)
 # tabspaces: 4
@@ -64,7 +64,7 @@ font:
   # The normal (roman) font face to use.
   normal:
     family: FiraCode Nerd Font
-    style: Medium
+    style: Regular
     # Style can be specified to pick a specific face.
     # style: Regular
 
@@ -94,7 +94,7 @@ font:
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
     x: 0
-    y: 2
+    y: 1
 
 
   # dpi:
@@ -115,38 +115,80 @@ font:
 # Should display the render timer
 debug.render_timer: false
 
-# color_start
-# Colors (Gruvbox dark)
+# color_star
+draw_bold_text_with_bright_colors: true
+
+# Colors
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '#1d2021'
-    # background: '#282828'
-    background: '#1d2021'
-    # soft contrast: background = '#32302f'
-    foreground: '#ebdbb2'
+    background:        '#080808'
+    foreground:        '#b2b2b2'
+    bright_foreground: '#eeeeee'
 
-    # Normal colors
-    normal:
-      black:   '#282828'
-      red:     '#cc241d'
-      green:   '#98971a'
-      yellow:  '#d79921'
-      blue:    '#458588'
-      magenta: '#b16286'
-      cyan:    '#689d6a'
-      white:   '#a89984'
+  # Cursor colors
+  cursor:
+    text:   '#080808'
+    cursor: '#9e9e9e'
 
-      # Bright colors
-      bright:
-        black:   '#928374'
-        red:     '#fb4934'
-        green:   '#b8bb26'
-        yellow:  '#fabd2f'
-        blue:    '#83a598'
-        magenta: '#d3869b'
-        cyan:    '#8ec07c'
-        white:   '#ebdbb2'
+  # Selection colors
+  selection:
+    text:       '#080808'
+    background: '#b2ceee'
+
+  # Normal colors
+  normal:
+    black:   '#323437'
+    red:     '#ff5454'
+    green:   '#8cc85f'
+    yellow:  '#e3c78a'
+    blue:    '#80a0ff'
+    magenta: '#d183e8'
+    cyan:    '#79dac8'
+    white:   '#c6c6c6'
+
+  # Bright colors
+  bright:
+    black:   '#949494'
+    red:     '#ff5189'
+    green:   '#36c692'
+    yellow:  '#c2c292'
+    blue:    '#74b2ff'
+    magenta: '#ae81ff'
+    cyan:    '#85dc85'
+    white:   '#e4e4e4'
+
+# Colors (Gruvbox dark)
+# colors:
+#   # Default colors
+#   primary:
+#     # hard contrast: background = '#1d2021'
+#     # background: '#282828'
+#     background: '#1d2021'
+#     # soft contrast: background = '#32302f'
+#     foreground: '#ebdbb2'
+
+#     # Normal colors
+#     normal:
+#       black:   '#282828'
+#       red:     '#cc241d'
+#       green:   '#98971a'
+#       yellow:  '#d79921'
+#       blue:    '#458588'
+#       magenta: '#b16286'
+#       cyan:    '#689d6a'
+#       white:   '#a89984'
+
+#       # Bright colors
+#       bright:
+#         black:   '#928374'
+#         red:     '#fb4934'
+#         green:   '#b8bb26'
+#         yellow:  '#fabd2f'
+#         blue:    '#83a598'
+#         magenta: '#d3869b'
+#         cyan:    '#8ec07c'
+#         white:   '#ebdbb2'
 # color_end
 
 # Visual Bell
@@ -175,9 +217,6 @@ bell:
   animation: EaseOutExpo
   duration: 0
 
-# Background opacity
-background_opacity: 1.0
-
 # Mouse bindings
 #
 # Currently doesn't support modifiers. Both the `mouse` and `action` fields must
@@ -205,8 +244,8 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
-# scrolling:
-#   multiplier: 
+scrolling:
+  multiplier: 1
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
@@ -236,8 +275,6 @@ shell:
   program: /usr/local/bin/fish
   args:
     - --login
-
-
 
 # Key bindings
 #
