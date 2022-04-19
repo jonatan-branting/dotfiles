@@ -6,8 +6,11 @@ fn - j: skhd -k down
 
 # terminal
 alt - return : $HOME/bin/start_iterm.sh
-# alt + shift - return : $HOME/bin/start_iterm.sh Floating
+# alt - return: alacritty msg create-window || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty
+
 alt - b: open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+
+# alt - space: alacritty msg create-window -t Floating || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty -t Floating
 
 # close
 alt - q: yabai -m window --close && yabai -m window --focus recent
@@ -20,7 +23,7 @@ alt - c : yabai -m window --focus stack.next || yabai -m window --focus stack.fi
 shift + alt - c : yabai -m window --focus stack.prev || yabai -m window --focus stack.last || yabai -m window --focus prev || yabai -m window --focus last
 
 
-alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end')
+alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end') && yabai -m space --padding $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "abs:10:10:10:10" else "abs:50:75:350:350" end')
 
 # swap monitors / space
 alt - tab : $HOME/bin/focus_recent_monitor.sh || yabai -m space --focus recent
@@ -43,8 +46,8 @@ shift + alt - c : yabai -m query --spaces --space \
 alt - right : $HOME/bin/space_dir.sh next
 alt - left : $HOME/bin/space_dir.sh prev
 
-alt - p : skhd -k ctrl-left #$HOME/bin/space_dir.sh prev
-alt - n : skhd -k ctrl-right # $HOME/bin/space_dir.sh next
+alt - p :  $HOME/bin/space_dir.sh prev #skhd -k ctrl-left
+alt - n :  $HOME/bin/space_dir.sh next
 
 # focus window
 alt - h : yabai -m window --focus west  || yabai -m display --focus west
@@ -136,17 +139,11 @@ alt - y : yabai -m window --toggle split
 alt - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
 
-# alt - m : $HOME/bin/move_window_to_display.sh
-
 # change layout of desktop
 ctrl + alt - a : yabai -m space --layout bsp
 ctrl + alt - d : yabai -m space --layout float
-
 
 # overrides
 cmd - h: echo "override"
 cmd - return: echo "override"
 cmd - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
-
-# resize windows...
-# modes? Resize mode, etc.

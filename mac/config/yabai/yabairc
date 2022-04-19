@@ -2,19 +2,22 @@
 
 sudo yabai --load-sa
 
+export DISPLAY_1_WIDTH="3072"
+export DISPLAY_1_HEIGHT="1920"
+
+export DISPLAY_2_WIDTH="2560"
+export DISPLAY_2_HEIGHT="1440"
+
 # global settings
 yabai -m config mouse_follows_focus          off
 yabai -m config focus_follows_mouse          off
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               on
 yabai -m config window_opacity               off
-# yabai -m config external_bar all:15:0
 yabai -m config window_opacity_duration      0.1
 yabai -m config window_shadow                on
 yabai -m config window_border                off
 yabai -m config window_border_width          5
-yabai -m config active_window_border_topmost on
-yabai -m config active_window_border_color   0xff6DB3CE
 yabai -m config normal_window_border_color   0xff505050
 yabai -m config insert_window_border_color   0xffd75f5f
 yabai -m config active_window_opacity        1.0
@@ -40,10 +43,10 @@ yabai -m rule --add app='.*' manage=off
 # Add applications to tile.
 yabai -m rule --add app='IntelliJ IDEA' title=".* - .*" role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^iTerm2$' title!="Scratchpad" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^alacritty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^Kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Alacritty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^Alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add title='.*Google Chrome.*' app='^Google Chrome$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^Code$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^Safari$' role="AXWindow" subrole="AXStandardWindow" manage=on
@@ -51,20 +54,8 @@ yabai -m rule --add app='^XCode$' role="AXWindow" subrole="AXStandardWindow" man
 yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
 yabai -m rule --add app='^python$' role="AXWindow" subrole="AXStandardWindow" manage=on
-# yabai -m rule --add app='^Slack$' role="AXWindow" subrole="AXStandardWindow" manage=on
+yabai -m rule --add app='^Slack$' role="AXWindow" subrole="AXStandardWindow" manage=on
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-
-# Float and center Floating terminals
-# yabai -m rule --add app='^iTerm2$' title="Floating" role="AXWindow" subrole="AXStandardWindow" manage=off
-# TODO move to center instead
-
-# Center windows which started as floating.
-# yabai -m signal --add event=window_deminimized action="center_if_floating.sh \$YABAI_WINDOW_ID"
-# yabai -m signal --add event=window_created action="center_if_floating.sh \$YABAI_WINDOW_ID"
-# yabai -m signal --add event=application_launched action="center_window.sh 'p' \$YABAI_PROCESS_ID"
-# yabai -m signal --add event=window_deminimized action="maybe_float.sh \$YABAI_WINDOW_ID"
-
-# yabai -m signal --add event=window_created app="iTerm2" title="Floating" action="yabai -m window \$YABAI_WINDOW_ID --grid 10:10:3:3:4:4" 
 
 echo "yabai configuration loaded.."
