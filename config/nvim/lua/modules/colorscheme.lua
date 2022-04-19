@@ -1,12 +1,14 @@
 -- local colors = require("tokyonight.colors").setup()
 
-local dark_background = "#1d2021"
+local dark_background = "#0d0d0d"
 local bg_float = "#1f2335"
 local none = "none"
-local border_color = "#c0caf5"
+local border_color = "#303030"
 
 -- Plugin settings
 vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer", "fern" }
+vim.g.moonflyNormalFloat = 1
+vim.g.moonflyUnderlineMatchParen = 1
 -- vim.g.tokyonight_style = "day"
 vim.g.tokyonight_hide_inactive_statusline = true
 vim.g.tokyonight_dark_float = true
@@ -44,8 +46,23 @@ vim.cmd [[
   highlight link TelescopeMatching IncSearch
 ]]
 
+highlight("NormalFloat", { guibg=dark_background})
+highlight("FloatBorder", { guifg=border_color, guibg=dark_background})
 highlight("StatuslineNC", { guibg = none, guifg = none, gui = none })
 highlight("VertSplit", { guibg = "bg" })
+
+-- highlight("NotifyWARNBorder", { guifg = none })
+-- highlight("NotifyERRORBorder", { guifg = none })
+-- highlight("NotifyDEBUGBorder", { guifg = none })
+-- highlight("NotifyTRACEBorder", { guifg = none })
+-- highlight("NotifyINFOBorder", { guifg = none })
+
+-- highlight("NotifyWARNBody", { guibg = "#e3c78a"})
+-- highlight("NotifyERRORBody", { guibg = "#ff5454" })
+-- highlight("NotifyDEBUGBody", { guibg = "#36c692" })
+-- highlight("NotifyTRACEBody", { guibg = "#c6c6c6" })
+-- highlight("NotifyINFOBody", { guibg = "#e4e4e4" })
+
 vim.api.nvim_exec([[set fillchars+=vert:\|]], false) -- How do I do this using lua?
 
 -- highlight("ALEError", { guisp = colors.error, gui = "undercurl"})
@@ -75,6 +92,7 @@ vim.api.nvim_exec([[set fillchars+=vert:\|]], false) -- How do I do this using l
 -- highlight("FloatBorder", { guifg = border_color })
 -- highlight("WhichKeyFloat", { guibg = bg_float })
 -- highlight("GitSignsCurrentLineBlame", { guifg = "#88929c" })
+highlight("FZFNormal", { guibg=dark_background })
 
 -- require("lsp-colors").setup({
 --   Error = "#db4b4b",

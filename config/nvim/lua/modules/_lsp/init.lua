@@ -1,21 +1,39 @@
 local lsp_config = require('lspconfig')
-local lsp_status = require('lsp-status')
 -- require("nvim-ale-diagnostic")
-require("trouble").setup()
+-- require("trouble").setup()
 require("lspkind").init()
-require("fzf_lsp").setup()
 require("treesitter-unit")
+local lsp_status = require("lsp-status")
+lsp_status.register_progress()
+
 -- require("lsp_signature").on_attach()
 
 -- Allow ALE to handle diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    virtual_text = true,
-    signs = true,
-    update_in_insert = true,
+    update_in_insert = false,
+     -- TODO make these functions based on vim.b.diagnostic_severity_limit
+    -- underline = {
+    --   severity_limit = "Warning"
+    -- },
+    -- float = {
+    --   severity_limit = "Warning"
+    -- },
+    signs = false,
+    -- virtual_text = {
+    --   severity_limit = "Warning"
+    -- },
   }
 )
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    -- Use a sharp border with `FloatBorder` highlights
+    border = "single"
+  }
+)
+
+-- vim.lsp.handlers["textDocument/references"] = require("telescope.builtin").lsp_references
 
 -- vim.lsp.handlers["textDocumentinitialize"] = vim.lsp.with(
 --   function(message) print("INITINIT", message) end, {}
@@ -25,15 +43,17 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- local capabilities = lsp_status.capabilities
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities.textDocument.completion.completionItem.snippetSupport = false
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  }
-}
-local on_attach = function(_client, bufnr)
+capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
+-- capabilities.textDocument.completion.completionItem.snippetSupport = false
+-- capabilities.textDocument.completion.completionItem.resolveSupport = {
+--   properties = {
+--     'documentation',
+--     'detail',
+--     'additionalTextEdits',
+--   }
+-- }
+local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
   -- require("lsp_signature").on_attach({
   --     bind = true,
@@ -63,7 +83,7 @@ local on_attach = function(_client, bufnr)
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>la', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>lr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
@@ -76,19 +96,20 @@ local on_attach = function(_client, bufnr)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   -- buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<space>af", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  -- buf_set_keymap("n", "<space>af", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  lsp_status.on_attach(client)
 end
 
 local servers = {
   "cssls",
   "solargraph",
-  "vimls",
   -- "pyls_ms",
   "html",
-  "denols",
-  "dockerls",
+  -- "denols",
+  -- "tailwindcss",
+  "vuels",
+  -- "rust_analyzer",
   "bashls",
-  "jsonls",
 }
 
 for _, server in ipairs(servers) do
@@ -97,6 +118,14 @@ for _, server in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+
+require('rust-tools').setup({
+  server = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  }
+})
 
 
 lsp_config.vuels.setup {
@@ -131,3 +160,4 @@ lsp_config.sumneko_lua.setup {
 --   }
 -- }
 
+vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])

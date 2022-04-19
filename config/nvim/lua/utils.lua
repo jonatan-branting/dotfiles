@@ -86,4 +86,19 @@ function M.get_visual_selection()
   return table.concat(lines)
 end
 
+function M.has_value(tab, val)
+  for index, value in ipairs(tab) do
+    if value[1] == val then
+      return true
+    end
+  end
+
+  return false
+end
+
+
+function M.is_floating(win)
+  return vim.api.nvim_win_get_config(win).relative ~= ""
+end
+
 return M

@@ -1,27 +1,32 @@
 local treesitter = require("nvim-treesitter.configs")
 
-require'astronauta.keymap'.nnoremap { '<leader>a', function()
-  require('plenary.reload').reload_module('nvim-treesitter')
-end }
-
 treesitter.setup {
   ensure_installed = "maintained",
-  -- textsubjects = {
-  --   enable = true,
-  --   keymaps = {
-  --     ['.'] = 'textsubjects-smart',
-  --     [';'] = 'textsubjects-big'
-  --   }
-  -- },
+  textsubjects = {
+    enable = true,
+    keymaps = {
+      ['.'] = 'textsubjects-smart',
+      [';'] = 'textsubjects-big'
+    }
+  },
   -- context_commentstring = {
   --   enable = true
   -- },
+  autopairs = {
+    enable = true
+  },
+  endwise = {
+    enable = true,
+  },
   indent = {
     enable = false
   },
+  yati = {
+    enable = true
+  },
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = true
+    -- additional_vim_regex_highlighting = true
   },
   incremental_selection = {
     enable = false,
@@ -86,6 +91,8 @@ treesitter.setup {
         ["ic"] = "@class.inner",
         ["ab"] = "@block.outer",
         ["ib"] = "@block.inner",
+        ["ia"] = "@parameter.inner",
+        ["aa"] = "@parameter.outer",
       }
     }
   }

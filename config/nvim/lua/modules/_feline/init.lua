@@ -1,20 +1,12 @@
-local nnoremap = require('astronauta.keymap').nnoremap
 local components = require('modules._feline.components')
 local lsp_progress = require('modules._feline.lsp_progress_component')
 local colors = require('modules._feline.colors')
 
-local function lsp_progress_component(active)
+local function lsp_progress_component(_active)
   return {
-    provider = function() return lsp_progress.status() end
+    provider = function() return lsp_progress.progress() end
   }
 end
-
--- Reload changes easily while editing plugin settings!
-nnoremap { '<leader>c', function()
-  vim.cmd("w")
-  require('plenary.reload').reload_module('feline')
-  vim.cmd("luafile ~/.config/nvim/lua/modules/_feline/init.lua")
-end }
 
 local properties = {
   force_inactive = {

@@ -29,7 +29,7 @@ require('gitsigns').setup {
   },
   numhl = false,
   linehl = false,
-  watch_index = {
+  watch_gitdir = {
     interval = 1000,
     follow_files = true
   },
@@ -43,5 +43,8 @@ require('gitsigns').setup {
   word_diff = false,
   status_formatter = nil, -- Use default
   -- use_decoration_api = true,
-  use_internal_diff = true,  -- If luajit is present
+  -- use_internal_diff = true,  -- If luajit is present
+  diff_opts = {
+    internal = true
+  }
 }

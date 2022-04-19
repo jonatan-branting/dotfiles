@@ -4,13 +4,19 @@ if not ok then
   return
 end
 
+local v_ok, virtual_text_plugin = pcall(require, "nvim-dap-virtual-text")
+
+if v_ok then
+  virtual_text_plugin.setup()
+end
+
 dap.set_log_level('TRACE');
-dap.defaults.fallback_terminal_win_cmd = "50vsplit new"
+dap.defaults.fallback_terminal_win_cmd = "80vsplit new"
 
 dap.adapters.ruby = {
   type = 'executable',
-  command = 'bundle',
-  args = {'exec', 'readapt', 'stdio'},
+  command = 'readapt',
+  args = {'stdio'},
 }
 
 -- dap.configurations.ruby = {{
@@ -32,7 +38,7 @@ dap.configurations.ruby = {{
       'rspec',
       '${file}'
     },
-    useBundler = true,
+    useBundler = false,
 }}
 
 vim.fn.sign_define('DapBreakpoint', {text='B', texthl='', linehl='', numhl=''})
@@ -40,6 +46,8 @@ vim.fn.sign_define('DapStopped', {text='X', texthl='', linehl='', numhl=''})
 
 local function debug_rspec(file)
   print("Running Rspec via nvim-dap for " .. file)
+  local file_name = string.gmatch(file, "(.-):")()
+
   dap.run {
     type = 'ruby',
     request = 'launch',

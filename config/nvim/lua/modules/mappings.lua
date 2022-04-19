@@ -1,66 +1,52 @@
-local keymap = require('astronauta.keymap')
-local wk = require("which-key")
-local cnoremap = keymap.cnoremap
-local vmap = keymap.vmap
-local onoremap = keymap.onoremap
-local snoremap = keymap.snoremap
-local xnoremap = keymap.xnoremap
-local nmap = keymap.nmap
-local xmap = keymap.xmap
-local omap = keymap.omap
-local imap = keymap.imap
-local tnoremap = keymap.tnoremap
+local keymap = vim.keymap
 
-require("which-key").setup {
-  plugins = {
-    marks = false,
-    registers = false,
-    presets = {
-      operators = true,
-      motions = false,
-      text_objects = false,
-      windows = false,
-      nav = false,
-      z = false,
-      g = false,
-    },
-  },
-  icons = {
-    breadcrumb = "-",
-    separator = "➜",
-    group = "+",
-  },
-  window = {
-    border = "none",
-    position = "bottom",
-    margin = { 0, 0, 1, 0 },
-    padding = { 1, 1, 1, 1 },
-  },
-  layout = {
-    height = { min = 1, max = 15 },
-    width = { min = 15, max = 40 },
-    spacing = 2,
-  },
-  show_help = false,
-  triggers = { "<leader>", "," },
-}
+-- require("which-key").setup {
+--   plugins = {
+--     marks = false,
+--     registers = false,
+--     presets = {
+--       operators = true,
+--       motions = false,
+--       text_objects = false,
+--       windows = false,
+--       nav = false,
+--       z = false,
+--       g = false,
+--     },
+--   },
+--   icons = {
+--     breadcrumb = "-",
+--     separator = "➜",
+--     group = "+",
+--   },
+--   window = {
+--     border = "none",
+--     position = "bottom",
+--     margin = { 0, 0, 1, 0 },
+--     padding = { 1, 1, 1, 1 },
+--   },
+--   layout = {
+--     height = { min = 1, max = 15 },
+--     width = { min = 15, max = 40 },
+--     spacing = 2,
+--   },
+--   show_help = false,
+--   triggers = { "<leader>", "," },
+-- }
 
 local wk_dict = {
   -- Groups
   ["<leader>r"] = { name = "+ruby" },
-  ["<leader>a"] = { name = "+actions" },
   ["<leader>t"] = { name = "+test" },
-  -- ["<leader>j"] = { name = "+harpoon" },
+  ["<leader>j"] = { name = "+harpoon" },
   ["<leader>b"] = { name = "+buffers" },
   ["<leader>g"] = { name = "+git" },
   ["<leader>w"] = { name = "+windows" },
   ["<leader>h"] = { name = "+hunks" },
-  ["<leader>c"] = { name = "+chrome" },
 
   -- Otherwise missing descriptions
   ["<leader><Tab>"] = { name = "toggle-terminal" },
   ["<leader>q"] = { name = "format-buffer" },
-  ["<leader>n"] = { name = "test-stuff" },
   ["<leader>d"] = { name = "debug" },
 }
 
@@ -69,19 +55,39 @@ local function starts_with(str, start)
 end
 
 local function nnoremap(opts, desc)
-  if starts_with(opts[1], "<leader>") then
-    wk_dict[opts[1]] = { desc }
-  end
+  -- if starts_with(opts[1], "<leader>") then
+  --   wk_dict[opts[1]] = { desc }
+  -- end
 
-  return keymap.nnoremap(opts)
+  return keymap.set("n", unpack(opts or {}))
 end
 
 local function inoremap(opts, desc)
-  return keymap.inoremap(opts)
+  return keymap.set("i", unpack(opts or {}))
+end
+
+local function tnoremap(opts, desc)
+  return keymap.set("t", unpack(opts or {}))
+end
+
+local function onoremap(opts, desc)
+  return keymap.set("o", unpack(opts or {}))
+end
+
+local function xnoremap(opts, desc)
+  return keymap.set("s", unpack(opts or {}))
+end
+
+local function snoremap(opts, desc)
+  return keymap.set("s", unpack(opts or {}))
+end
+
+local function cnoremap(opts, desc)
+  return keymap.set("c", unpack(opts or {}))
 end
 
 local function vnoremap(opts, desc)
-  return keymap.vnoremap(opts)
+  return keymap.set("v", unpack(opts or {}))
 end
 
 -- Convenience <leader> mappings
@@ -98,10 +104,15 @@ snoremap({ 'jj', '<esc>' })
 cnoremap({ 'jj', '<esc>' }, 'escape')
 tnoremap({ 'jj', '<c-\\><c-n>' }, 'escape')
 
-nnoremap({ '<silent><expr> k', "(v:count == 0 ? 'gk' : 'k')" })
-nnoremap({ '<silent><expr> j', "(v:count == 0 ? 'gj' : 'j')" })
-vnoremap({ '<silent><expr> k', "(v:count == 0 ? 'gk' : 'k')" })
-vnoremap({ '<silent><expr> j', "(v:count == 0 ? 'gj' : 'j')" })
+vim.api.nvim_set_keymap('n', 'k', "(v:count == 0 ? 'gk' : 'k')", {silent = true, expr = true})
+vim.api.nvim_set_keymap('n', 'j', "(v:count == 0 ? 'gj' : 'j')", {silent = true, expr = true})
+vim.api.nvim_set_keymap('v', 'k', "(v:count == 0 ? 'gk' : 'k')", {silent = true, expr = true})
+vim.api.nvim_set_keymap('v', 'j', "(v:count == 0 ? 'gj' : 'j')", {silent = true, expr = true})
+
+vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 -- nnoremap({ 'L', 'g$' })
 nnoremap({ 'H', 'g^' })
 
@@ -109,10 +120,8 @@ nnoremap({ 'H', 'g^' })
 vim.api.nvim_set_keymap('n', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
 vim.api.nvim_set_keymap('v', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
 
-vnoremap({ 'L', 'g$' })
--- vnoremap({ 'H', 'g^' })
-vnoremap({ '>', '>gv' })
-vnoremap({ '<', '<gv' })
+vim.api.nvim_set_keymap('v', '<', '<gv', {silent = true, noremap = true, nowait = true})
+vim.api.nvim_set_keymap('v', '>', '>gv', {silent = true, noremap = true, nowait = true})
 
 -- TODO: This [the visual-mode version] does not work properly when total_width = cursor_line_pos
 vnoremap({ 'L',
@@ -176,11 +185,11 @@ nnoremap({ 'Y', 'y$' })
 -- Run last macro using ,
 nnoremap({ ',', '@@' }, 'rerun-macro')
 
--- Break undo sequences
-inoremap({ ',', ',<c-g>u'})
-inoremap({ '.', '.<c-g>u'})
-inoremap({ '!', '!<c-g>u'})
-inoremap({ '?', '?<c-g>u'})
+-- -- Break undo sequences
+-- inoremap({ ',', ',<c-g>u'})
+-- inoremap({ '.', '.<c-g>u'})
+-- inoremap({ '!', '!<c-g>u'})
+-- inoremap({ '?', '?<c-g>u'})
 
 -- Terminal (Non-ANSI layouts make the default keybindings abysmal)
 -- tnoremap({ '<esc>', '<c-\\><c-n>' })
@@ -191,6 +200,13 @@ nnoremap({ '<leader>R', ':Reload<cr>' })
 -- Windows
 nnoremap({ '<leader>ww', '<c-w>w' }, '?')
 nnoremap({ '<leader>wd', '<c-w>c' }, 'delete-window')
+nnoremap({ '-', '<c-w>-'})
+nnoremap({ '+', '<c-w>+'})
+
+nnoremap({ 'yc', '<c-w>c' }, 'delete-window')
+nnoremap({ 'yd', '<c-w>j' }, 'delete-window')
+nnoremap({ 'yu', '<c-w>k' }, 'delete-window')
+
 nnoremap({ '<leader>w-', '<c-w>s' }, 'horizontal-split')
 nnoremap({ '<leader>w/', '<c-w>v' }, 'vertical-split')
 nnoremap({ '<leader>wh', '<c-w>h' }, 'window-left')
@@ -215,66 +231,22 @@ nnoremap({ '<leader>bp', ':bprev<cr>' }, 'prev-buffer')
 nnoremap({ '<leader>qn', ':cnext<cr>' }, 'quickfix-next')
 nnoremap({ '<leader>qn', ':cprev<cr>' }, 'quickfix-prev')
 
--- Telescope, remove, or add again when it's better than fzf
-local telescope = require('telescope.builtin')
-local telescope_bindings = {
-  find_files = function(opts) telescope.find_files(opts) end,
-  find_files_in_folder = function(opts) telescope.find_files(opts) end,
-  live_grep = function(opts) telescope.grep_string(opts) end,
-  list_buffers = function(opts) telescope.buffers({ sort_lastused = true, ignore_current_buffer = true, unpack(opts or {}) }) end,
-  most_recent = function(opts) require('telescope').extensions.frecency.frecency(opts) end,
-  grep_string = function(opts) telescope.grep_string(opts) end,
-  grep_string_visual = function(opts) telescope.grep_string({search = require"utils".get_visual_selection(), unpack(opts) }) end
-}
-
-local hist = require("history")
-local actions = require("telescope.actions")
-
-local function telescope_command(cmd)
-  local pre = cmd and {} or { pre = actions.cycle_history_prev }
-
-  return function()
-    cmd = cmd or hist.get_last_command("telescope")
-
-    local func = (telescope_bindings[cmd] or telescope[cmd])
-    if not func then return end
-
-    hist.insert_command("telescope", cmd)
-
-    return func(pre)
-  end
-end
-
-local function telescope_command(cmd)
-  return telescope_bindings[cmd] or telescope[cmd] or error("no telescope action found for: " .. cmd)
-end
-
--- nnoremap({ '<leader>p', telescope_command("find_files") }, 'find-files')
 nnoremap({ '<leader>p', ':Files<cr>' }, 'find-files')
-nnoremap({ '<leader>i', ':Files<cr>' }, 'find-files')
-nnoremap({ '<leader>f', ':Rg<cr>' }, 'live-grep')
+nnoremap({ '<leader>f', ':Rg<cr>!spec !db/ ' }, 'live-grep')
 nnoremap({ '<leader>e', ':Buffers<cr>' }, 'list-buffers')
--- nnoremap({ '<leader>e', telescope_command("list_buffers") }, 'list-buffers')
 nnoremap({ '<leader>m', ':FZFMru<cr>' }, 'most-recent')
--- nnoremap({ '<leader>m', telescope_command("most_recent") }, 'most-recent')
--- nnoremap({ '<leader>l', telescope_command() }, 'telescope-resume')
 
-nnoremap({ 'gw', ':Rg <c-r>=expand("<cword>")<cr><cr>' }, 'grep-cword')
+-- TODO: make language mappings which we append to remove specs and suchs depending on project language(framework?) type
+nnoremap({ 'gw', ':Rg <c-r>=expand("<cword>")<cr><cr>!spec !db/ ' }, 'grep-cword')
+nnoremap({ '<leader>gw', require('telescope').extensions.git_worktree.git_worktrees}, 'git-worktree')
 
--- nnoremap({ '<leader>e', telescope_command("list_buffers") }, 'list-buffers')
--- nnoremap({ '<leader>p', telescope_command("find_files") }, 'list-files')
--- nnoremap({ '<leader>i', telescope_command("find_files") }, 'list-files-in-folder')
--- nnoremap({ '<leader>f', telescope_command("live_grep") }, 'live-grep')
--- nnoremap({ 'gw', telescope_command("grep_string") }, 'grep-cword')
--- vnoremap({ 'gw', telescope_command("grep_string_visual") }, 'grep-cword')
--- vnoremap({ 'gw', telescope_command("grep_string_visual") }, 'grep-cword')
--- vnoremap({ 'gw', function() vim.cmd("GrepperRg " .. require"utils".get_visual_selection()) end}, 'grep-cword')
 -- If this is not an Ex command Telescope will require me to press <esc> to see the results for no apparentreason
 vnoremap ({ 'gw',
     function()
       local search = ":Rg " .. require"utils".get_visual_selection()
-      print(search)
+
       vim.cmd(search)
+      vim.api.nvim_input("<esc>")
     end
 }, 'grep-selected')
 
@@ -285,30 +257,44 @@ nnoremap ({ '<leader>i',
     end
   }, 'files-in-folder')
 
--- nnoremap({ '<leader>i', function() telescope.file_browser({cwd = get_current_file_dir()}) end }, 'files-in-dir')
+
+vnoremap({ '*',
+  function()
+    local search = require"utils".get_visual_selection()
+
+    vim.api.nvim_input([[<esc>]])
+    vim.api.nvim_input("/" .. search .. "<cr>")
+  end
+}, 'visual-star')
 
 -- Harpoon
--- nnoremap({ '<leader>j', function() require("hop").hint_words() end }, 'hint-words')
--- local harpoon_ui = require('harpoon.ui')
--- local harpoon_term = require('harpoon.term')
--- local harpoon_mark = require('harpoon.mark')
--- nnoremap({ '<leader>jh', function() harpoon_mark.add_file() end }, 'harpoon-file')
--- nnoremap({ '<leader>j1', function() harpoon_ui.nav_file(1) end }, 'goto-harpoon-1')
--- nnoremap({ '<leader>j2', function() harpoon_ui.nav_file(2) end }, 'goto-harpoon-2')
--- nnoremap({ '<leader>j3', function() harpoon_ui.nav_file(3) end }, 'goto-harpoon-3')
--- nnoremap({ '<leader>j4', function() harpoon_ui.nav_file(4) end }, 'goto-harpoon-4')
--- nnoremap({ '<leader>jt', function() harpoon_term.gotoTerminal(1) end }, 'harpoon-terminal')
+local harpoon_ui = require('harpoon.ui')
+local harpoon_term = require('harpoon.term')
+local harpoon_mark = require('harpoon.mark')
+nnoremap({ '<leader>jh', function() harpoon_mark.add_file() end }, 'harpoon-file')
+nnoremap({ '<leader>j1', function() harpoon_ui.nav_file(1) end }, 'goto-harpoon-1')
+nnoremap({ '<leader>j2', function() harpoon_ui.nav_file(2) end }, 'goto-harpoon-2')
+nnoremap({ '<leader>j3', function() harpoon_ui.nav_file(3) end }, 'goto-harpoon-3')
+nnoremap({ '<leader>j4', function() harpoon_ui.nav_file(4) end }, 'goto-harpoon-4')
+nnoremap({ '<leader>jt', function() harpoon_term.gotoTerminal(1) end }, 'harpoon-terminal')
+
+nnoremap({ '<F1>', function() harpoon_ui.nav_file(1) end }, 'goto-harpoon-1')
+nnoremap({ '<F2>', function() harpoon_ui.nav_file(2) end }, 'goto-harpoon-2')
+nnoremap({ '<F3>', function() harpoon_ui.nav_file(3) end }, 'goto-harpoon-3')
+nnoremap({ '<F4>', function() harpoon_ui.nav_file(4) end }, 'goto-harpoon-4')
+nnoremap({ '<F5>', function() harpoon_term.gotoTerminal(1) end }, 'harpoon-terminal')
+nnoremap({ '<leader>jm', function() harpoon_ui.toggle_quick_menu() end }, 'harpoon-quick-menu')
+nnoremap({ '<leader>ja', function() harpoon_mark.add_file() end }, 'harpoon-add-file')
 
 -- Neoterm
--- nnoremap({ '<leader><tab>', ":tabnext<cr>"})
-nnoremap({ '<leader><tab>', ":call WS_Backforth()<cr>"})
+nnoremap({ "<leader><tab>", ":tabnext<cr>"})
 
 -- Git
-nnoremap({ '<leader>gc', ':Git commit<cr>' }, 'git-commit')
-nnoremap({ '<leader>gl', ':Git log --name-only<cr>' }, 'git-log')
-nnoremap({ '<leader>gf', ':Git log --name-only --invert-grep --grep="^fixup!" --pretty="format:%h %Cf"<cr>' }, 'git-log')
-nnoremap({ '<leader>gs', ':Git<cr>' }, 'git-status')
-nnoremap({ '<leader>gg', ':Git status<cr>' }, 'neogit')
+nnoremap({ '<leader>gc', ':PopupNext Git commit<cr>' }, 'git-commit')
+nnoremap({ '<leader>gl', ':PopupNext Git log --name-only<cr>' }, 'git-log')
+nnoremap({ '<leader>gf', ':PopupNext Git log --name-only --invert-grep --grep="^fixup!" --pretty="format:%h %Cf"<cr>' }, 'git-log')
+nnoremap({ '<leader>gs', ':PopupNext Git<cr>' }, 'git-status')
+nnoremap({ '<leader>gg', ':PopupNext Git status<cr>' }, 'neogit')
 nnoremap({ '<leader>ga', ':Git add %<cr>' }, 'git-add-%')
 nnoremap({ '<leader>gd', ':Gdiffsplit master<cr>' }, 'git-diff-split')
 nnoremap({ '<leader>gm', ':Git mergetool<cr>' }, 'git-mergetool')
@@ -347,11 +333,11 @@ xnoremap({ 'ih', function() gitsigns.select_hunk() end })
 nnoremap({ '<leader>o', ':Fern . -reveal=%<cr>' }, 'reveal-file')
 
 -- Easy Align
-vmap({ '<cr>', '<Plug>(EasyAlign)' }, 'easy-align-selected')
-nmap({ 'ga', '<Plug>(EasyAlign)' }, 'easy-align')
+vnoremap({ '<cr>', '<Plug>(EasyAlign)' }, 'easy-align-selected')
+-- inoremap({ 'ga', '<Plug>(EasyAlign)' }, 'easy-align')
 
 -- Emmet
-imap({ ',,', '<c-y>,'})
+inoremap({ ',,', '<c-y>,'})
 
 -- Projectionist
 nnoremap({ '<leader>rc', ':Econtroller<cr>'}, 'goto-controller')
@@ -367,7 +353,7 @@ nnoremap({ '<leader>tl', ':TestLast<cr>'}, 'test-last')
 nnoremap({ '<leader>tv', ':TestVisit<cr>'}, 'test-visit')
 
 -- ALE
-nmap({ '<leader>q', '<Plug>(ale_fix)' }, 'ale-fix')
+-- nnoremap({ '<leader>q', '<Plug>(ale_fix)' }, 'ale-fix')
 -- nmap({ '<c-k>', '<Plug>(ale_next_wrap)' }, 'ale-next-error')
 -- nmap({ '<c-j>', '<Plug>(ale_prev_wrap)' }, 'ale-prev_error')
 
@@ -377,21 +363,20 @@ nnoremap({'gP', require('goto-preview').close_all_win})
 -- nnoremap({ '<tab>' , function() require'hop'.hint_words() end })
 
 -- Asterisk
-nmap({ '*', '<Plug>(asterisk-*)' })
-nmap({ '#', '<Plug>(asterisk-#)' })
-nmap({ 'g*', '<Plug>(asterisk-g*)' })
-nmap({ 'g#', '<Plug>(asterisk-g#)' })
-nmap({ 'z*', '<Plug>(asterisk-z*)' })
-nmap({ 'gz*', '<Plug>(asterisk-gz*)' })
-nmap({ 'z#', '<Plug>(asterisk-z#)' })
-nmap({ 'gz#', '<Plug>(asterisk-gz#)' })
+nnoremap({ '*', '<Plug>(asterisk-*)' })
+nnoremap({ '#', '<Plug>(asterisk-#)' })
+nnoremap({ 'g*', '<Plug>(asterisk-g*)' })
+nnoremap({ 'g#', '<Plug>(asterisk-g#)' })
+nnoremap({ 'z*', '<Plug>(asterisk-z*)' })
+nnoremap({ 'gz*', '<Plug>(asterisk-gz*)' })
+nnoremap({ 'z#', '<Plug>(asterisk-z#)' })
+nnoremap({ 'gz#', '<Plug>(asterisk-gz#)' })
 
 -- Reload chrome
-nnoremap({ '<leader>cr', ':w<cr>:call system("chrome-cli reload")' }, 'reload-chrome')
 nnoremap({ '<leader><leader>', ':luafile %<cr>' }, 'reload-lua-file')
 
 -- Allow line split using S, as opposed to J(oin)
-nnoremap({ 'K',  'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>' }, 'split-line')
+-- nnoremap({ 'K',  'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>' }, 'split-line')
 
 -- Compe auxiallary bindings
 inoremap({ '<c-space>', 'compe#complete()', expr = true})
@@ -473,16 +458,20 @@ nnoremap({ "<leader>dj", require'dap'.down }, "dap-down")
 nnoremap({ "<leader>dt", require'dap'.toggle_breakpoint }, "dap-toggle-breakpoint")
 nnoremap({ "<leader>d-", require'dap'.run_last }, "dap-last")
 nnoremap({ "<leader>dr", function() require'dap'.repl.open({}, 'vsplit') end }, "dap-repl")
-nnoremap({ "<leader>di", require'dap.ui.variables'.hover }, "dap-repl")
-vnoremap({ "<leader>di", require'dap.ui.variables'.visual_hover }, "dap-repl")
-nnoremap({ "<leader>d?", require'dap.ui.variables'.scopes }, "dap-scopes")
+-- nnoremap({ "<leader>di", require'dap.ui.variables'.hover }, "dap-repl")
+-- vnoremap({ "<leader>di", require'dap.ui.variables'.visual_hover }, "dap-repl")
+-- nnoremap({ "<leader>d?", require'dap.ui.variables'.scopes }, "dap-scopes")
 nnoremap({ "<leader>de", function() require'dap'.set_exception_breakpoints({"all"}) end }, "dap-scopes")
 -- nnoremap({ "<leader>da", require'debugHelper'.attach }, "dap-attach")
 -- nnoremap({ "<leader>dA", require'debugHelper'.attachToRemote }, "dap-attach-remote")
-nnoremap({ "<leader>di", require'dap.ui.widgets'.hover }, "dap-hover")
+-- nnoremap({ "<leader>di", require'dap.ui.widgets'.hover }, "dap-hover")
 
 nnoremap { "ds%", delete_surrounding_matches }
 nnoremap { "cs%", change_surrounding_matches }
+
+local todo = require("modules._todo")
+
+nnoremap({ "<leader>z", todo.open_branch_todo }, "open-branch-todo")
 
 -- local snap = require'snap'
 -- snap.maps {
@@ -500,14 +489,38 @@ nnoremap { "cs%", change_surrounding_matches }
 --   }
 -- end})
 
-nnoremap({ "<C-j>", ":resize +2<cr>" })
-nnoremap({ "<C-k>", ":resize -2<cr>" })
+nnoremap({"<c-k>", ":m .-2<CR>=="})
+nnoremap({"<c-j>", ":m .+1<CR>=="})
+vnoremap({"<c-k>", ":m '<-2<CR>gv=gv"})
+vnoremap({"<c-j>", ":m '>+1<CR>gv=gv"})
+
+nnoremap({ "<down>", "<c-w>j" })
+nnoremap({ "<up>", "<c-w>k" })
+nnoremap({ "<left>", "<c-w>h" })
+nnoremap({ "<right>", "<c-w>l" })
+
+nnoremap({ "<s-down>",  require'smart-splits'.resize_down })
+nnoremap({ "<s-up>",  require'smart-splits'.resize_up })
+nnoremap({ "<s-left>",  require'smart-splits'.resize_left })
+nnoremap({ "<s-right>",  require'smart-splits'.resize_right })
+
+nnoremap({ "<c-a>", "0" })
+nnoremap({ "<c-e>", "$" })
+
 nnoremap({ "<C-n>", "<C-w>w" })
 -- nnoremap({ "<leader><leader>", "<c-w>m" })
+-- vim.api.nvim_set_keymap('n', '<leader>-', ':lua require"FTerm".toggle()<cr>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('x', 'iu', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
 vim.api.nvim_set_keymap('x', 'au', ':lua require"treesitter-unit".select(true)<CR>', {noremap=true})
 vim.api.nvim_set_keymap('o', 'iu', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
 vim.api.nvim_set_keymap('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', {noremap=true})
 
-wk.register(wk_dict)
+nnoremap({ "<leader>a", "<c-^>" }, "alternate-last-buffer")
+nnoremap({ "<c-l>", require"telescope.builtin".lsp_code_actions })
+
+nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
+-- onoremap {"w", "e"}
+-- vnoremap {"w", "e"}
+
+-- wk.register(wk_dict)
