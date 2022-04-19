@@ -3,11 +3,12 @@ local event = require("nui.utils.autocmd").event
 local utils = require("utils")
 
 local delete_commands = function(...)
-  groups = {...}
+  local groups = {...}
   for _, group in ipairs(groups) do
     vim.api.nvim_create_augroup(group, { clear = true })
 
-    -- This throws an error if it doesn't exist, which is something we do not want, as this might be called multiple times
+    -- This throws an error if it doesn't exist, which is something we do not
+    -- want, as this might be called multiple times
     -- vim.api.nvim_del_augroup_by_name(group)
   end
 end
@@ -86,9 +87,6 @@ local close_split = function()
 end
 
 local popup_next = function(command)
-  before_buf = vim.api.nvim_get_current_buf()
-  before_win = vim.api.nvim_get_current_win()
-
   vim.cmd("let _popup_next_restore_win_cmd = winrestcmd()")
 
   vim.api.nvim_create_augroup("_popup_autocommands", { clear = true })
@@ -112,6 +110,32 @@ local popup_next = function(command)
   delete_commands("_popup_autocommands")
 end
 
+local popup_current = function(command)
+
+  vim.cmd("let _popup_next_restore_win_cmd = winrestcmd()")
+
+  vim.api.nvim_create_augroup("_popup_autocommands", { clear = true })
+
+  close_split()
+  create_popup_for_buffer(vim.fn.expand("<abuf>"), command)
+
+  vim.cmd(command)
+
+  delete_commands("_popup_autocommands")
+end
+
+local setup = function()
+  vim.cmd [[
+    command! -complete=command -nargs=+ PopupNext :lua require("plenary.reload").reload_module("modules.popup", true); require("plenary.reload").reload_module("modules.au", true); require("modules.popup").popup_next(<q-args>)
+  ]]
+
+  vim.cmd [[
+    command! -nargs=? PopupCurrent :lua require("plenary.reload").reload_module("modules.popup", true); require("modules.popup").popup_current(<q-args>)
+  ]]
+end
+
 return {
   popup_next = popup_next,
+  popup_current = popup_current,
+  setup = setup
 }
