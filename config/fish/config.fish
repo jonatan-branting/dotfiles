@@ -1,6 +1,5 @@
 # Disable greeting message
 set fish_greeting ""
-# theme_gruvbox dark hard
 
 function _git_branch_name
   echo (git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
@@ -60,16 +59,16 @@ end
 
 # Paths
 set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin $HOME/.local/bin
+set -x PATH "$HOME/.cargo/bin" $PATH
 set -x PATH "$HOME/.pyenv/bin" $PATH
 replay source "$HOME/.config/fish/protected.env"
-set EDITOR "nvim"
 
-# set BAT_THEME  'zenburn'
-# set BAT_STYLE  'changes,header'
-
+set EDITOR "nvr"
 set FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git --exclude tags'
 set FZF_DEFAULT_OPTS '--margin=1,1 --preview-window="right:50%:noborder" --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up'
-set VISUAL 'nvim'
+set VISUAL 'nvr'
+
+source $HOME/.hostconfig
 
 status is-login; and pyenv init --path | source
 set -gx EDITOR nvim
@@ -80,19 +79,16 @@ if set -q NVIM_LISTEN_ADDRESS
 	export MANPAGER="nvr +Man! -"
 	export EDITOR="nvr"
 else
+	alias nvim "nvim"
+	alias vim "nvim"
 	export EDITOR="nvim"
 	export MANPAGER="nvim +Man! -"
 end
 
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
+export GIT_PAGER="$EDITOR"
 
 pyenv init - | source
 
 function __fish_describe_command; end
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-#eval /usr/local/Caskroom/miniconda/base/bin/conda "shell.fish" "hook" $argv | source
-# <<< conda initialize <<<
-
