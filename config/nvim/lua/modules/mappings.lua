@@ -1,64 +1,6 @@
 local keymap = vim.keymap
 
--- require("which-key").setup {
---   plugins = {
---     marks = false,
---     registers = false,
---     presets = {
---       operators = true,
---       motions = false,
---       text_objects = false,
---       windows = false,
---       nav = false,
---       z = false,
---       g = false,
---     },
---   },
---   icons = {
---     breadcrumb = "-",
---     separator = "➜",
---     group = "+",
---   },
---   window = {
---     border = "none",
---     position = "bottom",
---     margin = { 0, 0, 1, 0 },
---     padding = { 1, 1, 1, 1 },
---   },
---   layout = {
---     height = { min = 1, max = 15 },
---     width = { min = 15, max = 40 },
---     spacing = 2,
---   },
---   show_help = false,
---   triggers = { "<leader>", "," },
--- }
-
-local wk_dict = {
-  -- Groups
-  ["<leader>r"] = { name = "+ruby" },
-  ["<leader>t"] = { name = "+test" },
-  ["<leader>j"] = { name = "+harpoon" },
-  ["<leader>b"] = { name = "+buffers" },
-  ["<leader>g"] = { name = "+git" },
-  ["<leader>w"] = { name = "+windows" },
-  ["<leader>h"] = { name = "+hunks" },
-
-  -- Otherwise missing descriptions
-  ["<leader><Tab>"] = { name = "toggle-terminal" },
-  ["<leader>q"] = { name = "format-buffer" },
-  ["<leader>d"] = { name = "debug" },
-}
-
-local function starts_with(str, start)
-  return str:sub(1, #start) == start
-end
-
 local function nnoremap(opts, desc)
-  -- if starts_with(opts[1], "<leader>") then
-  --   wk_dict[opts[1]] = { desc }
-  -- end
-
   return keymap.set("n", unpack(opts or {}))
 end
 
@@ -123,50 +65,6 @@ vim.api.nvim_set_keymap('v', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$'
 vim.api.nvim_set_keymap('v', '<', '<gv', {silent = true, noremap = true, nowait = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {silent = true, noremap = true, nowait = true})
 
--- TODO: This [the visual-mode version] does not work properly when total_width = cursor_line_pos
-vnoremap({ 'L',
-    function()
-      if vim.wo.wrap then
-        return vim.cmd [[normal g$]]
-      end
-
-      local total_width = vim.fn.virtcol("$") - 1
-      local cursor_line_pos = vim.fn.virtcol(".")
-      local cursor_window_pos = vim.fn.wincol()
-      local window_width = vim.fn.winwidth(0)
-
-      if total_width == cursor_line_pos then
-        return vim.cmd [[normal 0g$]]
-      elseif cursor_window_pos == window_width then
-        return vim.cmd [[normal $]]
-      else
-        return vim.cmd [[normal g$]]
-      end
-    end
-}, '')
-
-
-nnoremap({ 'L',
-    function()
-      if vim.wo.wrap then
-        return vim.cmd [[normal g$]]
-      end
-
-      local total_width = vim.fn.virtcol("$") - 1
-      local cursor_line_pos = vim.fn.virtcol(".")
-      local cursor_window_pos = vim.fn.wincol()
-      local window_width = vim.fn.winwidth(0)
-
-      if total_width == cursor_line_pos then
-        return vim.cmd [[normal 0g$]]
-      elseif cursor_window_pos == window_width then
-        return vim.cmd [[normal $]]
-      else
-        return vim.cmd [[normal g$]]
-      end
-    end
-}, '')
-
 nnoremap({ 'p', 'p`[v`]=' })
 
 -- Allow terminal style navigation in insert mode
@@ -184,15 +82,6 @@ nnoremap({ 'Y', 'y$' })
 
 -- Run last macro using ,
 nnoremap({ ',', '@@' }, 'rerun-macro')
-
--- -- Break undo sequences
--- inoremap({ ',', ',<c-g>u'})
--- inoremap({ '.', '.<c-g>u'})
--- inoremap({ '!', '!<c-g>u'})
--- inoremap({ '?', '?<c-g>u'})
-
--- Terminal (Non-ANSI layouts make the default keybindings abysmal)
--- tnoremap({ '<esc>', '<c-\\><c-n>' })
 
 -- Reload easily
 nnoremap({ '<leader>R', ':Reload<cr>' })
@@ -334,7 +223,7 @@ nnoremap({ '<leader>o', ':Fern . -reveal=%<cr>' }, 'reveal-file')
 
 -- Easy Align
 vnoremap({ '<cr>', '<Plug>(EasyAlign)' }, 'easy-align-selected')
--- inoremap({ 'ga', '<Plug>(EasyAlign)' }, 'easy-align')
+inoremap({ 'ga', '<Plug>(EasyAlign)' }, 'easy-align')
 
 -- Emmet
 inoremap({ ',,', '<c-y>,'})
@@ -352,15 +241,8 @@ nnoremap({ '<leader>tf', ':TestFile<cr>'}, 'test-file')
 nnoremap({ '<leader>tl', ':TestLast<cr>'}, 'test-last')
 nnoremap({ '<leader>tv', ':TestVisit<cr>'}, 'test-visit')
 
--- ALE
--- nnoremap({ '<leader>q', '<Plug>(ale_fix)' }, 'ale-fix')
--- nmap({ '<c-k>', '<Plug>(ale_next_wrap)' }, 'ale-next-error')
--- nmap({ '<c-j>', '<Plug>(ale_prev_wrap)' }, 'ale-prev_error')
-
-
 nnoremap({'gp', require('goto-preview').goto_preview_definition})
 nnoremap({'gP', require('goto-preview').close_all_win})
--- nnoremap({ '<tab>' , function() require'hop'.hint_words() end })
 
 -- Asterisk
 nnoremap({ '*', '<Plug>(asterisk-*)' })
@@ -376,7 +258,7 @@ nnoremap({ 'gz#', '<Plug>(asterisk-gz#)' })
 nnoremap({ '<leader><leader>', ':luafile %<cr>' }, 'reload-lua-file')
 
 -- Allow line split using S, as opposed to J(oin)
--- nnoremap({ 'K',  'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>' }, 'split-line')
+nnoremap({ 'S',  'i<cr><Esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>' }, 'split-line')
 
 -- Compe auxiallary bindings
 inoremap({ '<c-space>', 'compe#complete()', expr = true})
@@ -388,39 +270,6 @@ vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>LspTroubleToggle lsp_document_d
 vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>LspTroubleToggle loclist<cr>", {silent = true, noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>LspTroubleToggle quickfix<cr>", {silent = true, noremap = true})
 vim.api.nvim_set_keymap("n", "gR", "<cmd>LspTrouble lsp_references<cr>", {silent = true, noremap = true})
-
-
--- require("fzf").default_window_options = {
---   window_on_create = function(win)
---     -- vim.cmd("set winhl=Comment:Comment")
---     -- print(vim.inspect(window))
-
---     -- vim.api.nvim_win_set_option()
---     -- Make sure it exits properly
---     vim.cmd("hi TestHighlight guibg=#efefef")
---     -- vim.api.nvim_win_set_option(win, 'winhl', 'Normal:TestHighlight')
---     vim.cmd("set winhl=Normal:Normal")
---     vim.cmd("set winhl=FloatBorder:TestHighlight")
---     -- vim.api.nvim_win_set_option(win, 'winhl', 'FloatBorder:TestHighlight')
-
---     vim.cmd("inoremap <buffer><silent> <esc> <C-o>:close<cr>")
---     vim.cmd([[
---       augroup FzfEnsureClose
---         autocmd!
---         autocmd WinLeave * ++once close
---       augroup end
---       ]])
---   end,
---   width = vim.o.columns,
---   border = "solid",
---   -- border = "shadow",
---   -- border = "double",
---   -- relative = "bottom",
---   height = 13,
--- }
-
--- nnoremap({ 'gk', '' })
--- nnoremap({ 'K',  })
 
 -- I'm not using (And have no intention of starting to use) marks, harpoon is
 -- better, and I would use a leader key for this anyway
@@ -458,13 +307,7 @@ nnoremap({ "<leader>dj", require'dap'.down }, "dap-down")
 nnoremap({ "<leader>dt", require'dap'.toggle_breakpoint }, "dap-toggle-breakpoint")
 nnoremap({ "<leader>d-", require'dap'.run_last }, "dap-last")
 nnoremap({ "<leader>dr", function() require'dap'.repl.open({}, 'vsplit') end }, "dap-repl")
--- nnoremap({ "<leader>di", require'dap.ui.variables'.hover }, "dap-repl")
--- vnoremap({ "<leader>di", require'dap.ui.variables'.visual_hover }, "dap-repl")
--- nnoremap({ "<leader>d?", require'dap.ui.variables'.scopes }, "dap-scopes")
 nnoremap({ "<leader>de", function() require'dap'.set_exception_breakpoints({"all"}) end }, "dap-scopes")
--- nnoremap({ "<leader>da", require'debugHelper'.attach }, "dap-attach")
--- nnoremap({ "<leader>dA", require'debugHelper'.attachToRemote }, "dap-attach-remote")
--- nnoremap({ "<leader>di", require'dap.ui.widgets'.hover }, "dap-hover")
 
 nnoremap { "ds%", delete_surrounding_matches }
 nnoremap { "cs%", change_surrounding_matches }
@@ -472,22 +315,6 @@ nnoremap { "cs%", change_surrounding_matches }
 local todo = require("modules._todo")
 
 nnoremap({ "<leader>z", todo.open_branch_todo }, "open-branch-todo")
-
--- local snap = require'snap'
--- snap.maps {
---   {"<Leader>fb", snap.config.file {producer = "vim.buffer"}},
---   {"<Leader>fo", snap.config.file {producer = "vim.oldfile"}},
---   {"<Leader>ff", snap.config.vimgrep {}},
--- }
-
--- nnoremap({ '<leader>ab', function()
---   snap.run {
---     producer = snap.get'consumer.fzf'(snap.get'producer.ripgrep.file'),
---     select = snap.get'select.file'.select,
---     multiselect = snap.get'select.file'.multiselect,
---     views = {snap.get'preview.file'}
---   }
--- end})
 
 nnoremap({"<c-k>", ":m .-2<CR>=="})
 nnoremap({"<c-j>", ":m .+1<CR>=="})
@@ -508,8 +335,6 @@ nnoremap({ "<c-a>", "0" })
 nnoremap({ "<c-e>", "$" })
 
 nnoremap({ "<C-n>", "<C-w>w" })
--- nnoremap({ "<leader><leader>", "<c-w>m" })
--- vim.api.nvim_set_keymap('n', '<leader>-', ':lua require"FTerm".toggle()<cr>', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('x', 'iu', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
 vim.api.nvim_set_keymap('x', 'au', ':lua require"treesitter-unit".select(true)<CR>', {noremap=true})
@@ -521,7 +346,5 @@ nnoremap({ "<c-l>", require"telescope.builtin".lsp_code_actions })
 
 nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
 tnoremap({"<c-o>", "<c-\\><c-n><c-o>"})
--- onoremap {"w", "e"}
--- vnoremap {"w", "e"}
 
 -- wk.register(wk_dict)
