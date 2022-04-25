@@ -215,28 +215,19 @@ Plug 'dkarter/bullets.vim'
 
 " Terminals
 Plug 'kassio/neoterm'
-  let g:neoterm_size = "11"
   let g:neoterm_autoscroll = 1
   let g:neoterm_autojump = 1
   let g:neoterm_term_per_tab = 1
   let g:neoterm_shell = "/usr/local/bin/fish"
+
   vnoremap <Leader>2 :TREPLSendSelection<cr>
-  nnoremap <Leader>2 :TREPLSendLine<cr>
+  nnoremap <Leader>3 :TREPLSendLine<cr>
   nnoremap <Leader>4 :TREPLSendFile<cr>
-  nnoremap <Leader>3 :Tmap<cr>
-  nnoremap <Leader>- :Ttoggle<cr>
+  nnoremap <Leader>tm :Tmap<cr>
+  nnoremap <Leader>- :Tnew<cr>
+  nnoremap <Leader>c :Tfocus<cr>
 
   let g:neoterm_callbacks = {}
-
-  function! g:neoterm_callbacks.before_new()
-    if &columns > 200
-      let g:neoterm_default_mod = 'botright vertical'
-      let g:neoterm_size = ""
-    else
-      let g:neoterm_default_mod = 'botright'
-      let g:neoterm_size = "11"
-    end
-  endfunction
 
   " Test
 Plug 'vim-test/vim-test'
