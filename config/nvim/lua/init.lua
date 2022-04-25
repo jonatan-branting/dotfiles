@@ -21,6 +21,7 @@ require("modules.popup").setup()
 
 require("pqf").setup()
 require("dd").setup()
+require("trouble").setup()
 
 require("better_escape").setup {
   mapping = {"jk", "jj"},
