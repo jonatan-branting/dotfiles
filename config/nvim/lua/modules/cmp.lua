@@ -13,6 +13,8 @@ end
 
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
 
+local compare = cmp.config.compare
+
 cmp.setup({
   -- preselect = cmp.PreselectMode.None,
   formatting = {
@@ -31,6 +33,20 @@ cmp.setup({
     expand = function(args)
       vim.fn["UltiSnips#Anon"](args.body)
     end
+  },
+  sorting = {
+    priority_weight = 1.0,
+    comparators = {
+      compare.locality,
+      compare.recently_used,
+      compare.score,
+      compare.offset,
+      compare.order,
+      -- compare.exact,
+      -- compare.kind,
+      -- compare.sort_text,
+      -- compare.length,
+    },
   },
   mapping = {
     ["<cr>"] = cmp.mapping.confirm({ select = true }),
