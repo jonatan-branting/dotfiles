@@ -65,12 +65,12 @@ opt.breakindent = true
 opt.splitbelow = true
 opt.splitright = true
 
-opt.laststatus = 2
+opt.laststatus = 3
 
 opt.exrc = true
 opt.secure = true
 opt.termguicolors = true
 opt.wrap = false
+opt.clipboard = "unnamedplus"
 
 vim.g.vimsyn_embed = "l" -- Highlight Lua code inside .vim files
-
