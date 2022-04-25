@@ -520,6 +520,7 @@ nnoremap({ "<leader>a", "<c-^>" }, "alternate-last-buffer")
 nnoremap({ "<c-l>", require"telescope.builtin".lsp_code_actions })
 
 nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
+tnoremap({"<c-o>", "<c-\\><c-n><c-o>"})
 -- onoremap {"w", "e"}
 -- vnoremap {"w", "e"}
 
