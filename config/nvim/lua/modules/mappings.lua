@@ -242,8 +242,7 @@ nnoremap({ '<leader>tf', ':TestFile<cr>'}, 'test-file')
 nnoremap({ '<leader>tl', ':TestLast<cr>'}, 'test-last')
 nnoremap({ '<leader>tv', ':TestVisit<cr>'}, 'test-visit')
 
-nnoremap({'gp', require('goto-preview').goto_preview_definition})
-nnoremap({'gP', require('goto-preview').close_all_win})
+nnoremap({"gp", "o<esc>p=="})
 
 -- Asterisk
 nnoremap({ '*', '<Plug>(asterisk-*)' })
@@ -309,9 +308,6 @@ nnoremap({ "<leader>dt", require'dap'.toggle_breakpoint }, "dap-toggle-breakpoin
 nnoremap({ "<leader>d-", require'dap'.run_last }, "dap-last")
 nnoremap({ "<leader>dr", function() require'dap'.repl.open({}, 'vsplit') end }, "dap-repl")
 nnoremap({ "<leader>de", function() require'dap'.set_exception_breakpoints({"all"}) end }, "dap-scopes")
-
-nnoremap { "ds%", delete_surrounding_matches }
-nnoremap { "cs%", change_surrounding_matches }
 
 local todo = require("modules._todo")
 
