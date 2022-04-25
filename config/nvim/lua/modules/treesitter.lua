@@ -1,7 +1,7 @@
 local treesitter = require("nvim-treesitter.configs")
 
 treesitter.setup {
-  ensure_installed = "maintained",
+  ensure_installed = "all",
   textsubjects = {
     enable = true,
     keymaps = {
