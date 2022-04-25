@@ -205,7 +205,7 @@ Plug 'windwp/nvim-autopairs'
 Plug 'ntpeters/vim-better-whitespace'
   let g:better_whitespace_guicolor = '#445566'
 Plug 'antoinemadec/FixCursorHold.nvim'
-  let g:cursorhold_updatetime = 500
+  let g:cursorhold_updatetime = 1250
 Plug 'windwp/nvim-ts-autotag'
 
 " Statusline
@@ -453,8 +453,6 @@ endfunction
 
 vnoremap <silent><nowait> < <gv
 nnoremap <Leader>c :Tfocus<cr>
-
-
 
 nnoremap g. /\V<C-r>"<CR>cgn<C-a><Esc>
 
