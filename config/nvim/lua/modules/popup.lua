@@ -56,6 +56,8 @@ local function setup_popup_for_buffer(popup, buf, delete_on_close)
 end
 
 local create_popup_for_buffer = function(buf, command, delete_on_close)
+  delete_commands("_popup_autocommands")
+
   delete_on_close = delete_on_close or false
   buf = tonumber(buf)
 
@@ -111,7 +113,6 @@ local popup_next = function(command)
 end
 
 local popup_current = function(command)
-
   vim.cmd("let _popup_next_restore_win_cmd = winrestcmd()")
 
   vim.api.nvim_create_augroup("_popup_autocommands", { clear = true })
