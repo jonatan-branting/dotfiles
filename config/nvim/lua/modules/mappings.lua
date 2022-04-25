@@ -55,8 +55,9 @@ vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>
 vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
--- nnoremap({ 'L', 'g$' })
-nnoremap({ 'H', 'g^' })
+
+nnoremap({ 'L', 'g$' })
+vnoremap({ 'L', 'g$h' })
 
 -- TODO g0 first, then the other behaviour!
 vim.api.nvim_set_keymap('n', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
