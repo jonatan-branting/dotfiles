@@ -259,7 +259,6 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tjdevries/nlua.nvim'
 Plug 'rafcamlet/nvim-luapad'
 Plug 'euclidianAce/BetterLua.vim'
-Plug 'bfredl/nvim-luadev'
 
 " Web
 Plug 'mattn/emmet-vim'
