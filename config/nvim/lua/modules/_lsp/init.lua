@@ -1,30 +1,9 @@
 local lsp_config = require('lspconfig')
--- require("nvim-ale-diagnostic")
--- require("trouble").setup()
 require("lspkind").init()
 require("treesitter-unit")
+
 local lsp_status = require("lsp-status")
 lsp_status.register_progress()
-
--- require("lsp_signature").on_attach()
-
--- Allow ALE to handle diagnostics
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    update_in_insert = false,
-     -- TODO make these functions based on vim.b.diagnostic_severity_limit
-    -- underline = {
-    --   severity_limit = "Warning"
-    -- },
-    -- float = {
-    --   severity_limit = "Warning"
-    -- },
-    signs = false,
-    -- virtual_text = {
-    --   severity_limit = "Warning"
-    -- },
-  }
-)
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   vim.lsp.handlers.hover, {
@@ -33,47 +12,13 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   }
 )
 
--- vim.lsp.handlers["textDocument/references"] = require("telescope.builtin").lsp_references
-
--- vim.lsp.handlers["textDocumentinitialize"] = vim.lsp.with(
---   function(message) print("INITINIT", message) end, {}
--- )
-
--- Enable snippet support
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- local capabilities = lsp_status.capabilities
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
 
--- capabilities.textDocument.completion.completionItem.snippetSupport = false
--- capabilities.textDocument.completion.completionItem.resolveSupport = {
---   properties = {
---     'documentation',
---     'detail',
---     'additionalTextEdits',
---   }
--- }
 local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  -- require("lsp_signature").on_attach({
-  --     bind = true,
-  --     doc_lines = 2,
-  --     hint_enable = false,
-  --     hint_Scheme = "String",
-  --     hi_parameter = "Search",
-  --     fix_pos = true,
-  --     handler_opts = {
-  --       border = "shadow"
-  --     },
-  --     extra_trigger_chars = { "{", ","}
-  --   })
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-  --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
@@ -103,12 +48,8 @@ end
 local servers = {
   "cssls",
   "solargraph",
-  -- "pyls_ms",
   "html",
-  -- "denols",
-  -- "tailwindcss",
   "vuels",
-  -- "rust_analyzer",
   "bashls",
 }
 
@@ -147,17 +88,3 @@ lsp_config.sumneko_lua.setup {
 
   unpack(require("modules._lsp.lua")),
 }
-
--- lsp_config.efm.setup {
---   init_options = {documentFormatting = true},
---   settings = {
---     rootMarkers = {".git/"},
---     languages = {
---       lua = {
---         {formatCommand = "lua-format -i", formatStdin = true}
---       }
---     }
---   }
--- }
-
-vim.cmd([[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]])
