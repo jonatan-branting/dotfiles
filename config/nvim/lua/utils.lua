@@ -101,4 +101,14 @@ function M.is_floating(win)
   return vim.api.nvim_win_get_config(win).relative ~= ""
 end
 
+function M.floating_windows_exist()
+  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if M.is_floating(winid) then
+      return true
+    end
+  end
+
+  return false
+end
+
 return M

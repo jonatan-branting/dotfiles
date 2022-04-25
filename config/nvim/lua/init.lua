@@ -16,6 +16,7 @@ require("modules._todo")
 require("modules._feline")
 require("modules.neorg")
 require("modules.possession")
+require("modules.diagnostics")
 
 require("modules.popup").setup()
 
