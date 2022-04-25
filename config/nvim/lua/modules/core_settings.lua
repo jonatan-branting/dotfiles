@@ -11,7 +11,7 @@ opt.linebreak = true
 opt.breakindent = true
 opt.showmode = false
 opt.pumblend = 10
-opt.updatetime = 300
+opt.updatetime = 2000
 opt.shortmess = "filnxtToOFcI"
 opt.hidden = true
 opt.mouse = "a"
@@ -66,6 +66,8 @@ opt.splitbelow = true
 opt.splitright = true
 
 opt.laststatus = 3
+
+opt.signcolumn = "auto"
 
 opt.exrc = true
 opt.secure = true
