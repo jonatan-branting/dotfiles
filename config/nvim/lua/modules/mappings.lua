@@ -56,8 +56,49 @@ vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", 
 vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 
-nnoremap({ 'L', 'g$' })
-vnoremap({ 'L', 'g$h' })
+vnoremap({ 'L',
+  function()
+    if vim.wo.wrap then
+      return vim.cmd [[normal g$]]
+    end
+
+    local total_width = vim.fn.virtcol("$") - 1
+    local cursor_line_pos = vim.fn.virtcol(".")
+    local cursor_window_pos = vim.fn.wincol()
+    local window_width = vim.fn.winwidth(0)
+
+    if total_width == cursor_line_pos then
+      return vim.cmd [[normal 0g$]]
+    elseif cursor_window_pos == window_width then
+      return vim.cmd [[normal $h]]
+    else
+      return vim.cmd [[normal g$h]]
+    end
+  end
+}, '')
+
+
+nnoremap({ 'L',
+  function()
+    if vim.wo.wrap then
+      return vim.cmd [[normal g$]]
+    end
+
+    local total_width = vim.fn.virtcol("$") - 1
+    local cursor_line_pos = vim.fn.virtcol(".")
+    local cursor_window_pos = vim.fn.wincol()
+    local window_width = vim.fn.winwidth(0)
+
+    if total_width == cursor_line_pos then
+      return vim.cmd [[normal 0g$]]
+    elseif cursor_window_pos == window_width then
+      return vim.cmd [[normal $]]
+    else
+      return vim.cmd [[normal g$]]
+    end
+  end
+}, '')
+
 
 -- TODO g0 first, then the other behaviour!
 vim.api.nvim_set_keymap('n', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
