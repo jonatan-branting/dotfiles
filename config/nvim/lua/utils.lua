@@ -86,16 +86,15 @@ function M.get_visual_selection()
   return table.concat(lines)
 end
 
-function M.has_value(tab, val)
-  for index, value in ipairs(tab) do
-    if value[1] == val then
+function M.has_value(table, val)
+  for _, value in ipairs(table) do
+    if value == val then
       return true
     end
   end
 
   return false
 end
-
 
 function M.is_floating(win)
   return vim.api.nvim_win_get_config(win).relative ~= ""
@@ -109,6 +108,10 @@ function M.floating_windows_exist()
   end
 
   return false
+end
+
+function M.t(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
 return M
