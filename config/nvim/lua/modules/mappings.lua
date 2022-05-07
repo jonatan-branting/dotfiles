@@ -385,4 +385,5 @@ nnoremap({ "<c-l>", require"telescope.builtin".lsp_code_actions })
 nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
 tnoremap({"<c-o>", "<c-\\><c-n><c-o>"})
 
--- wk.register(wk_dict)
+nnoremap({ "n", require("modules.better_n").n })
+nnoremap({ "<s-n>", require("modules.better_n").shift_n })
