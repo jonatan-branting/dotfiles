@@ -10,6 +10,9 @@ local mappings_table = {
   ["<leader>hn"] = {"<leader>hn", "<leader>hp"},
   ["<leader>hp"] = {"<leader>hn", "<leader>hp"},
 
+  ["<leader>bn"] = {"<leader>bn", "<leader>bp"},
+  ["<leader>bp"] = {"<leader>bn", "<leader>bp"},
+
   ["{"] = {"}", "{"},
   ["}"] = {"}", "{"},
 
