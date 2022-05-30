@@ -23,6 +23,29 @@ require("modules.popup").setup()
 require("pqf").setup()
 require("dd").setup()
 require("trouble").setup()
+require("dressing").setup()
+
+require("modules.better_n").setup {
+  callbacks = {
+    mapping_executed = function(_, key)
+      if key == "n" then return end
+
+      -- Clear highlighting, indicating that `n` will not goto the next
+      -- highlighted search-term
+      vim.cmd [[ nohl ]]
+    end
+  },
+  mappings = {
+    ["<leader>hn"] = {previous = "<leader>hp", next = "<leader>hn"},
+    ["<leader>hp"] = {previous = "<leader>hp", next = "<leader>hn"},
+
+    ["<leader>bn"] = {previous = "<leader>bp", next = "<leader>bn"},
+    ["<leader>bp"] = {previous = "<leader>bp", next = "<leader>bn"},
+
+    ["<c-d>"] = {previous = "<c-u>", next = "<c-d>"},
+    ["<c-u>"] = {previous = "<c-u>", next = "<c-d>"},
+  }
+}
 
 require("better_escape").setup {
   mapping = {"jk", "jj"},

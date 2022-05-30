@@ -1,59 +1,57 @@
 local autocmd = require("modules.autocmd")
 local utils = require("utils")
 
+local mapping_prefix = "<plug>(better-n)"
+
 local latest_movement_cmd = {
   mode = "n",
   key = "n"
 }
 
 local mappings_table = {
-  ["<leader>hn"] = {"<leader>hn", "<leader>hp"},
-  ["<leader>hp"] = {"<leader>hn", "<leader>hp"},
+  ["*"] = {previous = "<s-n>", next = "n"},
+  ["#"] = {previous = "n", next ="<s-n>"},
+  ["f"] = {previous = ",", next = ";"},
+  ["t"] = {previous = ",", next = ";"},
+  ["F"] = {previous = ";", next = ","},
+  ["T"] = {previous = ";", next = ","},
 
-  ["<leader>bn"] = {"<leader>bn", "<leader>bp"},
-  ["<leader>bp"] = {"<leader>bn", "<leader>bp"},
-
-  ["{"] = {"}", "{"},
-  ["}"] = {"}", "{"},
-
-  ["<c-d>"] = {"<c-d>", "<c-u>"},
-  ["<c-u>"] = {"<c-d>", "<c-u>"},
-
-  ["/"] = {"n", "<s-n>"},
-  ["*"] = {"n", "<s-n>"},
-  ["?"] = {"<s-n>", "n"},
-  ["#"] = {"<s-n>", "n"},
-  ["f"] = {";", ","},
-  ["t"] = {";", ","},
-  ["F"] = {",", ";"},
-  ["T"] = {",", ";"},
+  ["/"] = {previous = "<s-n>", next = "n", cmdline = true},
+  ["?"] = {previous = "n", next ="<s-n>", cmdline = true},
 }
 
 local execute_map = function(map)
-  vim.api.nvim_feedkeys(utils.t("<plug>" .. map), latest_movement_cmd.mode, false)
+  vim.api.nvim_feedkeys(utils.t(mapping_prefix .. map), latest_movement_cmd.mode, false)
 end
 
-local setup_autocmds = function()
-  autocmd.subscribe("MappingExecuted", function(mode, key)
-    if key == "n" then
-      return
-    end
+local n = function()
+  execute_map(mappings_table[latest_movement_cmd.key].next)
+end
 
-    -- Clear highlighting, indicating that `n` will not goto the next
-    -- highlighted search-term
-    vim.cmd [[ nohl ]]
+local shift_n = function()
+  execute_map(mappings_table[latest_movement_cmd.key].previous)
+end
+
+local setup_autocmds = function(callback)
+  autocmd.subscribe("MappingExecuted", function(mode, key)
+    if callback then callback(mode, key) end
 
     latest_movement_cmd.mode = mode
     latest_movement_cmd.key = key
   end)
 end
 
-local n = function()
-  execute_map(mappings_table[latest_movement_cmd.key][1])
-end
+local register_cmdline = function()
+  vim.api.nvim_create_autocmd("CmdlineLeave", {
+    callback = function()
+      local abort = vim.v.event.abort
+      local cmdline_char = vim.fn.expand("<afile>")
 
-local shift_n = function()
-  execute_map(mappings_table[latest_movement_cmd.key][2])
+      if not abort and utils.has_key(mappings_table, cmdline_char) then
+        autocmd.emit("MappingExecuted", "n", cmdline_char)
+      end
+    end
+  })
 end
 
 local action_from_key = function(mode, key)
@@ -69,35 +67,50 @@ end
 local register_key = function(mode, key)
   -- TODO doesn't support buffer local mappings properly.
 
-  -- Store the original keymap in a <plug> keybind, so we can reuse the
+  -- Store the original keymap in a <plug>(better-n) keybind, so we can reuse the
   -- functionality
   local action = action_from_key(mode, key) or key
-  vim.keymap.set(mode, "<plug>" .. key, action, {silent = true})
+  vim.keymap.set(mode, mapping_prefix .. key, action, {silent = true})
 
   vim.keymap.set(mode, key, function()
     autocmd.emit("MappingExecuted", mode, key)
-    vim.api.nvim_feedkeys(utils.t("<plug>" .. key), mode, false)
+
+    vim.api.nvim_feedkeys(utils.t(mapping_prefix .. key), mode, false)
   end)
 end
 
-local setup = function(opts)
-  -- TODO:
-  -- 1. allow customizing which keys are registered
-  -- 2. expose the callback function, allowing user defined callbacks
-  setup_autocmds()
+local register_keys = function()
+  for key, mapping in pairs(mappings_table) do
+    if mapping.cmdline then goto continue end
 
-  -- Save important keybinds in <plug> bindings, for reuse
-  for _, key in ipairs({ ";", ",", "n", "<s-n>" }) do
-    for _, mode in ipairs({ "n", "v" }) do
-      vim.keymap.set(mode, "<plug>" .. key, key, {silent = true})
-    end
-  end
-
-  for key, _ in pairs(mappings_table) do
     for _, mode in ipairs({ "n", "v" }) do
       register_key(mode, key)
     end
+
+    ::continue::
   end
+end
+
+local store_baseline_keys = function()
+  -- Save important keybinds in <plug> bindings, for reuse
+  for _, key in ipairs({ ";", ",", "n", "<s-n>" }) do
+    for _, mode in ipairs({ "n", "v" }) do
+      vim.keymap.set(mode,  mapping_prefix .. key, key, {silent = true, nowait = true})
+    end
+  end
+end
+
+local setup = function(opts)
+  for key, value in pairs(opts.mappings or {}) do
+    mappings_table[key] = value
+  end
+
+  setup_autocmds(opts.callbacks.mapping_executed)
+
+  store_baseline_keys()
+
+  register_cmdline()
+  register_keys()
 end
 
 return {
