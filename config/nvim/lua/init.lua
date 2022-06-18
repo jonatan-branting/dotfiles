@@ -24,6 +24,7 @@ require("pqf").setup()
 require("dd").setup()
 require("trouble").setup()
 require("dressing").setup()
+require("ufo").setup()
 
 require("modules.better_n").setup {
   callbacks = {

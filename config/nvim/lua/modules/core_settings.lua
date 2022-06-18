@@ -46,7 +46,10 @@ opt.backup = false
 opt.writebackup = false
 opt.equalalways = true
 
-opt.foldmethod = "manual"
+opt.foldcolumn = "1"
+opt.foldlevel = 99
+opt.foldenable = true
+
 opt.visualbell = true
 opt.errorbells = false
 
