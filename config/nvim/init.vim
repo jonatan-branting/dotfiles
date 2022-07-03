@@ -8,6 +8,7 @@ call plug#begin('~/.nvim/plugged')
 " Libraries
 Plug 'kosayoda/nvim-lightbulb'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'jedrzejboczar/possession.nvim'
 Plug 'Julian/vim-textobj-variable-segment'
 Plug 'nvim-telescope/telescope-ui-select.nvim'
