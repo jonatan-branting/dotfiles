@@ -6,6 +6,24 @@ local b = vim.b
 
 local M = {}
 
+local msg_queue = {}
+
+function M.notify(message, level, opts)
+  table.insert(msg_queue, message)
+  print(vim.inspect(msg_queue))
+  vim.defer_fn(function()
+    table.remove(msg_queue, 1)
+  end, 3000)
+end
+
+function M.notifications()
+  return {
+    provider = function()
+      return msg_queue[1] or ""
+    end,
+  }
+end
+
 function M.column_component(active)
   return {
     provider = function()
@@ -128,7 +146,6 @@ function M.git_branch_component()
       local cwd = fn.getcwd():gsub('^.*/', '')
 
       if not b.gitsigns_status_dict then return ' ' .. cwd end
-
 
       local head = b.gitsigns_status_dict.head
 

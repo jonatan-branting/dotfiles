@@ -1,58 +1,47 @@
+local color_utils = require("modules.ui.utils")
+local utils = require("utils")
+
 local M = {}
 
--- gruvbox
-M = {
-  bg0_h = '#1d2021',
-  bg0_s = '#32302f',
-  bg0 = '#282828',
-  bg1 = '#3c3836',
-  bg2 = '#504945',
-  bg3 = '#665c54',
-  bg4 = '#7c6f64',
-  fg0 = '#fbf1c7',
-  fg1 = '#ebdbb2',
-  fg2 = '#d5c4a1',
-  fg3 = '#bdae93',
-  fg4 = '#a89984',
-  fg5 = '#999999',
-  bright_red     = '#fb4934',
-  bright_green   = '#b8bb26',
-  bright_yellow  = '#fabd2f',
-  bright_blue    = '#83a598',
-  bright_purple  = '#d3869b',
-  bright_aqua    = '#8ec07c',
-  bright_orange  = '#fe8019',
-  neutral_red    = '#cc241d',
-  neutral_green  = '#98971a',
-  neutral_yellow = '#d79921',
-  neutral_blue   = '#458588',
-  neutral_purple = '#b16286',
-  neutral_aqua   = '#689d6a',
-  neutral_orange = '#d65d0e',
-  faded_red      = '#9d0006',
-  faded_green    = '#79740e',
-  faded_yellow   = '#b57614',
-  faded_blue     = '#076678',
-  faded_purple   = '#8f3f71',
-  faded_aqua     = '#427b58',
-  faded_orange   = '#af3a03',
+M.colors = {
+  bg = color_utils.get_highlight("Statusline").bg,
+  fg = color_utils.get_highlight("Statusline").fg,
+
+  red = color_utils.get_highlight("DiagnosticError").fg,
+  green = color_utils.get_highlight("String").fg,
+  blue = color_utils.get_highlight("Function").fg,
+  gray = color_utils.get_highlight("NonText").fg,
+  orange = color_utils.get_highlight("Constant").fg,
+  purple = color_utils.get_highlight("Statement").fg,
+  cyan = color_utils.get_highlight("Special").fg,
+
+  diag_warn = color_utils.get_highlight("DiagnosticWarn").fg,
+  diag_error = color_utils.get_highlight("DiagnosticError").fg,
+  diag_hint = color_utils.get_highlight("DiagnosticHint").fg,
+  diag_info = color_utils.get_highlight("DiagnosticInfo").fg,
+
+  git_del = color_utils.get_highlight("DiffDelete").fg,
+  git_add = color_utils.get_highlight("DiffAdd").fg,
+  git_change = color_utils.get_highlight("DiffChange").fg,
 }
 
--- local tokyonight_colors = require("tokyonight.colors").setup()
- 
--- M.faded_yellow = "#e0af68"
--- M.fg_sides = tokyonight_colors.terminal_black
--- M.bg_sides = "#9aa5ce"
--- M.bg_inactive = "#343b58"
--- M.bg_active = "#465170"
--- M.fg_active = "#db5d6db"
--- M.fg_inactive = tokyonight_colors.blue3
+local variations = {}
 
-M.fg_sides = M.bg1
-M.bg_sides = M.fg2
-M.bg_active = M.bg3
-M.bg_inactive = M.bg2
-M.fg_active = M.fg0
-M.fg_inactive = M.fg2
+-- for k, v in pairs(M.colors) do
+--   variations["bright_" .. k] = color_utils.brighten(v, 0.25)
+--   variations["faded_" .. k] = color_utils.darken(v, 0.75)
+--   variations["dark_" .. k] = color_utils.darken(v, 0.75)
+-- end
+
+
+M.colors = utils.merge(M.colors, variations)
+
+M.fg_sides = color_utils.invert(M.colors.bg)
+M.bg_sides = color_utils.invert(M.colors.fg)
+M.bg_active = M.colors.bright_bg
+M.bg_inactive = M.colors.bg
+M.fg_active = M.colors.fg
+M.fg_inactive = M.colors.dark_fg
+
 
 return M

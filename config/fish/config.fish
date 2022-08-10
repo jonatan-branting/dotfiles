@@ -63,27 +63,20 @@ set -x PATH "$HOME/.cargo/bin" $PATH
 set -x PATH "$HOME/.pyenv/bin" $PATH
 replay source "$HOME/.config/fish/protected.env"
 
-set EDITOR "nvr"
 set FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git --exclude tags'
 set FZF_DEFAULT_OPTS '--margin=1,1 --preview-window="right:50%:noborder" --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up'
-set VISUAL 'nvr'
+
+set EDITOR "nvim"
+export EDITOR="$nvim"
+set VISUAL "$EDITOR"
+
+alias nvim "nvim"
+alias vim "nvim"
 
 source $HOME/.hostconfig
 
 status is-login; and pyenv init --path | source
-set -gx EDITOR nvim
-
-if set -q NVIM_LISTEN_ADDRESS
-	alias nvim "nvr"
-	alias vim "nvr"
-	export MANPAGER="nvr +Man! -"
-	export EDITOR="nvr"
-else
-	alias nvim "nvim"
-	alias vim "nvim"
-	export EDITOR="nvim"
-	export MANPAGER="nvim +Man! -"
-end
+set -gx EDITOR "nvim"
 
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"

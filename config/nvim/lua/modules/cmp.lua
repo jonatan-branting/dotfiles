@@ -1,5 +1,6 @@
 local cmp = require("cmp")
 local lspkind = require("lspkind")
+local utils = require("utils")
 local luasnip = require("luasnip")
 
 local has_words_before = function()
@@ -7,20 +8,16 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
 vim.opt.completeopt = "menu,menuone,noinsert"
 
 local compare = cmp.config.compare
 
 local can_expand_or_advance = function()
-  return luasnip.expand_or_jumpable()
+  return luasnip.expand_or_locally_jumpable()
 end
 
 local expand_or_advance = function()
-  luasnip.expand()
+  luasnip.expand_or_jump()
 end
 
 local can_jump = function(direction)
@@ -33,26 +30,27 @@ end
 
 local types = require('cmp.types')
 
+local tab = function(fallback)
+  if cmp.visible() then
+    cmp.confirm({select = true})
+  elseif can_expand_or_advance() then
+    expand_or_advance()
+  elseif has_words_before() then
+    cmp.complete()
+    -- TODO filter the last accepted completion (i.e. instantly accept the second entry)
+  else
+    fallback()
+  end
+end
+
 cmp.setup({
   enabled = function ()
     return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
     or require("cmp_dap").is_dap_buffer()
   end,
-  window = {
-    completion = {
-      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-      col_offset = -3,
-      side_padding = 0,
-    }
-  },
   formatting = {
-    fields = { "kind", "abbr", "menu" },
     format = function(entry, vim_item)
-      local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-      local strings = vim.split(kind.kind, "%s", { trimempty = true })
-
-      vim_item.kind = " " .. strings[1] .. " "
-      vim_item.menu = "    (" .. strings[2] .. ")"
+      vim_item.kind = lspkind.presets.default[vim_item.kind] .. " " .. vim_item.kind
 
       vim_item.menu = ({
         buffer = "[Buffer]",
@@ -89,33 +87,40 @@ cmp.setup({
     end
   },
   sorting = {
-    priority_weight = 2.0,
+    priority_weight = 1.0,
     comparators = {
+      -- require("copilot_cmp.comparators").prioritize,
+      -- require("copilot_cmp.comparators").score,
+
       compare.score,
-      compare.length,
+      compare.kind,
       compare.offset,
       compare.exact,
+      -- function(a, b)
+      compare.length,
+      --   local a_kind = types.lsp.CompletionItemKind[a:get_kind()]
+      --   local b_kind = types.lsp.CompletionItemKind[b:get_kind()]
+      --   print(a_kind, b_kind)
+
+      --   if a_kind == "Snippet" and b_kind == "Variable" or b_kind == "Function" then
+      --     return true
+      --   end
+      --   return false
+      -- end,
+      -- function(a, b)
+      --   -- print(vim.inspect(a.completion_item))
+      --   return true
+      -- end,
       -- compare.order,
       -- compare.locality,
       -- compare.recently_used,
-      -- compare.kind,
       -- compare.sort_text,
     },
   },
   mapping = {
     ["<tab>"] = cmp.mapping({
-      i = function(fallback)
-        if cmp.visible() then
-          cmp.confirm({select = true})
-        elseif can_expand_or_advance() then
-          expand_or_advance()
-        elseif has_words_before() then
-          cmp.complete()
-          -- TODO filter the last accepted completion (i.e. instantly accept the second entry)
-        else
-          fallback()
-        end
-      end,
+      s = tab,
+      i = tab,
       c = function()
         cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
       end
@@ -178,7 +183,7 @@ cmp.setup({
         if cmp.visible() then
           cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
         else
-          vim.api.nvim_feedkeys(t("<Down>"), "n", true)
+          vim.api.nvim_feedkeys(utils.t("<Down>"), "n", true)
         end
       end,
       i = function(fallback)
@@ -191,11 +196,10 @@ cmp.setup({
     }),
     ["<C-p>"] = cmp.mapping({
       c = function()
-        test = 123
         if cmp.visible() then
           cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
         else
-          vim.api.nvim_feedkeys(t("<Up>"), "n", true)
+          vim.api.nvim_feedkeys(utils.t("<Up>"), "n", true)
         end
       end,
       i = function(fallback)
@@ -209,6 +213,7 @@ cmp.setup({
     ["<c-e>"] = cmp.mapping.close()
   },
   sources = {
+    -- { name = "copilot" },
     { name = "nvim_lsp", filter = function(entry, ctx)
       local kind = types.lsp.CompletionItemKind[entry:get_kind()]
 
@@ -221,11 +226,24 @@ cmp.setup({
     end},
     { name = "dap" },
     { name = "git" },
-    { name = "commit" },
+    -- { name = "commit" },
     { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
   }
+})
+
+cmp.setup.cmdline("?", {
+  view = {
+    entries = "wildmenu"
+  },
+  sources = cmp.config.sources({
+    {
+      { name = 'buffer', max_item_count = 10 }
+    }, {
+      { name = 'nvim_lsp_document_symbol', max_item_count = 10 }
+    }
+  })
 })
 
 cmp.setup.cmdline("/", {
@@ -234,14 +252,13 @@ cmp.setup.cmdline("/", {
   },
   sources = cmp.config.sources({
     {
-      { name = 'nvim_lsp_document_symbol', max_item_count = 10 }
-    }, {
       { name = 'buffer', max_item_count = 10 }
+    }, {
+      { name = 'nvim_lsp_document_symbol', max_item_count = 10 }
     }
   })
 })
 
--- Use cmdline & path source for ":" (if you enabled `native_menu`, this won"t work anymore).
 cmp.setup.cmdline(":", {
   view = {
     entries = "wildmenu"
@@ -253,8 +270,36 @@ cmp.setup.cmdline(":", {
 })
 
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-local handlers = "nvim-autopairs.completion.handlers"
+-- local handlers = "nvim-autopairs.completion.handlers"
+local autopairs_utils = require('nvim-autopairs.utils')
 
+local handler = function(char, item, bufnr, commit_character)
+  local line = autopairs_utils.text_get_current_line(bufnr)
+  local _, col = autopairs_utils.get_cursor()
+  local char_before, char_after = autopairs_utils.text_cusor_line(line, col, 1, 1, false)
+
+  if char == '' or char_before == char or char_after == char
+    or (item.data and item.data.funcParensDisabled)
+    or (item.textEdit and item.textEdit.newText and item.textEdit.newText:match "[%(%[%$]")
+    or (item.insertText and item.insertText:match "[%(%[%$]")
+    or char == commit_character
+  then
+    return
+  end
+
+  -- vim.api.nvim_feedkeys(char, "i", true)
+  -- luasnip.lsp_expand("(${1:" .. vim.fn.getreg("z") .. "})$0")
+  vim.schedule(function()
+    vim.cmd [[ let @t="" ]]
+  end)
+  -- vim.schedule(function()
+  --   vim.api.nvim_feedkeys(utils.t("<esc>\"tp"), "n", false)
+  --   vim.api.nvim_feedkeys(utils.t("`[v`]<c-g>"), "n", false)
+  -- end)
+  -- TODO turn this into a snippt
+end
+
+-- TODO always clear the register...
 cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
   filetypes = {
     -- "*" is a alias to all filetypes
@@ -264,10 +309,11 @@ cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
           cmp.lsp.CompletionItemKind.Function,
           cmp.lsp.CompletionItemKind.Method,
         },
-        handler = handlers["*"]
+        handler = handler
       }
     },
     ruby = false,
+    tex = false,
     -- TODO special ruby handler which doesnt add parenthesis for functions or
     -- or simply disable it for ruby
     -- methods with parameters
@@ -290,7 +336,6 @@ cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
     --  }
     --},
     -- Disable for tex
-    tex = false
   }
 })
 )

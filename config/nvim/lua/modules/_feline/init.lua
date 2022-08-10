@@ -1,18 +1,20 @@
 local components = require('modules._feline.components')
-local lsp_progress = require('modules._feline.lsp_progress_component')
 local colors = require('modules._feline.colors')
 
-local function lsp_progress_component(_active)
-  return {
-    provider = function() return lsp_progress.progress() end
-  }
-end
-
 local properties = {
-  force_inactive = {
-    filetypes = {},
-    buftypes = {},
-    bufnames = {}
+  statusline = {
+    force_inactive = {
+      filetypes = {},
+      buftypes = {},
+      bufnames = {}
+    },
+  },
+  winbar = {
+    force_inactive = {
+      filetypes = {},
+      buftypes = {},
+      bufnames = {}
+    },
   }
 }
 
@@ -28,19 +30,25 @@ local statusline_components = {
   }
 }
 
-properties.force_inactive.filetypes = {
+properties.statusline.force_inactive.filetypes = {
   'NvimTree',
   'dbui',
   'packer',
   -- 'startify',
   'fugitive',
   'fugitiveblame',
+  'TelescopePrompt',
   'fzf'
   -- 'help'
 }
 
-properties.force_inactive.buftypes = {
-  'terminal'
+properties.statusline.force_inactive.buftypes = {
+  -- 'terminal',
+  'prompt'
+}
+
+properties.winbar.force_inactive.filetypes = {
+  "qf"
 }
 
 local active_inner_hl = {
@@ -71,6 +79,7 @@ local left_edge = {
 local left_inner = {
   components = {
     components.file_info_component,
+    components.notifications
     -- components.treesitter_location
   },
   side = 'left',
@@ -96,7 +105,6 @@ local right_inner = {
     components.lsp_client_names_component,
     components.spacing_component,
     -- function() return { provider = '', left_sep = 'slant_left' } end,
-    lsp_progress_component,
   },
   side = 'right',
   hl = {active = active_inner_hl, inactive = inactive_inner_hl}
@@ -152,6 +160,7 @@ local c = {
   active = {},
   inactive = {}
 }
+
 table.insert(c.active, statusline_components.left.active)
 table.insert(c.active, statusline_components.mid.active)
 table.insert(c.active, statusline_components.right.active)
@@ -160,6 +169,26 @@ table.insert(c.inactive, statusline_components.left.inactive)
 table.insert(c.inactive, statusline_components.mid.inactive)
 table.insert(c.inactive, statusline_components.right.inactive)
 
+local _c = {
+  active = {
+    components.file_info_component(true),
+  },
+  inactive = {
+    components.file_info_component(false),
+  }
+}
+
+require("feline").winbar.setup({
+  components = {
+    active = {
+      { provider = "file_info" }
+    },
+    inactive = {
+    }
+  },
+  force_inactive = properties.winbar.force_inactive,
+})
+
 require('feline').setup({
     default_bg = colors.bg_active,
     default_fg = colors.fg_active,
@@ -167,5 +196,5 @@ require('feline').setup({
       INSERT = "#f7768e"
     },
     components = c,
-    properties = properties,
+    force_inactive = properties.statusline.force_inactive,
 })

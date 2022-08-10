@@ -5,12 +5,12 @@ fn - l: skhd -k right
 fn - j: skhd -k down
 
 # terminal
-alt - return : $HOME/bin/start_iterm.sh
-# alt - return: alacritty msg create-window || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty
+# alt - return : $HOME/bin/start_iterm.sh
+alt - return: alacritty msg create-window || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty
 
 alt - b: open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 
-# alt - space: alacritty msg create-window -t Floating || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty -t Floating
+alt + shift - return: alacritty msg create-window -t Floating || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty -t Floating
 
 # close
 alt - q: yabai -m window --close && yabai -m window --focus recent

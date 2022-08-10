@@ -9,7 +9,7 @@ table.insert(path, "lua/?/init.lua")
 local function add(lib)
   for _, p in pairs(vim.fn.expand(lib, false, true)) do
     p = vim.loop.fs_realpath(p)
-    library[p] = true
+    -- library[p] = true
   end
 end
 
@@ -27,7 +27,7 @@ add("~/.nvim/plugged/*")
 
 return {
   -- delete root from workspace to make sure we don't trigger duplicate warnings
-  cmd = {'lua_language_server.sh'};
+  cmd = {'lua_language_server'};
   on_new_config = function(config, root)
     local libs = vim.tbl_deep_extend("force", {}, library)
     libs[root] = nil
@@ -42,7 +42,7 @@ return {
         -- Setup your lua path
         path = path
       },
-      completion = { callSnippet = "Both" },
+      -- completion = { callSnippet = "Both" },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
         globals = { "vim" }

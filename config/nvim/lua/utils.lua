@@ -1,5 +1,28 @@
--- Remove once https://github.com/neovim/neovim/pull/13896 lands
+local buffers = require("buffers")
+
 local M = {}
+function M.range(a, b, step)
+  if not b then
+    b = a
+    a = 1
+  end
+  step = step or 1
+  local f =
+    step > 0 and
+    function(_, lastvalue)
+      local nextvalue = lastvalue + step
+      if nextvalue <= b then return nextvalue end
+    end or
+      step < 0 and
+      function(_, lastvalue)
+        local nextvalue = lastvalue + step
+        if nextvalue >= b then return nextvalue end
+      end or
+    function(_, lastvalue) return lastvalue end
+  return f, nil, a - step
+end
+
+-- Remove once https://github.com/neovim/neovim/pull/13896 lands
 -- Get the region between two marks and the start and end positions for the region
 --
 --@param mark1 Name of mark starting the region
@@ -86,6 +109,16 @@ function M.get_visual_selection()
   return table.concat(lines)
 end
 
+function M.has_key(table, _key)
+  for key, _ in pairs(table) do
+    if key == _key then
+      return true
+    end
+  end
+
+  return false
+end
+
 function M.has_value(table, val)
   for _, value in ipairs(table) do
     if value == val then
@@ -114,4 +147,118 @@ function M.t(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
+function M.imerge(a, b)
+  for _,v in ipairs(b) do table.insert(a, v) end
+  return a
+end
+
+function M.merge(a, b)
+  for k,v in pairs(b) do a[k] = v end
+  return a
+end
+
+-- copied from nvim-surround
+M.get_selection = function(is_visual)
+  -- Determine whether to use visual marks or operator marks
+  local mark1, mark2
+  if is_visual then
+    mark1, mark2 = "<", ">"
+  else
+    mark1, mark2 = "[", "]"
+    buffers.adjust_mark("[")
+    buffers.adjust_mark("]")
+  end
+
+  -- Get the row and column of the first and last characters of the selection
+  local first_position = buffers.get_mark(mark1)
+  local last_position = buffers.get_mark(mark2)
+  if not first_position or not last_position then
+    return nil
+  end
+
+  local selection = {
+    first_pos = first_position,
+    last_pos = last_position,
+  }
+  return selection
+end
+
+function M.total_columns()
+  return vim.api.nvim_get_options("columns")
+end
+
+function M.seq(a, b)
+  local sequence = {}
+
+  for i = a, b do
+    table.insert(sequence, i)
+  end
+
+  return sequence
+end
+
+-- vim ranges are 1, 1 indexed
+-- marks are 1, 0 indexed
+function M.vim_range_from_mark(range)
+  local start_row, start_col, end_row, end_col = unpack(range)
+
+  return { start_row, start_col + 1, end_row, end_col + 1}
+end
+
+-- vim ranges are 1, 1 indexed
+function M.vim_range_from_ts(range, bufnr)
+  local bufnr = bufnr or 0
+  return require("nvim-treesitter.ts_utils").get_vim_range(range, bufnr)
+end
+
+-- works on 1, 1 indexed ranges (vim ranges)
+-- calls func with 1, 1 indexed ranges
+function M.iter_buffer_range(buffer, range, func, opts)
+  local defaults = {
+    linewise = false,
+  }
+  local opts = M.merge(defaults, opts or {})
+
+  local start_row, start_col, end_row, end_col = unpack(range)
+
+  local lines = vim.api.nvim_buf_get_lines(buffer, start_row - 1, end_row, true)
+
+  if end_col == -1 then
+    end_col = #lines[#lines]
+  end
+
+  local function line_content(row, scol, ecol)
+    if opts.linewise then return lines[row] end
+
+    return string.sub(lines[row], scol, ecol)
+  end
+
+  if start_row == end_row then
+    func(line_content(1, start_col, end_col), start_row, start_col, end_col)
+  else
+    -- first line
+    func(line_content(1, start_col, end_col),
+      start_row, start_col, -1)
+
+    -- middle
+    for i in M.range(2, #lines - 1) do
+      func(line_content(i, 1, -1),
+        start_row + i, 1, -1)
+    end
+
+    -- end
+    func(line_content(#lines, 1, end_col),
+      end_row, 1, end_col)
+  end
+end
+
+-- 1, 1 indexed
+-- TODO: use the builting vim.highlight.range instead...
+function M.highlight_range(ns, range, opts)
+  local opts = opts or {}
+  local start_row, start_col, end_row, end_col = unpack(range)
+  local hl_group = opts.hl_group or "Visual"
+
+  vim.highlight.range(ns, 0, hl_group, {start_row, start_col}, {end_row, end_col},{})
+end
 return M

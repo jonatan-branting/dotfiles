@@ -4,8 +4,8 @@ local M =  {}
 function M.generate_template(filename)
   return string.format(
     [[
-  # %s
-  1.
+# %s
+1.
     ]], filename)
 end
 
