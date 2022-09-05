@@ -214,15 +214,15 @@ cmp.setup({
   },
   sources = {
     -- { name = "copilot" },
-    { name = "nvim_lsp", filter = function(entry, ctx)
+    { name = "nvim_lsp", entry_filter = function(entry, ctx)
       local kind = types.lsp.CompletionItemKind[entry:get_kind()]
 
       if kind == "Keyword" then
-        return true
+        return false
       elseif kind == "Text" then
-        return true
+        return false
       end
-      return false
+      return true
     end},
     { name = "dap" },
     { name = "git" },

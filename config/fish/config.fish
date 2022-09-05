@@ -61,7 +61,7 @@ end
 set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin $HOME/.local/bin
 set -x PATH "$HOME/.cargo/bin" $PATH
 set -x PATH "$HOME/.pyenv/bin" $PATH
-replay source "$HOME/.config/fish/protected.env"
+#replay source "$HOME/.config/fish/protected.env"
 
 set FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git --exclude tags'
 set FZF_DEFAULT_OPTS '--margin=1,1 --preview-window="right:50%:noborder" --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up'
@@ -73,15 +73,15 @@ set VISUAL "$EDITOR"
 alias nvim "nvim"
 alias vim "nvim"
 
-source $HOME/.hostconfig
+#source $HOME/.hostconfig
 
-status is-login; and pyenv init --path | source
+#status is-login; and pyenv init --path | source
 set -gx EDITOR "nvim"
 
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
 export GIT_PAGER="$EDITOR"
 
-pyenv init - | source
+#pyenv init - | source
 
 function __fish_describe_command; end

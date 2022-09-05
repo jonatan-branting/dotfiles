@@ -33,7 +33,7 @@ window:
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
-  decorations: buttonless
+  decorations: full
 
 # Display tabs using this many cells (changes require restart)
 # tabspaces: 4
@@ -81,7 +81,7 @@ font:
     style: Italic
 
   # Point size of the font
-  size: 17
+  size: 15
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -330,7 +330,7 @@ live_config_reload: true
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 shell:
-  program: /usr/local/bin/fish
+  program: fish
   args:
     - --login
 
@@ -380,8 +380,8 @@ key_bindings:
   - { key: Return,   mods: Shift,   chars: "\x1b[13;2u" }
   - { key: Return,   mods: Control, chars: "\x1b[13;5u" }
 # key_bindings:
-#   - { key: V,        mods: Control|Shift,    action: Paste               }
-#   - { key: C,        mods: Control|Shift,    action: Copy                }
+  - { key: V,        mods: Control|Shift,    action: Paste               }
+  - { key: C,        mods: Control|Shift,    action: Copy                }
 #   - { key: Paste,                   action: Paste                        }
 #   - { key: Copy,                    action: Copy                         }
 #   - { key: Q,        mods: Command, action: Quit                         }

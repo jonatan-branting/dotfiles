@@ -31,7 +31,7 @@ require("packer").startup({
     -- use { "ibhagwan/fzf-lua" }
     use { "smjonas/inc-rename.nvim" }
     use { "rcarriga/cmp-dap" }
-    use { "~/git/nvim-better-n" }
+    use { "jonatan-branting/nvim-better-n" }
     use { "kana/vim-textobj-user" }
     use { "nvim-telescope/telescope.nvim" }
     use { "nvim-telescope/telescope-file-browser.nvim" }
@@ -114,7 +114,7 @@ require("packer").startup({
     use { "jonatan-branting/vim-dispatch-neovim" }
     use { "RRethy/nvim-treesitter-textsubjects" }
     use { "rmagatti/goto-preview" }
-    use { "roman/golden-ratio" }
+    -- use { "roman/golden-ratio" }
     use { "folke/lsp-colors.nvim" }
     use { "rafamadriz/friendly-snippets" }
     use { "honza/vim-snippets" }
@@ -195,7 +195,7 @@ end
 
 vim.g.rooter_silent_chdir = 1
 
-require("old_vimscript")
+-- require("old_vimscript")
 require("modules.core_settings")
 require("modules.mappings")
 

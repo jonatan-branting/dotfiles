@@ -51,6 +51,7 @@ local servers = {
   "cssls",
   "solargraph",
   "html",
+  "rnix",
   "vuels",
   "bashls",
 }
