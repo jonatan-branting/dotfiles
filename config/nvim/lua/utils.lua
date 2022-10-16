@@ -129,8 +129,8 @@ function M.has_value(table, val)
   return false
 end
 
-function M.is_floating(win)
-  return vim.api.nvim_win_get_config(win).relative ~= ""
+function M.is_floating(winnr)
+  return vim.api.nvim_win_get_config(winnr).relative ~= ""
 end
 
 function M.floating_windows_exist()

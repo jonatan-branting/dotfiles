@@ -1,4 +1,4 @@
-local select_mode = require("modules.select_mode")
+local select_mode = require("modules.selection")
 local utils = require("utils")
 local M = {}
 -- TODO smarter selection of <cword>, make it a pattern instead and make sure
@@ -76,8 +76,9 @@ function M.opfunc()
   -- then add selections to the occurrences
   local selections = {}
   for _, occurrence in ipairs(occurrences) do
+    local occurence_range = { occurrence.row, occurrence.start, occurrence.row, occurrence.end_ }
     local selection = select_mode.select_range(
-      occurrence.row, occurrence.start, occurrence.row, occurrence.end_, {ephemeral = true})
+      occurence_range, {ephemeral = true})
 
     if selection then table.insert(selections, selection) end
   end

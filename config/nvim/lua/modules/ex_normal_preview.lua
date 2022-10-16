@@ -56,7 +56,7 @@ local function execute_on_targets(targets, cmd, opts)
   vim.keymap.set({"i"}, "<c-1>", "<c-o>", {  buffer = true })
   vim.keymap.set({"i"}, "<c-q>", "<c-o>", {  buffer = true })
 
-  backup_cursor()
+  -- backup_cursor()
   vim.cmd("delmarks < > s e") -- register clobberer :(
   for _, target in ipairs(targets) do
     if type(target) == "function" then
@@ -74,19 +74,19 @@ local function execute_on_targets(targets, cmd, opts)
       vim.api.nvim_buf_set_mark(0, "e", end_row, end_col - 1, {})
     end
 
-    if opts.preselect then
+    if false and opts.preselect then
       vim.cmd('exe "normal g`svg`e' .. cmd .. '\\<c-1>"')
 
-    elseif opts.reverse then
+    elseif false and opts.reverse then
       vim.cmd('exe "normal g`e' .. cmd .. '\\<c-1>"')
     else
-      vim.cmd('exe "normal ' .. cmd .. '\\<c-1>"')
+      vim.cmd('exe "normal ' .. cmd .. '"')-- .. '\\<c-1>"')
     end
 
-    local mode = vim.fn.mode()
-    if not (mode  == "v" or mode == "V") then
-      vim.cmd("delmarks < > ^")
-    end
+    -- local mode = vim.fn.mode()
+    -- if not (mode  == "v" or mode == "V") then
+    --   vim.cmd("delmarks < > ^")
+    -- end
 
     if opts.preview then
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -142,7 +142,7 @@ end
 local function setup_user_command(name, args)
   local args = args or {}
   local ephemeral = args.ephemeral or false
-  local name = name or "Norm"
+  local name = name or "Normal"
   -- if args.targets and type(args.targets) == "function" then
   --   print("targets:", vim.inspect(args.targets()))
   -- end
@@ -152,7 +152,7 @@ local function setup_user_command(name, args)
       function(opts)
         -- print(vim.inspect(line_occurrences))
         local targets = args.targets or default_targets_function(opts)
-        execute_on_targets(targets(), opts.args, { preselect = args.preselect, reverse = args.reverse})
+        execute_on_targets(targets(), opts.args, { preview =true, preselect = args.preselect, reverse = args.reverse})
       end,
       {
         nargs = 1,

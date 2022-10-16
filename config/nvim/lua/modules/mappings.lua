@@ -133,8 +133,6 @@ vim.api.nvim_set_keymap('v', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$'
 vim.api.nvim_set_keymap('v', '<', '<gv', {silent = true, noremap = true, nowait = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {silent = true, noremap = true, nowait = true})
 
-nnoremap({ 'p', 'p`[v`]=' })
-
 -- Allow terminal style navigation in insert mode
 inoremap({ '<c-e>', '<c-o>g$' }, 'end-of-line')
 inoremap({ '<c-a>', '<c-o>g0' }, 'start-of-line')
@@ -158,14 +156,14 @@ nnoremap({ '<leader>R', ':Reload<cr>' })
 -- TODO better window management
 -- maybe a hydra?
 
+
 nnoremap({ '<leader>ww', '<c-w>w' }, '?')
 nnoremap({ '<leader>wd', '<c-w>c' }, 'delete-window')
 nnoremap({ '-', '<c-w>-'})
 nnoremap({ '+', '<c-w>+'})
 
 nnoremap({ 'yc', '<c-w>c' }, 'delete-window')
-nnoremap({ 'yd', '<c-w>j' }, 'delete-window')
-nnoremap({ 'yu', '<c-w>k' }, 'delete-window')
+
 
 nnoremap({ '<leader>w-', '<c-w>s' }, 'horizontal-split')
 nnoremap({ '<leader>w/', '<c-w>v' }, 'vertical-split')
@@ -178,15 +176,18 @@ nnoremap({ '<leader>wH', '<c-w>5<' }, 'enlargen-window-left')
 nnoremap({ '<leader>wL', '<c-w>5>' }, 'enlargen-window-right')
 nnoremap({ '<leader>wy', '<c-w>H' }, 'semi-rotate-layout')
 nnoremap({ '<leader>w=', '<c-w>=' }, 'balance-windows')
-nnoremap({ '<leader>wg', ':GoldenRatioResize<cr>' }, 'golden-ratio')
-nnoremap({ '<leader>we', ':GoldenRatioResize<cr>' }, 'golden-ratio')
+vim.keymap.set("n", "<leader>we", "<cmw>WindowsMaximize<cr>" )
+nnoremap({ 'y=', '<c-w>=' }, 'balance-windows')
+nnoremap({ 'yu', '<cmd>WindowsMaximize<cr>' }, 'maximize-window')
+-- nnoremap({ 'yd', '<c-w>j' }, 'delete-window')
+-- nnoremap({ 'yu', '<c-w>k' }, 'delete-window')
+
 
 -- Buffers
 nnoremap({ '<leader>bd', ':bd<cr>' }, 'delete-buffer')
 nnoremap({ '<leader>bh', ':Startify<cr>' }, 'start-screen/home')
 nnoremap({ '<leader>bn', ':bnext<cr>' }, 'next-buffer')
 nnoremap({ '<leader>bp', ':bprev<cr>' }, 'prev-buffer')
-
 -- local fzf = require("fzf-lua")
 -- nnoremap({ '<leader><leader>', fzf.files }, 'find-files')
 -- nnoremap({ '<leader>f', fzf.live_grep_native }, 'live-grep')
@@ -199,7 +200,8 @@ nnoremap({ '<leader>bp', ':bprev<cr>' }, 'prev-buffer')
 -- vnoremap { "gw", fzf.grep_visual }
 
 local telescope = require("telescope.builtin")
-nnoremap({ '<leader><leader>', function() telescope.find_files({ hidden = true }) end }, 'find-files')
+-- nnoremap({ '<leader><leader>', function() telescope.find_files({ hidden = true }) end }, 'find-files')
+nnoremap({ '<leader>p', function() telescope.find_files({ hidden = true }) end }, 'find-files')
 nnoremap({ '<leader>f', function() telescope.live_grep({hidden =true}) end }, 'live-grep')
 nnoremap({ '<leader>F', function() telescope.grep_string({hidden = true, grep_open_files = true}) end }, 'live-grep')
 nnoremap({ '<leader>e', telescope.buffers }, 'list-buffers')
@@ -296,9 +298,6 @@ end
 onoremap({ 'ih', function() gitsigns.select_hunk() end })
 xnoremap({ 'ih', function() gitsigns.select_hunk() end })
 
--- Fern
-nnoremap({ '<leader>o', ':Fern . -reveal=%<cr>' }, 'reveal-file')
-
 -- Easy Align
 vnoremap({ '<cr>', '<Plug>(EasyAlign)' }, 'easy-align-selected')
 nnoremap({ 'ga', '<Plug>(EasyAlign)' }, 'easy-align')
@@ -382,6 +381,7 @@ vnoremap({"<down>", ":m '>+1<CR>gv=gv"})
 vnoremap({"<left>", "<gv"})
 vnoremap({"<right>", ">gv"})
 
+
 nnoremap({ "<down>", "<c-w>j" })
 nnoremap({ "<up>", "<c-w>k" })
 nnoremap({ "<left>", "<c-w>h" })
@@ -404,7 +404,9 @@ nnoremap({ "<c-e>", "$" })
 
 nnoremap({ "<leader>a", "<c-^>" }, "alternate-last-buffer")
 
-nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
+-- nnoremap({"<leader>,", ":Tfocus<cr>"}, "toggle-term")
+nnoremap({"ys", "<cmd>Ttoggle<cr>" }, "toggle-term")
+nnoremap({"yc", "<c-w>c" }, "close-window")
 tnoremap({"<c-o>", "<c-\\><c-n><c-o>"})
 
 -- Register keybindings for usage with better-n
@@ -425,7 +427,7 @@ require('refactoring').setup({
     }
   }
 })
-vim.keymap.set("v", "<leader>r",
+vim.keymap.set("v", "<c-f>",
   function()
     vim.api.nvim_feedkeys(utils.t("<esc>"), "v", false)
     require('refactoring').select_refactor()
@@ -485,36 +487,35 @@ vim.keymap.set("n", "x<", function()
   return "g@l"
 end, { silent = true, expr = true })
 
-require("leap").setup({
-  {
-    repeat_search = '<enter>',
-    next_group    = '<space>',
-    prev_group    = '<tab>',
-    eol           = '<space>',
-    next_match = "n",
-    prev_match = "<s-n>"
-  }
-})
-vim.keymap.set({"n", "x"}, "q", "<Plug>(leap-forward)")
-vim.keymap.set({"n", "x"}, "Q", "<Plug>(leap-backward)")
-vim.keymap.set({"x", "o"}, "q", require("leap-ast").leap)
+-- require("leap").setup({
+--   {
+--     repeat_search = '<enter>',
+--     next_group    = '<space>',
+--     prev_group    = '<tab>',
+--     eol           = '<space>',
+--     next_match = "n",
+--     prev_match = "<s-n>"
+--   }
+-- })
+-- vim.keymap.set({"n", "x"}, "q", "<Plug>(leap-forward)")
+-- vim.keymap.set({"n", "x"}, "Q", "<Plug>(leap-backward)")
 
 -- Usage:
-local leap_multi = require("modules.leap_multi")
+-- local leap_multi = require("modules.leap_multi")
 -- vim.keymap.set("n", "<c-n>", function()
 --   vim.cmd("*")
 -- end)
 
 local ts_utils = require("nvim-treesitter.ts_utils")
-vim.keymap.set("o", "r", function()
-  require("leap").leap({
-    -- targets =  TODO after first character, get all ts nodes and filter them, then show labels for each one jump to that target and run the current operator on the node!
-    -- qurstions: keep cursor there? only for change maybe, a bit inconsistent though... Maybe jump back for change too once done? That'd be weird though
-    action = function(target)
-      -- print(vim.inspect(target))
-    end,
-  })
-end)
+-- vim.keymap.set("o", "r", function()
+--   require("leap").leap({
+--     -- targets =  TODO after first character, get all ts nodes and filter them, then show labels for each one jump to that target and run the current operator on the node!
+--     -- qurstions: keep cursor there? only for change maybe, a bit inconsistent though... Maybe jump back for change too once done? That'd be weird though
+--     action = function(target)
+--       -- print(vim.inspect(target))
+--     end,
+--   })
+-- end)
 
 cnoremap({"<c-x>", "<c-v><esc>"})
 vnoremap({"<tab>", "\"zc"})
@@ -522,7 +523,7 @@ vnoremap({"<tab>", "\"zc"})
 vim.keymap.set({"x", "n"}, "gh", "^", {})
 vim.keymap.set({"x", "n"}, "gl", "$", {})
 
-local leap_ast = require("modules.leap_ast")
+-- local leap_ast = require("modules.leap_ast")
 
 -- vim.schedule(function()
 --   vim.keymap.set("n", "c", function()
@@ -544,37 +545,37 @@ local dynamic_textobj_active = false
 local last_operator = nil
 local is_in_cmdline = false
 
-vim.api.nvim_create_autocmd("User",
-  {
-    pattern = "TreehopperLeave",
-    callback = function (args)
-      if not dynamic_textobj_active then return end
+-- vim.api.nvim_create_autocmd("User",
+--   {
+--     pattern = "TreehopperLeave",
+--     callback = function (args)
+--       if not dynamic_textobj_active then return end
 
-      -- print('dynamic_textobj_active', dynamic_textobj_active)
-      -- print('last_operator', last_operator)
-      -- print('is_in_cmdline', is_in_cmdline)
+--       -- print('dynamic_textobj_active', dynamic_textobj_active)
+--       -- print('last_operator', last_operator)
+--       -- print('is_in_cmdline', is_in_cmdline)
 
-      if args.data.jumped then
-        vim.schedule(function() dynamic_textobj_active = false end)
+--       if args.data.jumped then
+--         vim.schedule(function() dynamic_textobj_active = false end)
 
-        return
-      end
+--         return
+--       end
 
-      local motion = args.data.key
-      -- print("args", vim.inspect(args.data))
-      -- print("motion", motion)
+--       local motion = args.data.key
+--       -- print("args", vim.inspect(args.data))
+--       -- print("motion", motion)
 
-      if motion and not args.data.jumped then
-        vim.api.nvim_input(utils.t("<esc>" .. last_operator .. motion))
-      else
-        vim.api.nvim_feedkeys(utils.t("<esc>"), "n", false)
-      end
+--       if motion and not args.data.jumped then
+--         vim.api.nvim_input(utils.t("<esc>" .. last_operator .. motion))
+--       else
+--         vim.api.nvim_feedkeys(utils.t("<esc>"), "n", false)
+--       end
 
-      vim.schedule(function() dynamic_textobj_active = false
-      end)
-    end
-  }
-)
+--       vim.schedule(function() dynamic_textobj_active = false
+--       end)
+--     end
+--   }
+-- )
 
 local function _t()
   vim.api.nvim_feedkeys(utils.t(last_operator), "n", false)
@@ -606,30 +607,30 @@ require("tsht").config.hint_keys = {"q", "x", "e", "v", "g", "u", ".", "z", "/",
 --   }
 -- )
 
-vim.api.nvim_create_autocmd("CmdlineEnter", { callback = function () is_in_cmdline = true end })
-vim.api.nvim_create_autocmd("CmdlineLeave", { callback = function () is_in_cmdline = false end })
+-- vim.api.nvim_create_autocmd("CmdlineEnter", { callback = function () is_in_cmdline = true end })
+-- vim.api.nvim_create_autocmd("CmdlineLeave", { callback = function () is_in_cmdline = false end })
 
-vim.keymap.set("x", "p", "\"_dP")
+-- vim.keymap.set("x", "p", "\"_dP")
 
 -- nowait only works if the mapping is defined last of all contesting bindings
-vim.schedule(function()
-  -- vim.keymap.set("n", "c", "c", {nowait = true})
-  -- vim.keymap.set("n", "d", "d", {nowait = true})
-  -- vim.keymap.set("n", "y", "y", {nowait = true})
-  vim.cmd("normal! qtq")
-end)
-
-vim.keymap.set("n", "x", "<nop>")
-
-vim.keymap.set("n", "se", function()
-  require("modules.selection").norm_on_selection()
-end)
--- vim.keymap.set("n", "su", function()
---   require("modules.select_mode").remove_last_cursor()
+-- vim.schedule(function()
+--   -- vim.keymap.set("n", "c", "c", {nowait = true})
+--   -- vim.keymap.set("n", "d", "d", {nowait = true})
+--   -- vim.keymap.set("n", "y", "y", {nowait = true})
+--   vim.cmd("normal! qtq")
 -- end)
-vim.keymap.set("n", "sq", function()
-  require("modules.selection").clear_selection()
-end)
+
+-- vim.keymap.set("n", "x", "<nop>")
+
+-- vim.keymap.set("n", "se", function()
+--   require("modules.selection").norm_on_selection()
+-- end)
+-- -- vim.keymap.set("n", "su", function()
+-- --   require("modules.select_mode").remove_last_cursor()
+-- -- end)
+-- vim.keymap.set("n", "sq", function()
+--   require("modules.selection").clear_selection()
+-- end)
 
 -- vim.key.map.set("v", "s", function()
 --   require("modules.select_mode").select
@@ -658,6 +659,8 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   end
 })
 
+-- vim.keymap.set("t", "<esc>", "<C-\\><C-n>")
+
 vim.keymap.set("o", "o", require("modules.occurrence_modifier").motion)
 vim.keymap.set("o", "m", require("modules.selection").motion)
 vim.keymap.set({"n", "x"}, "m", function()
@@ -666,31 +669,31 @@ vim.keymap.set({"n", "x"}, "m", function()
   return "g@"
 end, {expr = true})
 
-vim.keymap.set({"o"}, "o", function()
-  return require("modules.occurrence_modifier").motion()
-end)
+-- vim.keymap.set({"o"}, "o", function()
+--   return require("modules.occurrence_modifier").motion()
+-- end)
 
-vim.api.nvim_create_user_command("M",
-  function(args)
-    local line = args.line1
-    local contents = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
-    require("modules.selection").select_range(line, 0, line, #contents - 1)
-  end
-, { range = true })
+-- vim.api.nvim_create_user_command("M",
+--   function(args)
+--     local line = args.line1
+--     local contents = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+--     require("modules.selection").select_range(line, 0, line, #contents - 1)
+--   end
+-- , { range = true })
 
-vim.keymap.set("n", "<c-h>",
-  function()
-    local cword = vim.fn.expand("<cword>")
-    vim.cmd("help " .. cword)
-  end
-, {})
+-- vim.keymap.set("n", "<c-h>",
+--   function()
+--     local cword = vim.fn.expand("<cword>")
+--     vim.cmd("help " .. cword)
+--   end
+-- , {})
 
-vim.keymap.set("n", "mx", function() require("modules.selection").motion({preselect = false, operator = "a", reverse = true}) end)
-vim.keymap.set("n", "mz", function() require("modules.selection").motion({preselect = false, operator = "i"}) end)
+-- vim.keymap.set("n", "mx", function() require("modules.selection").motion({preselect = false, operator = "a", reverse = true}) end)
+-- vim.keymap.set("n", "mz", function() require("modules.selection").motion({preselect = false, operator = "i"}) end)
 -- vim.keymap.set("n", "g.", "'.")
 -- vim.keymap.set("n", "[m", "g;")
 -- vim.keymap.set("n", "]m", "g,")
-vim.keymap.set("n", "<leader>p", "")
+-- vim.keymap.set("n", "<leader>p", "")
 
 vim.api.nvim_create_user_command("AutorunCurrentFile",
   function()
@@ -874,8 +877,19 @@ vim.keymap.set({"n", "o", "x"}, "<c-w>", "w")
 --   -- vim.api.nvim_feedkeys(utils.t("miw"), "n", false)
 -- end)
 
+-- Do not break goto-functionality in help-buffers
+-- vim.api.nvim_create_autocmd("Filetype", {
+--   pattern = "help",
+--   callback = function (args)
+--     vim.keymap.set("n", "<cr>", "<cr>", { buffer = args.buffer })
+--   end
+-- })
+
+-- dont overwrite clipboard when pasting from visual mode
+vim.keymap.set("x", "p", "pgvy")
+
 return {
   extract_function_callback = extract_function_callback,
-  _t = _t
+  -- _t = _t
 }
 

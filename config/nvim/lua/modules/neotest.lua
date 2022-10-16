@@ -30,7 +30,7 @@ require("neotest").setup({
     require("neotest-plenary"),
     require("neotest-rspec"),
     require("neotest-vim-test")({
-      ignore_file_types = { "python", "vim", "lua", "ruby" },
+      ignore_file_types = { "python", "vim", "lua" },
     }),
   },
 })

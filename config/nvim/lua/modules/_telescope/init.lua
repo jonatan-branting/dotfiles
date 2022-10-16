@@ -86,15 +86,15 @@ require('telescope').setup{
   },
   pickers = {
     find_files = {
-      disable_devicons = true,
+      -- disable_devicons = true,
     },
     grep_string = {
-      disable_devicons = true,
+      -- disable_devicons = true,
       debounce = 250,
       path_display = { "shorten" }
     },
     live_grep = {
-      disable_devicons = true,
+      -- disable_devicons = true,
       debounce = 250,
       path_display = { "shorten" }
     }

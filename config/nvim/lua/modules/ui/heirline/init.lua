@@ -293,15 +293,15 @@ local git_component = {
     self.cwd = vim.fn.getcwd():gsub('^.*/', '')
   end,
 
-  on_click = {
-    callback = function(self, minwid, nclicks, button)
-      -- vim.defer_fn(function()
-      --   vim.cmd("Lazygit %:p:h")
-      -- end, 100)
-    end,
-    name = "heirline_git",
-    update = false,
-  },
+  -- on_click = {
+  --   callback = function(self, minwid, nclicks, button)
+  --     -- vim.defer_fn(function()
+  --     --   vim.cmd("Lazygit %:p:h")
+  --     -- end, 100)
+  --   end,
+  --   name = "heirline_git",
+  --   update = false,
+  -- },
   hl = { fg = "bg", bg = "fg", bold = true },
   {
     provider = function(self)
@@ -427,12 +427,12 @@ local work_dir = {
     end
   end,
   hl = { italic = true },
-  on_click = {
-    callback = function()
-      vim.cmd('NvimTreeToggle')
-    end,
-    name = "heirline_workdir",
-  },
+  -- on_click = {
+  --   callback = function()
+  --     vim.cmd('NvimTreeToggle')
+  --   end,
+  --   name = "heirline_workdir",
+  -- },
 
   h_utils.make_flexible_component(1, {
     provider = function(self)
@@ -586,6 +586,7 @@ local terminal_statusline = {
 
 local statuslines = {
   -- Hack to make sure that floating windows do not update the statusline
+  fallthrough = false,
   condition = function (self)
     if utils.is_floating(0) then
       self.winnr = self.last_winnr or self.winnr
@@ -629,8 +630,6 @@ local statuslines = {
     end,
   },
 
-  init = h_utils.pick_child_on_condition,
-
   git_statusline,
   special_statusline,
   terminal_statusline,
@@ -648,15 +647,15 @@ local close_button = {
   {
     provider = "",
     hl = { fg = "gray" },
-    on_click = {
-      callback = function(_, winid)
-        vim.api.nvim_win_close(winid, true)
-      end,
-      name = function(self)
-        return "heirline_close_button_" .. self.winnr
-      end,
-      update = true,
-    },
+    -- on_click = {
+    --   callback = function(_, winid)
+    --     vim.api.nvim_win_close(winid, true)
+    --   end,
+    --   name = function(self)
+    --     return "heirline_close_button_" .. self.winnr
+    --   end,
+    --   update = true,
+    -- },
   },
 }
 
@@ -667,7 +666,6 @@ local winbar = {
     local fg = ui_utils.get_highlight("NormalNC").fg
     return { bg = bg, fg = fg}
   end,
-  init = h_utils.pick_child_on_condition,
   {
     condition = function()
       return conditions.buffer_matches({

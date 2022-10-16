@@ -3,6 +3,7 @@ local npairs = require('nvim-autopairs')
 npairs.setup({
   disable_filetype = { "TelescopePrompt" },
   check_ts = true,
+  break_undo = false,
   map_bs = true,
   map_c_w = true,
   fast_wrap = {

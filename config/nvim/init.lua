@@ -10,6 +10,9 @@ DEFAULT_BORDERS = { topleft = '┏', horiz = '━', topright = '┓', vert = '�
 
 DEFAULT_BORDERS = {  horiz = '━',  vert = '┃',   vertright = '┣', vertleft = '┫', horizdown = "┳", horizup = "┻", verthoriz = "╋" }
 vim.opt.fillchars = DEFAULT_BORDERS
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.smarttab = true
 -- TODO move out 
 -- for k, v in pairs(DEFAULT_BORDERS) do
 --   vim.opt.fillchars = --vim.opt.fillchars .. k .. ":" .. v
@@ -21,13 +24,64 @@ vim.cmd [[packadd packer.nvim]]
 require("packer").startup({
   function(use)
     use { "wbthomason/packer.nvim" }
-    use { "nvim-telescope/telescope-fzf-native.nvim", run = "'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" }
+    use { "smjonas/live-command.nvim",
+      config = function()
+        require("live-command").setup {
+          -- defaults = {},
+          commands = {
+            Norm = { cmd = "norm" },
+            G = { cmd = "g" },
+          },
+        }
+      end,
+    }
+    use { "chaoren/vim-wordmotion" }
+    use { "williamboman/mason.nvim" }
+    use { "williamboman/mason-lspconfig.nvim" }
+    use {
+      "nvim-neo-tree/neo-tree.nvim",
+      branch = "v2.x",
+      requires = {
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+      },
+      config = function()
+        require("modules.neotree").setup()
+
+        vim.keymap.set("n", "<leader>o", function()
+          require("neo-tree.command").execute({
+            action = "show",
+            source = "filesystem",
+            position = "current",
+          })
+        end)
+      end
+    }
+    use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }
     use { "nvim-lua/plenary.nvim", run = "make" }
+    use { "rcarriga/nvim-notify" }
+    -- use { "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async", config = function()
+    --   vim.o.foldcolumn = '1'
+    --   vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+    --   vim.o.foldlevelstart = 99
+    --   vim.o.foldenable = true
+    --   require("ufo").setup()
+    -- end}
     use { "jedrzejboczar/possession.nvim" }
     use { "projekt0n/github-nvim-theme" }
-    use { "ggandor/leap.nvim" }
+    use { "anuvyklack/windows.nvim",
+      requires = { "anuvyklack/middleclass", "anuvyklack/animation.nvim" },
+      config = function()
+        vim.o.winwidth = 10
+        vim.o.winminwidth = 10
+        vim.o.equalalways = false
+        require("windows").setup()
+      end
+    }
+    use { "catppuccin/nvim" }
     use { "ggandor/leap-ast.nvim" }
     use { "Julian/vim-textobj-variable-segment" }
+    use { "gpanders/editorconfig.nvim" }
     -- use { "ibhagwan/fzf-lua" }
     use { "smjonas/inc-rename.nvim" }
     use { "rcarriga/cmp-dap" }
@@ -40,7 +94,6 @@ require("packer").startup({
     use { "L3MON4D3/LuaSnip" }
     use { "jonatan-branting/lua-dev.nvim" }
     use { "saadparwaiz1/cmp_luasnip" }
-    -- use { "github/copilot.vim" }
     -- use { "zbirenbaum/copilot.lua",
     --   requires = { { "zbirenbaum/copilot-cmp", module = "copilot_cmp" }},
     --   config = function()
@@ -65,25 +118,32 @@ require("packer").startup({
     use { "nvim-neotest/neotest-plenary" }
     use { "nvim-neotest/neotest-python" }
     use { "nvim-neotest/neotest-vim-test" }
+    use {
+      'samodostal/copilot-client.lua',
+      requires = {
+        'zbirenbaum/copilot.lua', -- requires copilot.lua and plenary.nvim
+        'nvim-lua/plenary.nvim'
+      },
+    }
     use { "haydenmeade/neotest-jest" }
-    use { "jonatan-branting/neotest-rspec" }
+    use { "jonatan-branting/neotest-rspec", as = "neotest-minitest"}
+    use { "olimorris/neotest-rspec"}
     use { "j-hui/fidget.nvim" }
     use { "anuvyklack/hydra.nvim" }
     use { "anuvyklack/keymap-layer.nvim" }
     use { "yioneko/nvim-yati" }
     use { "kwkarlwang/bufresize.nvim" }
-    use { "vim-scripts/text-object-left-and-right" }
     use { "MunifTanjim/nui.nvim" }
     use { "sunjon/stylish.nvim" }
     use { "stevearc/dressing.nvim" }
-    use { "kyazdani42/nvim-web-devicons" }
+    -- use { "kyazdani42/nvim-web-devicons" }
     use { "mfussenegger/nvim-treehopper" }
     use { "kylechui/nvim-surround",
       config = function()
         require("nvim-surround").setup({
-          keymaps =  {
-            insert = "<C-g>s",
-            insert_line = "<C-g>S",
+          keymaps = {
+            -- insert = "<C-g>s",
+            -- insert_line = "<C-g>S",
             normal = "s",
             normal_cur = "ss",
             normal_line = "S",
@@ -96,7 +156,6 @@ require("packer").startup({
         })
       end
     }
-    -- use { "tpope/vim-surround" }
     use { "andymass/vim-matchup" }
     use { "danymat/neogen" }
     use { "famiu/bufdelete.nvim" }
@@ -114,7 +173,6 @@ require("packer").startup({
     use { "jonatan-branting/vim-dispatch-neovim" }
     use { "RRethy/nvim-treesitter-textsubjects" }
     use { "rmagatti/goto-preview" }
-    -- use { "roman/golden-ratio" }
     use { "folke/lsp-colors.nvim" }
     use { "rafamadriz/friendly-snippets" }
     use { "honza/vim-snippets" }
@@ -127,7 +185,7 @@ require("packer").startup({
     use { "hrsh7th/cmp-nvim-lsp" }
     use { "hrsh7th/cmp-cmdline" }
     use { "hrsh7th/cmp-buffer" }
-    use { "jonatan-branting/nvim-cmp" }
+    use { "hrsh7th/nvim-cmp" }
     use { "nvim-lua/lsp-status.nvim" }
     use { "onsails/lspkind-nvim" }
     use { "https://gitlab.com/yorickpeterse/nvim-dd" }
@@ -136,22 +194,29 @@ require("packer").startup({
     use { "tpope/vim-rhubarb" }
     use { "lewis6991/gitsigns.nvim" }
     use { "tpope/vim-fugitive" }
-    use { "ThePrimeagen/git-worktree.nvim" }
+    use { "ThePrimeagen/git-worktree.nvim", config = function()
+      local worktree = require("git-worktree")
+      worktree.setup({
+        update_on_change = true,
+        clearjumps_on_change = true
+      })
+
+
+      vim.api.nvim_create_user_command("GW", function(opts)
+        local branch_name = opts.args
+
+        require("git-worktree").create_worktree(branch_name, "develop", "origin")
+      end, { nargs = 1 })
+    end}
     use { "tami5/sql.nvim" }
     use { "kevinhwang91/nvim-bqf" }
     use { "kevinhwang91/promise-async" }
-    use { "mcchrish/zenbones.nvim", requires = "rktjmp/lush.nvim" }
-    use { "rktjmp/shipwright.nvim" }
     use { "romainl/vim-qf" }
     use { "airblade/vim-rooter" }
-    use { "lambdalisue/fern.vim", branch = "main" }
-    use { "lambdalisue/fern-git-status.vim" }
     use { "JoosepAlviste/nvim-ts-context-commentstring" }
     use { "AndrewRadev/splitjoin.vim" }
     use { "haya14busa/vim-asterisk" }
     use { "junegunn/vim-easy-align" }
-    -- use { "wellle/targets.vim" }
-    -- use { "chaoren/vim-wordmotion" }
     use { "michaeljsmith/vim-indent-object" }
     use { "tpope/vim-repeat" }
     use { "tpope/vim-eunuch" }
@@ -164,7 +229,18 @@ require("packer").startup({
     use { "antoinemadec/FixCursorHold.nvim" }
     use { "windwp/nvim-ts-autotag" }
     use { "dkarter/bullets.vim" }
-    use { "jonatan-branting/neoterm" }
+    use {
+      "jonatan-branting/neoterm",
+      config = function()
+
+        vim.cmd [[
+          let g:neoterm_callbacks = {}
+          function! g:neoterm_callbacks.before_exec()
+            normal G
+          endfunction
+        ]]
+      end
+    }
     use { "vim-test/vim-test" }
     use { "jonatan-branting/nvim-dap" }
     use { "theHamsta/nvim-dap-virtual-text" }
@@ -188,12 +264,16 @@ require("packer").startup({
 })
 
 F = F or {}
-
 function F.iter_buffer_range(buffer, range, func, opts)
   return require("utils").iter_buffer_range(buffer, range, func, opts)
 end
 
 vim.g.rooter_silent_chdir = 1
+vim.g.ruby_indent_hanging_elements = 0
+vim.g.ruby_indent_assignment_style = "variable"
+vim.g.ruby_indent_block_style = "do"
+vim.g.matchup_matchparen_offscreen = {}
+vim.g["test#strategy"] = "neoterm"
 
 -- require("old_vimscript")
 require("modules.core_settings")
@@ -238,7 +318,7 @@ require("better-n").setup {
       if key == "n" then return end
 
       -- Clear highlighting, indicating that `n` will not goto the next
-      -- highlighted search-term
+       -- highlighted search-term
       vim.cmd [[ nohl ]]
     end
   },
@@ -248,6 +328,9 @@ require("better-n").setup {
 
     ["]m"] = {previous = "[m", next = "]m"},
     ["[m"] = {previous = "[m", next = "]m"},
+
+    ["]r"] = {previous = "[r", next = "]r"},
+    ["[r"] = {previous = "[r", next = "]r"},
 
     ["]a"] = {previous = "[a", next = "]a"},
     ["[a"] = {previous = "[a", next = "]a"},
@@ -301,11 +384,6 @@ require("goto-preview").setup({
   dismiss_on_move = false,
 })
 
-require("git-worktree").setup({
-  update_on_change = true,
-  clearjumps_on_change = true
-})
-
 require("nvim-ts-autotag").setup({
   enabled = true,
   filetypes = { "html", "javascript", "javascriptreact", "typescriptreact", "svelte", "vue", "eruby", "erb" },
@@ -316,28 +394,46 @@ require("neogen").setup({})
 require("modules.ui.heirline")
 require("modules.ex_normal_preview")
 require("modules.select_mode").setup({})
+require("modules.mouse_hover").setup()
 
--- vim.api.nvim_create_autocmd("BufWritePost",
---   {
---     pattern = "lua/*.lua",
---     callback = function(opts)
---       print("SourceCmd", vim.inspect(opts))
---     end,
---     nested = true
---   }
--- )
+require("mason").setup()
+require("mason-lspconfig").setup()
 
--- vim.api.nvim_create_autocmd("SourceCmd",
---   {
---     pattern = "*.lua",
---     callback = function(opts)
---       print("SourceCmd", vim.inspect(opts))
---       vim.cmd("source " .. opts.file)
---     end,
---     nested = true
---   }
--- )
+local diagnostic_window = nil
+vim.api.nvim_create_autocmd(
+  "User", {
+    pattern = "MouseHoverEnter",
+    callback = function (args)
+      vim.schedule(function()
+        local row = args.data.position.line + 1
+        local col = args.data.position.column
 
--- vim.api.nvim_create_user_command("ASEnable")
--- vim.api.nvim_create_user_command("ASDisable")
+        local mouse_pos = vim.fn.getmousepos()
+        local row = mouse_pos.line
+        local col = mouse_pos.column
+        print(row,col)
 
+        local win_id = vim.diagnostic.open_float({
+          scope = "cursor",
+          pos = { row, col },
+        })
+
+        print("winid", win_id)
+        diagnostic_window = vim.fn.win_id2win(win_id)
+        if diagnostic_window == 0 then diagnostic_window = nil end
+      end)
+    end
+  }
+)
+vim.api.nvim_create_autocmd(
+  "User", {
+    pattern = "MouseHoverLeave",
+    callback = function (data)
+      vim.schedule(function()
+        if not diagnostic_window then return end
+
+        vim.api.nvim_win_close(diagnostic_window, false)
+      end)
+    end
+  }
+)

@@ -1,67 +1,67 @@
 #!/usr/bin/env sh
 
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
-export DISPLAY_1_WIDTH="3072"
-export DISPLAY_1_HEIGHT="1920"
-
-export DISPLAY_2_WIDTH="2560"
-export DISPLAY_2_HEIGHT="1440"
-
 # global settings
-yabai -m config mouse_follows_focus          off
-yabai -m config focus_follows_mouse          off
-yabai -m config window_placement             second_child
-yabai -m config window_topmost               off
-yabai -m config window_opacity               off
-yabai -m config window_opacity_duration      0.1
-yabai -m config window_shadow                off
-yabai -m config window_border                on
-yabai -m config window_border_width          12
-yabai -m config normal_window_border_color   0xff505050
-yabai -m config active_window_border_color   0xff99A1C4
-yabai -m config insert_window_border_color   0xffd75f5f
-yabai -m config window_origin_display        focused
-yabai -m config active_window_opacity        1.0
-yabai -m config normal_window_opacity        0.90
-yabai -m config split_ratio                  0.50
-yabai -m config auto_balance                 off
-yabai -m config mouse_modifier               cmd
-yabai -m config mouse_action1                move
-yabai -m config mouse_action2                resize
-yabai -m config mouse_drop_action            stack
+yabai -m config                               \
+  mouse_follows_focus          off            \
+  focus_follows_mouse          autoraise      \
+  window_origin_display        focused        \
+  window_placement             second_child   \
+  window_topmost               off             \
+  window_shadow                off            \
+  window_animation_duration    0.20           \
+  window_opacity_duration      0.0            \
+  active_window_opacity        1.0            \
+  normal_window_opacity        0.90           \
+  window_opacity               off            \
+  normal_window_border_color   0xaf505050     \
+  active_window_border_color   0xaf99A1C4     \
+  window_border_width          1              \
+  window_border_radius         11             \
+  window_border_blur           off            \
+  window_border_hidpi          on             \
+  window_border                on             \
+  split_ratio                  0.50           \
+  split_type                   auto           \
+  auto_balance                 off            \
+  top_padding                  6              \
+  bottom_padding               14             \
+  left_padding                 14             \
+  right_padding                14             \
+  window_gap                   12             \
+  layout                       bsp            \
+  mouse_modifier               alt            \
+  mouse_action1                move           \
+  mouse_action2                resize         \
+  mouse_drop_action            swap
 
-# general space settings
-yabai -m config layout                       bsp
-yabai -m config top_padding                  20
-yabai -m config bottom_padding               20
-yabai -m config left_padding                 20
-yabai -m config right_padding                20
-yabai -m config window_gap                   20
-
-# Exclude by default
-yabai -m rule --add app='.*' manage=off
+## Exclude by default
+yabai -m rule --add app!='^Alacritty$|^Google Chrome$' manage=off
 
 # Add applications to tile.
-yabai -m rule --add app='IntelliJ IDEA' title=".* - .*" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^iTerm2$' title!="Scratchpad" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add title='.*Google Chrome.*' app='^Google Chrome$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Code$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Safari$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^XCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^python$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^Slack$' role="AXWindow" subrole="AXStandardWindow" manage=on
-yabai -m rule --add app='^MonitorControl$' manage=off topmost=off
+# yabai -m rule --add app='IntelliJ IDEA' title=".* - .*" role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^iTerm2$' title!="Scratchpad" role="AXWindow" subrole="AXStandardWindow" manage=on
+# # yabai -m rule --add app='^alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^Kitty$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^Alacritty$' title!="Floating" role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add title='.*Google Chrome.*' app='^Google Chrome$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^Code$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^Safari$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^XCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^AppCode$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^python$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^Slack$' role="AXWindow" subrole="AXStandardWindow" manage=on
+# yabai -m rule --add app='^MonitorControl$' manage=off topmost=off
 
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-yabai -m signal --ad event=window_created \
-  action="yabai -m query --windows --window \$YABAI_WINDOW_ID | jq -e '.app == "Alacritty"' && yabai -m window --focus \$YABAI_WINDOW_ID"
+# Without this alacritty windows created through `alacritty msg create-window` won't get focused
+yabai -m signal --add event=window_created \
+  action="yabai -m query --windows --window \$YABAI_WINDOW_ID | jq -e '.app == \"Alacritty\"' && sleep 0.2 && yabai -m window --focus \$YABAI_WINDOW_ID"
+
+
 yabai -m signal --add event=space_changed \
   action="osascript -e 'tell application id \"tracesof.Uebersicht\" to refresh widget id \"clarity-spaces-jsx\"'"
 yabai -m signal --add event=display_changed \

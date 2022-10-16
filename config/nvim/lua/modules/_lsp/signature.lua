@@ -140,7 +140,7 @@ local function create_popup(ctx)
 
     },
     win_options = {
-      winblend = 25,
+      winblend = 12,
       winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
     },
   })

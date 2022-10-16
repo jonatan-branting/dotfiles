@@ -1,12 +1,12 @@
 require('gitsigns').setup {
   signs = {
-    add = {hl = 'GitSignsAdd', numhl='GitSignsAddNr', linehl='GitSignsAddLn'},
-    change = {hl = 'GitSignsChange', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-    delete = {hl = 'GitSignsDelete', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-    topdelete = {hl = 'GitSignsDelete', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-    changedelete = {hl = 'GitSignsChange', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    add = {hl = 'GitSignsAdd', text = '+', numhl='GitSignsAddNr', linehl='GitSignsAddLn'},
+    change = {hl = 'GitSignsChange', text = '/', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
   },
-  signcolumn = false,
+  -- signcolumn = true,
   keymaps = {
     -- -- Default keymap options
     -- noremap = true,
@@ -28,7 +28,7 @@ require('gitsigns').setup {
     -- ['o ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
     -- ['x ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>'
   },
-  numhl = false,
+  numhl = true,
   linehl = false,
   watch_gitdir = {
     interval = 1000,
@@ -41,6 +41,7 @@ require('gitsigns').setup {
   },
   sign_priority = 6,
   update_debounce = 100,
+  attach_to_untracked = false,
   word_diff = false,
   status_formatter = nil, -- Use default
   -- use_decoration_api = true,

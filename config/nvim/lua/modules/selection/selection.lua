@@ -5,7 +5,7 @@ function Selection:new(session, range)
   local start_row, start_col, end_row, end_col = unpack(range)
 
   range = Range:new({start_row, start_col}, {end_row, end_col})
-  range.anchor(session.ns, session.bufnr)
+  range:anchor(session.ns, session.bufnr)
 
   local selection = { session = session, range = range}
   setmetatable(selection, self)

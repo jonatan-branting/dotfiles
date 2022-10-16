@@ -234,9 +234,9 @@ cmp.setup({
 })
 
 cmp.setup.cmdline("?", {
-  view = {
-    entries = "wildmenu"
-  },
+  -- view = {
+  --   entries = "wildmenu"
+  -- },
   sources = cmp.config.sources({
     {
       { name = 'buffer', max_item_count = 10 }
@@ -247,9 +247,9 @@ cmp.setup.cmdline("?", {
 })
 
 cmp.setup.cmdline("/", {
-  view = {
-    entries = "wildmenu"
-  },
+  -- view = {
+  --   entries = "wildmenu"
+  -- },
   sources = cmp.config.sources({
     {
       { name = 'buffer', max_item_count = 10 }
@@ -260,9 +260,9 @@ cmp.setup.cmdline("/", {
 })
 
 cmp.setup.cmdline(":", {
-  view = {
-    entries = "wildmenu"
-  },
+  -- view = {
+  --   entries = "wildmenu"
+  -- },
   sources = cmp.config.sources({
     { name = "path", max_item_count = 7 },
     { name = "cmdline", max_item_count = 15 }

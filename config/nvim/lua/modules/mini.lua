@@ -7,47 +7,10 @@ require("mini.ai").setup({
   custom_textobjects = {
     -- argument
     -- a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separators = { ',', ';' } }),
-    -- b = { {"%b[]", "%b()", "%b{}" } },
+    b = { {"%b[]", "%b()", "%b{}" } },
     -- digits
     d = { '%f[%d]%d+' },
     -- diagnostics (errors)
-    -- e = miniAiDiagnostics,
-    -- grammer (sentence)
-    g = {
-      {
-        '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
-        '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
-        '\n%s*\n()().-()()$', -- paragraph at end of file
-      },
-      {
-        '[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]', -- normal sentence
-        '^[%s]*()().-[^%s].-()[%.?!]()[%s]', -- sentence at start of paragraph
-        '[%.?!][%s]+()().-[^%s].-()()[\n]*$', -- sentence at end of paragraph
-        '^[%s]*()().-[^%s].-()()[%s]+$', -- sentence at end of paragraph (no final punctuation)
-      }
-    },
-    -- blOck
-    o = gen_spec.treesitter({
-        a = { "@conditional.outer", "@loop.outer", "@block.outer" },
-        i = { "@conditional.inner", "@loop.inner", "@block.inner" },
-      }
-    ),
-    -- paragraph
-    p = { {
-      '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
-      '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
-      '\n%s*\n()().-()()$', -- paragraph at end of file
-    } },
-    -- sub-word (below w on my keyboard)
-    r = {
-      {
-        '%u[%l%d]+%f[^%l%d]',
-        '%f[%S][%l%d]+%f[^%l%d]',
-        '%f[%P][%l%d]+%f[^%l%d]',
-        '^[%l%d]+%f[^%l%d]',
-      },
-      '^().*()$'
-    },
     f = gen_spec.treesitter({
         a = { "@function.outer" },
         i = { "@function.inner" },
@@ -101,7 +64,7 @@ require("mini.ai").setup({
   search_method = 'cover_or_next',
 })
 
-for _, k in ipairs({ "]", "}", ">", "o", "f" }) do
+for _, k in ipairs({ "]", "}", ">", "o", "f", "r", "b" }) do
   for _, mode in ipairs({ 'n', 'x', 'o' }) do
     vim.api.nvim_set_keymap(
       mode, ']' .. k, [[<Cmd>lua MiniAi.move_cursor('left', 'a',']]  .. vim.fn.escape(k, "'") .. [[', { search_method = 'next' })<CR>]], {}
@@ -224,47 +187,51 @@ require('mini.sessions').setup({
     },
   })
 
--- require("mini.indentscope").setup({
---     draw = {
---       -- Delay (in ms) between event and start of drawing scope indicator
---       delay = 50,
+-- require("mini.root").setup({
+  
+-- })
 
---       -- Animation rule for scope's first drawing. A function which, given next
---       -- and total step numbers, returns wait time (in ms). See
---       -- |MiniIndentscope.gen_animation()| for builtin options. To not use
---       -- animation, supply `require('mini.indentscope').gen_animation('none')`.
---       animation = require("mini.indentscope").gen_animation("none")
---     },
+require("mini.indentscope").setup({
+    draw = {
+      -- Delay (in ms) between event and start of drawing scope indicator
+      delay = 50,
 
---     -- Module mappings. Use `''` (empty string) to disable one.
---     mappings = {
---       -- Textobjects
---       object_scope = 'is',
---       object_scope_with_border = 'as',
+      -- Animation rule for scope's first drawing. A function which, given next
+      -- and total step numbers, returns wait time (in ms). See
+      -- |MiniIndentscope.gen_animation()| for builtin options. To not use
+      -- animation, supply `require('mini.indentscope').gen_animation('none')`.
+      animation = require("mini.indentscope").gen_animation("none")
+    },
 
---       -- Motions (jump to respective border line; if not present - body line)
---       goto_top = '[s',
---       goto_bottom = ']s',
---     },
+    -- Module mappings. Use `''` (empty string) to disable one.
+    mappings = {
+      -- Textobjects
+      object_scope = 'is',
+      object_scope_with_border = 'as',
 
---     -- Options which control computation of scope. Buffer local values can be
---     -- supplied in buffer variable `vim.b.miniindentscope_options`.
---     options = {
---       -- Type of scope's border: which line(s) with smaller indent to
---       -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
---       border = 'both',
+      -- Motions (jump to respective border line; if not present - body line)
+      goto_top = '[s',
+      goto_bottom = ']s',
+    },
 
---       -- Whether to use cursor column when computing reference indent. Useful to
---       -- see incremental scopes with horizontal cursor movements.
---       indent_at_cursor = true,
+    -- Options which control computation of scope. Buffer local values can be
+    -- supplied in buffer variable `vim.b.miniindentscope_options`.
+    options = {
+      -- Type of scope's border: which line(s) with smaller indent to
+      -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
+      border = 'both',
 
---       -- Whether to first check input line to be a border of adjacent scope.
---       -- Use it if you want to place cursor on function header to get scope of
---       -- its body.
---       try_as_border = false,
---     },
+      -- Whether to use cursor column when computing reference indent. Useful to
+      -- see incremental scopes with horizontal cursor movements.
+      indent_at_cursor = true,
 
---     -- Which character to use for drawing scope indicator
---     symbol = ':',
---   }
--- )
+      -- Whether to first check input line to be a border of adjacent scope.
+      -- Use it if you want to place cursor on function header to get scope of
+      -- its body.
+      try_as_border = false,
+    },
+
+    -- Which character to use for drawing scope indicator
+    symbol = ':',
+  }
+)

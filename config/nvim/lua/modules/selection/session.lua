@@ -1,4 +1,6 @@
 local selection_utils = require("modules.selection.utils")
+
+local Selection = require("modules.selection.selection")
 local Cursor = require("modules.selection.cursor")
 
 local Session = {}
@@ -8,6 +10,7 @@ local Session = {}
 function Session:new(bufnr)
   local session = {
     cursors = {},
+    selections = {},
     bufnr = bufnr,
     ns = vim.api.nvim_create_namespace(""),
     hi_ns = vim.api.nvim_create_namespace(""),
@@ -27,6 +30,13 @@ end
 function Session:render_highlights()
   self:clear_highlights()
   self:for_each_cursor(function(cursor) cursor:highlight() end)
+  self:for_each_cursor(function(cursor) cursor:highlight() end)
+end
+
+function Session:for_each_selection(func)
+  for _, selection in pairs(self.selections) do
+    func(selection)
+  end
 end
 
 function Session:for_each_cursor(func)
@@ -51,41 +61,40 @@ function Session:add_cursor(position, opts)
   return cursor
 end
 
--- function Session:get_selections_containing_range(range)
---   local selections_in_range = {}
+function Session:get_selections_containing_range(range)
+  local selections_in_range = {}
 
---   for _, selection in ipairs(self.selections) do
---     if selection:contains_range(range) then
---       table.insert(selections_in_range, selection)
---     end
---   end
+  for _, selection in ipairs(self.selections) do
+    if selection:contains_range(range) then
+      table.insert(selections_in_range, selection)
+    end
+  end
 
---   return selections_in_range
--- end
+  return selections_in_range
+end
 
--- function Session:select_range(range, _opts)
---   local opts = opts or {}
+function Session:select_range(range, _opts)
+  local opts = opts or {}
 
---   -- TODO remove selections which this one contain
---   print(vim.inspect(range))
---   local selection = Selection:new(self, range)
+  -- TODO remove selections which this one contain
+  print(vim.inspect(range))
+  local selection = Selection:new(self, range)
 
---   if not opts.ephemeral then
---     table.insert(self.selections, selection)
---     self:render_highlights()
---   end
+  if not opts.ephemeral then
+    table.insert(self.selections, selection)
+    self:render_highlights()
+  end
 
 
---   return selection
--- end
+  return selection
+end
 
--- 
--- function Session:generate_selection_targets()
---   return selection_utils.generate_targets(self.selections)
--- end
+function Session:generate_selection_targets()
+  return selection_utils.generate_targets(self.selections)
+end
 
--- function Session:get_last_selection()
---   return self.selections[#self.selections]
--- end
+function Session:get_last_selection()
+  return self.selections[#self.selections]
+end
 
 return Session

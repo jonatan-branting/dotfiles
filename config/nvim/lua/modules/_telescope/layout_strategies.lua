@@ -715,12 +715,12 @@ layout_strategies.vertical = make_documented_layout(
 
     local height_padding = math.floor((max_lines - height) / 2)
     if not layout_config.mirror then
-      preview.line = height_padding + (1 + bs)
+      preview.line = height_padding + (2 + bs)
       if layout_config.prompt_position == "top" then
-        prompt.line = (preview.height == 0) and preview.line or preview.line + preview.height + (1 + bs)
+        prompt.line = (preview.height == 0) and preview.line or preview.line + preview.height + (bs)
         results.line = prompt.line + prompt.height + (1 + bs)
       elseif layout_config.prompt_position == "bottom" then
-        results.line = (preview.height == 0) and preview.line or preview.line + preview.height + (1 + bs)
+        results.line = (preview.height == 0) and preview.line or preview.line + preview.height + (bs)
         prompt.line = results.line + results.height + (1 + bs)
       else
         error(string.format("Unknown prompt_position: %s\n%s", self.window.prompt_position, vim.inspect(layout_config)))

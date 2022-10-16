@@ -9,6 +9,10 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 local capabilities = require("cmp_nvim_lsp").update_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
+-- capabilities.textDocument.foldingRange = {
+--   dynamicRegistration = false,
+--   lineFoldingOnly = true
+-- }
 
 local on_attach = function(client, bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -53,8 +57,12 @@ local servers = {
   "html",
   "rnix",
   "vuels",
-  "bashls",
 }
+
+require("mason-lspconfig").setup({
+  ensure_installed = servers,
+  -- automatic_installation = true,
+})
 
 for _, server in ipairs(servers) do
   lsp_config[server].setup {
