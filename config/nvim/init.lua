@@ -48,15 +48,15 @@ require("packer").startup({
       config = function()
         require("modules.neotree").setup()
 
-        vim.keymap.set("n", "<leader>o", "<cmd>Neotree position=current reveal<cr>")
-          -- function()
-          -- -- require("neo-tree.command").execute({
-          -- --   action = "show",
-          -- --   source = "filesystem",
-          -- --   position = "current",
-          -- --   reveal = true,
-          -- -- })
-        -- end)
+        vim.keymap.set("n", "<leader>o", function()
+          require("neo-tree.command").execute({
+            action = "show",
+            source = "filesystem",
+            position = "current",
+            reveal = true,
+            toggle = true,
+          })
+        end)
       end
     }
     use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }

@@ -292,7 +292,7 @@ _G.packer_plugins = {
     url = "https://github.com/echasnovski/mini.nvim"
   },
   ["neo-tree.nvim"] = {
-    config = { "\27LJ\2\nv\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\rposition\fcurrent\vsource\15filesystem\vaction\tshow\fexecute\21neo-tree.command\frequireu\1\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0B\0\4\1K\0\1\0\0\14<leader>o\6n\bset\vkeymap\bvim\nsetup\20modules.neotree\frequire\0" },
+    config = { "\27LJ\2\nÜ\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\5\vsource\15filesystem\vaction\tshow\vtoggle\2\vreveal\2\rposition\fcurrent\fexecute\21neo-tree.command\frequireu\1\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0B\0\4\1K\0\1\0\0\14<leader>o\6n\bset\vkeymap\bvim\nsetup\20modules.neotree\frequire\0" },
     loaded = true,
     path = "/Users/nonah/.local/share/nvim/site/pack/packer/start/neo-tree.nvim",
     url = "https://github.com/nvim-neo-tree/neo-tree.nvim"
@@ -308,7 +308,7 @@ _G.packer_plugins = {
     url = "https://github.com/nvim-neorg/neorg"
   },
   neoterm = {
-    config = { "\27LJ\2\nµ\1\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0ï\1          let g:neoterm_callbacks = {}\n          function! g:neoterm_callbacks.before_exec()\n            normal G\n          endfunction\n        \bcmd\bvim\0" },
+    config = { "\27LJ\2\n\v\0\0\1\0\0\0\1K\0\1\0\0" },
     loaded = true,
     path = "/Users/nonah/.local/share/nvim/site/pack/packer/start/neoterm",
     url = "https://github.com/jonatan-branting/neoterm"
@@ -414,7 +414,7 @@ _G.packer_plugins = {
     url = "https://gitlab.com/yorickpeterse/nvim-pqf"
   },
   ["nvim-surround"] = {
-    config = { "\27LJ\2\nπ\1\0\0\4\0\6\0\t6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\2B\0\2\1K\0\1\0\fkeymaps\1\0\0\1\0\b\20normal_cur_line\aSS\vchange\acs\16normal_line\6S\vdelete\ads\15normal_cur\ass\vnormal\6s\vvisual\6S\16visual_line\agS\nsetup\18nvim-surround\frequire\0" },
+    config = { "\27LJ\2\nπ\1\0\0\4\0\6\0\t6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\2B\0\2\1K\0\1\0\fkeymaps\1\0\0\1\0\b\vvisual\6S\16visual_line\agS\20normal_cur_line\aSS\vchange\acs\16normal_line\6S\vdelete\ads\15normal_cur\ass\vnormal\6s\nsetup\18nvim-surround\frequire\0" },
     loaded = true,
     path = "/Users/nonah/.local/share/nvim/site/pack/packer/start/nvim-surround",
     url = "https://github.com/kylechui/nvim-surround"
@@ -706,36 +706,36 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nvim-surround
-time([[Config for nvim-surround]], true)
-try_loadstring("\27LJ\2\nπ\1\0\0\4\0\6\0\t6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\2B\0\2\1K\0\1\0\fkeymaps\1\0\0\1\0\b\20normal_cur_line\aSS\vchange\acs\16normal_line\6S\vdelete\ads\15normal_cur\ass\vnormal\6s\vvisual\6S\16visual_line\agS\nsetup\18nvim-surround\frequire\0", "config", "nvim-surround")
-time([[Config for nvim-surround]], false)
 -- Config for: neoterm
 time([[Config for neoterm]], true)
-try_loadstring("\27LJ\2\nµ\1\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0ï\1          let g:neoterm_callbacks = {}\n          function! g:neoterm_callbacks.before_exec()\n            normal G\n          endfunction\n        \bcmd\bvim\0", "config", "neoterm")
+try_loadstring("\27LJ\2\n\v\0\0\1\0\0\0\1K\0\1\0\0", "config", "neoterm")
 time([[Config for neoterm]], false)
--- Config for: live-command.nvim
-time([[Config for live-command.nvim]], true)
-try_loadstring("\27LJ\2\nÅ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0=\4\a\3=\3\t\2B\0\2\1K\0\1\0\rcommands\1\0\0\6G\1\0\1\bcmd\6g\tNorm\1\0\0\1\0\1\bcmd\tnorm\nsetup\17live-command\frequire\0", "config", "live-command.nvim")
-time([[Config for live-command.nvim]], false)
+-- Config for: windows.nvim
+time([[Config for windows.nvim]], true)
+try_loadstring("\27LJ\2\nå\1\0\0\3\0\b\0\0186\0\0\0009\0\1\0)\1\n\0=\1\2\0006\0\0\0009\0\1\0)\1\n\0=\1\3\0006\0\0\0009\0\1\0+\1\1\0=\1\4\0006\0\5\0'\2\6\0B\0\2\0029\0\a\0B\0\1\1K\0\1\0\nsetup\fwindows\frequire\16equalalways\16winminwidth\rwinwidth\6o\bvim\0", "config", "windows.nvim")
+time([[Config for windows.nvim]], false)
 -- Config for: git-worktree.nvim
 time([[Config for git-worktree.nvim]], true)
 try_loadstring("\27LJ\2\nh\0\1\a\0\6\0\n9\1\0\0006\2\1\0'\4\2\0B\2\2\0029\2\3\2\18\4\1\0'\5\4\0'\6\5\0B\2\4\1K\0\1\0\vorigin\fdevelop\20create_worktree\17git-worktree\frequire\targsµ\1\1\0\6\0\n\0\0146\0\0\0'\2\1\0B\0\2\0029\1\2\0005\3\3\0B\1\2\0016\1\4\0009\1\5\0019\1\6\1'\3\a\0003\4\b\0005\5\t\0B\1\4\1K\0\1\0\1\0\1\nnargs\3\1\0\aGW\29nvim_create_user_command\bapi\bvim\1\0\2\21update_on_change\2\25clearjumps_on_change\2\nsetup\17git-worktree\frequire\0", "config", "git-worktree.nvim")
 time([[Config for git-worktree.nvim]], false)
 -- Config for: neo-tree.nvim
 time([[Config for neo-tree.nvim]], true)
-try_loadstring("\27LJ\2\nv\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\3\rposition\fcurrent\vsource\15filesystem\vaction\tshow\fexecute\21neo-tree.command\frequireu\1\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0B\0\4\1K\0\1\0\0\14<leader>o\6n\bset\vkeymap\bvim\nsetup\20modules.neotree\frequire\0", "config", "neo-tree.nvim")
+try_loadstring("\27LJ\2\nÜ\1\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\5\vsource\15filesystem\vaction\tshow\vtoggle\2\vreveal\2\rposition\fcurrent\fexecute\21neo-tree.command\frequireu\1\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0B\0\4\1K\0\1\0\0\14<leader>o\6n\bset\vkeymap\bvim\nsetup\20modules.neotree\frequire\0", "config", "neo-tree.nvim")
 time([[Config for neo-tree.nvim]], false)
--- Config for: windows.nvim
-time([[Config for windows.nvim]], true)
-try_loadstring("\27LJ\2\nå\1\0\0\3\0\b\0\0186\0\0\0009\0\1\0)\1\n\0=\1\2\0006\0\0\0009\0\1\0)\1\n\0=\1\3\0006\0\0\0009\0\1\0+\1\1\0=\1\4\0006\0\5\0'\2\6\0B\0\2\0029\0\a\0B\0\1\1K\0\1\0\nsetup\fwindows\frequire\16equalalways\16winminwidth\rwinwidth\6o\bvim\0", "config", "windows.nvim")
-time([[Config for windows.nvim]], false)
+-- Config for: nvim-surround
+time([[Config for nvim-surround]], true)
+try_loadstring("\27LJ\2\nπ\1\0\0\4\0\6\0\t6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\2B\0\2\1K\0\1\0\fkeymaps\1\0\0\1\0\b\vvisual\6S\16visual_line\agS\20normal_cur_line\aSS\vchange\acs\16normal_line\6S\vdelete\ads\15normal_cur\ass\vnormal\6s\nsetup\18nvim-surround\frequire\0", "config", "nvim-surround")
+time([[Config for nvim-surround]], false)
+-- Config for: live-command.nvim
+time([[Config for live-command.nvim]], true)
+try_loadstring("\27LJ\2\nÅ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0=\4\a\3=\3\t\2B\0\2\1K\0\1\0\rcommands\1\0\0\6G\1\0\1\bcmd\6g\tNorm\1\0\0\1\0\1\bcmd\tnorm\nsetup\17live-command\frequire\0", "config", "live-command.nvim")
+time([[Config for live-command.nvim]], false)
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
-vim.cmd [[au FileType eruby ++once lua require("packer.load")({'vim-haml'}, { ft = "eruby" }, _G.packer_plugins)]]
 vim.cmd [[au FileType ruby ++once lua require("packer.load")({'vim-rails', 'vim-ruby', 'vim-bundler'}, { ft = "ruby" }, _G.packer_plugins)]]
+vim.cmd [[au FileType eruby ++once lua require("packer.load")({'vim-haml'}, { ft = "eruby" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
