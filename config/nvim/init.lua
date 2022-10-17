@@ -48,13 +48,15 @@ require("packer").startup({
       config = function()
         require("modules.neotree").setup()
 
-        vim.keymap.set("n", "<leader>o", function()
-          require("neo-tree.command").execute({
-            action = "show",
-            source = "filesystem",
-            position = "current",
-          })
-        end)
+        vim.keymap.set("n", "<leader>o", "<cmd>Neotree position=current reveal<cr>")
+          -- function()
+          -- -- require("neo-tree.command").execute({
+          -- --   action = "show",
+          -- --   source = "filesystem",
+          -- --   position = "current",
+          -- --   reveal = true,
+          -- -- })
+        -- end)
       end
     }
     use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }
@@ -233,12 +235,12 @@ require("packer").startup({
       "jonatan-branting/neoterm",
       config = function()
 
-        vim.cmd [[
-          let g:neoterm_callbacks = {}
-          function! g:neoterm_callbacks.before_exec()
-            normal G
-          endfunction
-        ]]
+        -- vim.cmd [[
+        --   let g:neoterm_callbacks = {}
+        --   function! g:neoterm_callbacks.before_exec()
+        --     normal G
+        --   endfunction
+        -- ]]
       end
     }
     use { "vim-test/vim-test" }
