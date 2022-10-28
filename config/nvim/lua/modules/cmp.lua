@@ -130,7 +130,7 @@ cmp.setup({
         if cmp.visible() then
           cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
         elseif can_jump(-1) then
-          previous()
+          jump(-1)
         else
           fallback()
         end
@@ -289,9 +289,9 @@ local handler = function(char, item, bufnr, commit_character)
 
   -- vim.api.nvim_feedkeys(char, "i", true)
   -- luasnip.lsp_expand("(${1:" .. vim.fn.getreg("z") .. "})$0")
-  vim.schedule(function()
-    vim.cmd [[ let @t="" ]]
-  end)
+  -- vim.schedule(function()
+  --   vim.cmd [[ let @t="" ]]
+  -- end)
   -- vim.schedule(function()
   --   vim.api.nvim_feedkeys(utils.t("<esc>\"tp"), "n", false)
   --   vim.api.nvim_feedkeys(utils.t("`[v`]<c-g>"), "n", false)
@@ -300,42 +300,42 @@ local handler = function(char, item, bufnr, commit_character)
 end
 
 -- TODO always clear the register...
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
-  filetypes = {
-    -- "*" is a alias to all filetypes
-    ["*"] = {
-      ["("] = {
-        kind = {
-          cmp.lsp.CompletionItemKind.Function,
-          cmp.lsp.CompletionItemKind.Method,
-        },
-        handler = handler
-      }
-    },
-    ruby = false,
-    tex = false,
-    -- TODO special ruby handler which doesnt add parenthesis for functions or
-    -- or simply disable it for ruby
-    -- methods with parameters
-    --lua = {
-    --  ["("] = {
-    --    kind = {
-    --      cmp.lsp.CompletionItemKind.Function,
-    --      cmp.lsp.CompletionItemKind.Method
-    --    },
-    --    ---@param char string
-    --    ---@param item item completion
-    --    ---@param bufnr buffer number
-    --    handler = function(char, item, bufnr)
-    --      print(
-    --        cmp.lsp.CompletionItemKind.Function,
-    --        cmp.lsp.CompletionItemKind.Method
-    --      )
-    --      print(vim.inspect{char, item, bufnr})
-    --    end
-    --  }
-    --},
-    -- Disable for tex
-  }
-})
-)
+--cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
+--  filetypes = {
+--    -- "*" is a alias to all filetypes
+--    ["*"] = {
+--      ["("] = {
+--        kind = {
+--          cmp.lsp.CompletionItemKind.Function,
+--          cmp.lsp.CompletionItemKind.Method,
+--        },
+--        handler = handler
+--      }
+--    },
+--    ruby = false,
+--    tex = false,
+--    -- TODO special ruby handler which doesnt add parenthesis for functions or
+--    -- or simply disable it for ruby
+--    -- methods with parameters
+--    --lua = {
+--    --  ["("] = {
+--    --    kind = {
+--    --      cmp.lsp.CompletionItemKind.Function,
+--    --      cmp.lsp.CompletionItemKind.Method
+--    --    },
+--    --    ---@param char string
+--    --    ---@param item item completion
+--    --    ---@param bufnr buffer number
+--    --    handler = function(char, item, bufnr)
+--    --      print(
+--    --        cmp.lsp.CompletionItemKind.Function,
+--    --        cmp.lsp.CompletionItemKind.Method
+--    --      )
+--    --      print(vim.inspect{char, item, bufnr})
+--    --    end
+--    --  }
+--    --},
+--    -- Disable for tex
+--  }
+--})
+--)

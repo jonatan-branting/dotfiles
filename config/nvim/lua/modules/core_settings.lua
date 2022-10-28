@@ -2,6 +2,12 @@ local opt = vim.opt
 
 vim.g.mapleader = " "
 
+-- DEFAULT_BORDERS = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' }
+-- DEFAULT_BORDERS = { topleft = '┏', horiz = '━', topright = '┓', vert = '┃', botright = '┛', botleft ='┗', vertleft = '┣', vertright = '┫', horizup = "┳", horizdown = "┻", verthoriz = "╋" }
+
+DEFAULT_BORDERS = {  horiz = '━',  vert = '┃',   vertright = '┣', vertleft = '┫', horizdown = "┳", horizup = "┻", verthoriz = "╋" }
+
+vim.opt.fillchars = DEFAULT_BORDERS
 opt.termguicolors = true
 
 opt.number = true
@@ -14,7 +20,7 @@ opt.breakindent = true
 opt.showmode = false
 opt.pumblend = 12
 opt.splitkeep = "topline"
-opt.winblend = 8
+opt.winblend = 4
 opt.updatetime = 2000
 opt.shortmess = "filnxtToOFcI"
 opt.hidden = true
@@ -25,7 +31,7 @@ opt.inccommand = "nosplit"
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
-opt.smarttab = true
+vim.opt.smarttab = true
 
 opt.scrolloff = 2
 opt.lazyredraw = false

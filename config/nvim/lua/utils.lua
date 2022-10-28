@@ -261,4 +261,15 @@ function M.highlight_range(ns, range, opts)
 
   vim.highlight.range(ns, 0, hl_group, {start_row, start_col}, {end_row, end_col},{})
 end
+
+function M.seq(a, b)
+  local sequence = {}
+
+  for i = a, b do
+    table.insert(sequence, i)
+  end
+
+  return sequence
+end
+
 return M

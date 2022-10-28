@@ -31,6 +31,8 @@ require('telescope').setup{
         ["<S-CR>"] = actions.smart_send_to_qflist + actions.open_qflist,
         ["<C-j>"] = actions.preview_scrolling_down,
         ["<C-k>"] = actions.preview_scrolling_up,
+        ["<C-p>"] = actions.cycle_history_prev,
+        ["<C-n>"] = actions.cycle_history_next,
       },
     },
     file_ignore_patterns = { ".*%.DS_Store", ".*%.min.js", "%.git/.*", "%karabiner/.*json" },
@@ -102,7 +104,7 @@ require('telescope').setup{
 }
 
 require('telescope').load_extension("fzf")
-require("telescope").load_extension("git_worktree")
+-- require("telescope").load_extension("git_worktree")
 -- require('telescope').load_extension("dap")
 -- require("telescope").load_extension("git_worktree")
 -- require("telescope").load_extension("ui-select")

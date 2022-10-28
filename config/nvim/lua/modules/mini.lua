@@ -2,8 +2,8 @@ local queries = require "nvim-treesitter.query"
 local gen_spec = require("mini.ai").gen_spec
 
 require("mini.ai").setup({
-    -- Table with textobject id as fields, textobject specification as values.
-    -- Also use this to disable builtin textobjects. See |MiniAi.config|.
+  -- Table with textobject id as fields, textobject specification as values.
+  -- Also use this to disable builtin textobjects. See |MiniAi.config|.
   custom_textobjects = {
     -- argument
     -- a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separators = { ',', ';' } }),
@@ -72,10 +72,6 @@ for _, k in ipairs({ "]", "}", ">", "o", "f", "r", "b" }) do
     -- print([[<Cmd>lua MiniAi.move_cursor('left', 'a',']]  .. vim.fn.escape(k, "'") .. [[', { search_method = 'next' })<CR>]])
     -- print([[<Cmd>lua MiniAi.move_cursor('left', 'a',]]  .. k .. [[, { search_method = 'next' })<CR>]])
   end
-end
-
-local function test()
-  
 end
 
 require('mini.trailspace').setup({
@@ -162,33 +158,33 @@ require('mini.sessions').setup({
   -- Whether to print session path after action
   verbose = { read = false, write = true, delete = true },
 })
-  local starter = require('mini.starter')
-  starter.setup({
-    evaluate_single = true,
-    items = {
-      -- {action = 'FzfLua file_browser',    name = 'Browser',         section = 'Telescope'},
-      -- {action = 'FzfLua command_history', name = 'Command history', section = 'FZF'},
-      -- {action = 'FzfLua files',           name = 'Files',           section = 'FZF'},
-      -- {action = 'FzfLua help_tags',       name = 'Help tags',       section = 'FZF'},
-      -- {action = 'FzfLua live_grep',       name = 'Live grep',       section = 'FZF'},
-      -- {action = 'FzfLua oldfiles',        name = 'Old files',       section = 'FZF'},
+local starter = require('mini.starter')
+starter.setup({
+  evaluate_single = true,
+  items = {
+    -- {action = 'FzfLua file_browser',    name = 'Browser',         section = 'Telescope'},
+    -- {action = 'FzfLua command_history', name = 'Command history', section = 'FZF'},
+    -- {action = 'FzfLua files',           name = 'Files',           section = 'FZF'},
+    -- {action = 'FzfLua help_tags',       name = 'Help tags',       section = 'FZF'},
+    -- {action = 'FzfLua live_grep',       name = 'Live grep',       section = 'FZF'},
+    -- {action = 'FzfLua oldfiles',        name = 'Old files',       section = 'FZF'},
 
-      starter.sections.builtin_actions(),
-      starter.sections.recent_files(10, false),
-      starter.sections.recent_files(10, true),
-      -- Use this if you set up 'mini.sessions'
-      starter.sections.sessions(5, true)
-    },
-    content_hooks = {
-      starter.gen_hook.adding_bullet(),
-      starter.gen_hook.indexing('all', { 'Builtin actions' }),
-      starter.gen_hook.aligning('center', 'center'),
-      starter.gen_hook.padding(4, 2),
-    },
-  })
+    starter.sections.builtin_actions(),
+    starter.sections.recent_files(10, false),
+    starter.sections.recent_files(10, true),
+    -- Use this if you set up 'mini.sessions'
+    starter.sections.sessions(5, true)
+  },
+  content_hooks = {
+    starter.gen_hook.adding_bullet(),
+    starter.gen_hook.indexing('all', { 'Builtin actions' }),
+    starter.gen_hook.aligning('center', 'center'),
+    starter.gen_hook.padding(4, 2),
+  },
+})
 
 -- require("mini.root").setup({
-  
+
 -- })
 
 require("mini.indentscope").setup({

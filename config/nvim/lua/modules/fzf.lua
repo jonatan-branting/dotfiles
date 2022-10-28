@@ -26,7 +26,8 @@ require("fzf-lua").setup {
     -- to manually draw the border characters around the preview
     -- window, can be set to 'false' to remove all borders or to
     -- 'none', 'single', 'double', 'thicc' or 'rounded' (default)
-    border           = "thicc", -- { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+    -- border           =  { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' },--"rounded", -- { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+    -- border = "solid",
     -- border           = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
     fullscreen       = false,           -- start fullscreen?
     hl = {
@@ -53,8 +54,8 @@ require("fzf-lua").setup {
       layout         = 'flex',          -- horizontal|vertical|flex
       flip_columns   = 120,             -- #cols to switch to horizontal on flex
       -- Only valid with the builtin previewer:
-      title          = true,            -- preview border title (file/buf)?
-      scrollbar      = 'float',         -- `false` or string:'float|border'
+      title          = false,            -- preview border title (file/buf)?
+      scrollbar      = false,         -- `false` or string:'float|border'
       -- float:  in-window floating border
       -- border: in-border chars (see below)
       scrolloff      = '-2',            -- float scrollbar offset from right
@@ -77,6 +78,8 @@ require("fzf-lua").setup {
     },
     on_create = function()
       -- vim.api.nvim_win_set_config(0, { winblend = 0.3 })
+      local w = vim.api.nvim_win_get_width(0)
+      vim.api.nvim_win_set_width(0, w - 1)
       -- vim.cmd("set winblend=10")
       -- called once upon creation of the fzf main window
       -- can be used to add custom fzf-lua mappings, e.g:
@@ -161,19 +164,19 @@ require("fzf-lua").setup {
   },
   -- fzf '--color=' options (optional)
   fzf_colors = {
-      ["fg"]          = { "fg", "PmenuSel" },
+      ["fg"]          = { "fg", "Normal" },
       ["bg"]          = { "bg", "NormalFloat" },
-      ["hl"]          = { "fg", "Comment" },
+      ["hl"]          = { "fg", "Title" },
       ["fg+"]         = { "fg", "Normal" },
       ["bg+"]         = { "bg", "PmenuSbar" },
-      ["hl+"]         = { "fg", "Statement" },
+      ["hl+"]         = { "fg", "Title" },
       ["info"]        = { "fg", "PreProc" },
       ["prompt"]      = { "fg", "Conditional" },
       ["pointer"]     = { "fg", "Conditional" },
       ["marker"]      = { "fg", "Keyword" },
       ["spinner"]     = { "fg", "Label" },
       ["header"]      = { "fg", "Comment" },
-      ["gutter"]      = { "bg", "Normal" },
+      ["gutter"]      = { "bg", "NormalFloat" },
   },
   previewers = {
     cat = {

@@ -47,6 +47,13 @@ function Position:anchor(ns, bufnr)
   return self.extmark.id
 end
 
+function Position:is_anchored(bufnr)
+  if not self.extmark then return false end
+
+  -- TODO this does not take bufnr into account
+  return true
+end
+
 function Position:get()
   if not self.extmark then
     return { self._row, self._col }

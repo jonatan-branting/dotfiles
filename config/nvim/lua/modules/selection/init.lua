@@ -90,36 +90,36 @@ end
 -- if not, (also remap <esc> to confirm...) it will simply run the command at the location and confirm for you (still using norm preview mode)
 -- Keep `selection` clean
 function M.motion(opts)
-  print(">enter motion")
+  -- print(">enter motion")
 
-  local session = get_current_session()
-  local defaults = {
-    preselect = true,
-    reverse = false,
-    selections = session.selections,
-    operator = vim.v.operator,
-  }
+  -- local session = get_current_session()
+  -- local defaults = {
+  --   preselect = true,
+  --   reverse = false,
+  --   selections = session.selections,
+  --   operator = vim.v.operator,
+  -- }
 
-  local opts = utils.merge(defaults, opts or {})
+  -- local opts = utils.merge(defaults, opts or {})
 
-  vim.v.operator = nil
+  -- vim.v.operator = nil
 
-  -- perhaps there is a better way to do this, but this
-  -- allows us to wait for the next ex_normal_preview command
-  vim.api.nvim_feedkeys(utils.t("<esc>"), "n", false)
+  -- -- perhaps there is a better way to do this, but this
+  -- -- allows us to wait for the next ex_normal_preview command
+  -- vim.api.nvim_feedkeys(utils.t("<esc>"), "n", false)
 
-  vim.schedule(function()
-    require("modules.ex_normal_preview").setup("SM", {
-      ephemeral = true,
-      targets = function() return selection_utils.generate_targets(opts.selections) end,
-      preselect = opts.preselect,
-      reverse = opts.reverse,
-    })
+  -- vim.schedule(function(
+  --   require("modules.ex_normal_preview").setup("SM", {
+  --     ephemeral = true,
+  --     targets = function() return selection_utils.generate_targets(opts.selections) end,
+  --     preselect = opts.preselect,
+  --     reverse = opts.reverse,
+  --   })
 
-    -- TODO make feedkeys part of exnormal preview and auto tear down on cancel
-    -- as well
-    vim.api.nvim_feedkeys(utils.t("<esc>:SM<space>" .. opts.operator), "n", false)
-  end)
+  --   -- TODO make feedkeys part of exnormal preview and auto tear down on cancel
+  --   -- as well
+  --   vim.api.nvim_feedkeys(utils.t("<esc>:SM<space>" .. opts.operator), "n", false)
+  -- end)
 end
 
 -- what is the current selection? is there such a thing?

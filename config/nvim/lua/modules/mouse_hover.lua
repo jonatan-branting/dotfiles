@@ -11,13 +11,13 @@ function M.setup()
     end
     hover_timer = vim.defer_fn(function()
       hover_timer = nil
+
       vim.api.nvim_exec_autocmds(
         "User", {
           pattern = "MouseHoverEnter",
           data = { position = vim.fn.getmousepos() }
         }
       )
-      -- print('Hover' .. vim.loop.now())
     end, hover_time)
     vim.api.nvim_exec_autocmds(
       "User", {

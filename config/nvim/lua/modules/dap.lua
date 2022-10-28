@@ -98,15 +98,57 @@ dap.configurations.ruby = {
   }
 }
 
-local hydra = require("modules.hydra").dap
+local hint = [[
+ _n_: step over   _\*_: to cursor   _K_: eval
+ _l_: step into   _c_: continue    _r_: toggle repl 
+ _o_: step out    _b_: breakpoint
+
+ ^ ^              _q_: exit
+]]
+
+local hydra = require("hydra")
+local dap_hydra = hydra({
+  hint = hint,
+  config = {
+    color = 'pink',
+    invoke_on_body = true,
+    hint = {
+      -- position = 'middle-right',
+      border = 'single'
+    },
+  },
+  name = 'dap',
+  mode = {'n','x'},
+  body = '<leader>dd',
+  on_enter = function()
+    dap.repl.open()
+  end,
+  on_close = function()
+    dap.repl.close()
+  end,
+  heads= {
+    { 'n', dap.step_over, { silent = true } },
+    { 'l', dap.step_into, { silent = true } },
+    { 'o', dap.step_out, { silent = true } },
+    { '*', dap.run_to_cursor, { silent = true } },
+    { 'c', dap.continue, { silent = true } },
+    -- { 'x', ":lua require'dap'.disconnect({ terminateDebuggee = false })<CR>", {exit=true, silent = true } },
+    -- { 'C', ":lua require('dapui').close()<cr>:DapVirtualTextForceRefresh<CR>", { silent = true } },
+    { 'b', dap.toggle_breakpoint, { silent = true } },
+    { 'K', ":lua require('dap.ui.widgets').hover()<CR>", { silent = true } },
+    { 'q', dap.close, { exit = true, nowait = true } },
+    { 'r', dap.repl.toggle, { silent = true }}
+  }
+})
+
 dap.listeners.after.event_output["dapui_config"] = function(a, b)
 end
 dap.listeners.after.event_initialized["dapui_config"] = function()
-  hydra:activate()
+  dap_hydra:activate()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
-  hydra.layer:exit()
+  dap_hydra.layer:exit()
 end
 dap.listeners.before.event_exited["dapui_config"] = function()
-  hydra.layer:exit()
+  dap_hydra.layer:exit()
 end
