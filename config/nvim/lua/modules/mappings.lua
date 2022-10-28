@@ -229,14 +229,14 @@ nnoremap({ ']h', function()
   end
 }, 'next-hunk')
 
--- nnoremap({ '<leader>hn', function()
---   if vim.wo.diff then
---     vim.api.nvim_exec('normal ]c', false)
---   else
---     gitsigns.next_hunk()
---  end
--- end
--- }, 'next-hunk')
+nnoremap({ '<leader>hn', function()
+  if vim.wo.diff then
+    vim.api.nvim_exec('normal ]c', false)
+  else
+    gitsigns.next_hunk()
+ end
+end
+}, 'next-hunk')
 
 nnoremap({ '[h', function()
     if vim.wo.diff then
@@ -247,14 +247,14 @@ nnoremap({ '[h', function()
   end
 },'prev-hunk')
 
--- nnoremap({ '<leader>hp', function()
---   if vim.wo.diff then
---     vim.api.nvim_exec('normal [c', false)
---   else
---     gitsigns.prev_hunk()
---   end
--- end
--- },'prev-hunk')
+nnoremap({ '<leader>hp', function()
+  if vim.wo.diff then
+    vim.api.nvim_exec('normal [c', false)
+  else
+    gitsigns.prev_hunk()
+  end
+end
+},'prev-hunk')
 
 onoremap({ 'ih', function() gitsigns.select_hunk() end })
 xnoremap({ 'ih', function() gitsigns.select_hunk() end })
