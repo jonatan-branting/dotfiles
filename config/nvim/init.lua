@@ -26,6 +26,17 @@ require("packer").startup({
     --     require("live").setup()
     --   end
     -- }
+    use { "lambdalisue/fern.vim",
+      config = function()
+        vim.g["fern#hide_cursor"] = 1
+        vim.g["fern#keepjumps_on_edit"] = 1
+        vim.g["fern#keepalt_on_edit"] = 1
+
+        vim.keymap.set("n", "<leader>o", function()
+          return "<cmd>Fern . -reveal=%<cr>"
+        end, { expr = true })
+      end
+    }
     use { "cbochs/grapple.nvim",
       config = function()
       end
@@ -38,18 +49,6 @@ require("packer").startup({
       config = function()
         require("mason").setup()
         require("mason-lspconfig").setup()
-      end
-    }
-    use { "tamago324/lir.nvim",
-      requires = {
-        { "nvim-lua/plenary.nvim" },
-      },
-      config = function()
-        require("modules.lir")
-
-        vim.keymap.set("n", "<leader>o", function()
-          return "<cmd>edit " .. vim.fn.expand("%:h") .. "<cr>"
-        end, { expr = true })
       end
     }
     -- use {
