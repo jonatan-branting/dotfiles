@@ -5,6 +5,8 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   packer_bootstrap = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
+vim.opt.shell = "zsh"
+
 vim.cmd [[ packadd packer.nvim ]]
 
 require("packer").startup({
@@ -29,7 +31,7 @@ require("packer").startup({
     use { "lambdalisue/fern.vim",
       config = function()
         vim.g["fern#hide_cursor"] = 1
-        vim.g["fern#keepjumps_on_edit"] = 1
+        vim.g["fern#keepjumps_on_edit"] = 0
         vim.g["fern#keepalt_on_edit"] = 1
 
         vim.keymap.set("n", "<leader>o", function()
@@ -73,7 +75,6 @@ require("packer").startup({
     --   end
     -- }
     use { "nvim-lua/plenary.nvim", run = "make" }
-    use { "rcarriga/nvim-notify" }
     use { "jedrzejboczar/possession.nvim",
       config = function()
         require("modules.possession")
@@ -87,8 +88,14 @@ require("packer").startup({
     --     require("windows").setup()
     --   end
     -- }
+    use { "ggandor/leap.nvim",
+      requires = {
+        {"ggandor/leap-spooky.nvim"},
+      },
+      config = function()
+      end
+    }
     use { "catppuccin/nvim" }
-    -- use { "ggandor/leap-ast.nvim" }
     use { "Julian/vim-textobj-variable-segment" }
     use { "gpanders/editorconfig.nvim" }
     use { "smjonas/inc-rename.nvim",
@@ -148,6 +155,17 @@ require("packer").startup({
         }
       end
     }
+    use {
+      "nvim-neorg/neorg",
+      config = function()
+        require('neorg').setup {
+          load = {
+            ["core.defaults"] = {}
+          }
+        }
+      end,
+      requires = "nvim-lua/plenary.nvim"
+    }
     use { "kana/vim-textobj-user" }
     use { "ibhagwan/fzf-lua",
       config = function()
@@ -156,23 +174,51 @@ require("packer").startup({
         local fzf = require("fzf-lua" )
 
         vim.keymap.set("n", "<leader>f", function() fzf.grep({ search = "" }) end)
-        vim.keymap.set("n", "<leader>l", function() fzf.resume() end)
-        vim.keymap.set("n", "<leader>l", function() fzf.resume() end)
+        vim.keymap.set("n", "<leader>p", function() fzf.files() end)
+        vim.keymap.set("n", "<leader>i", function() fzf.files({ cwd = vim.fn.expand("%:h") }) end)
+        vim.keymap.set("n", "<leader>e", function() fzf.buffers() end)
+        vim.keymap.set("n", "<leader>m", function() fzf.old_files() end)
+        vim.keymap.set("n", "gw", function() fzf.grep_cword() end)
+        vim.keymap.set("n", "gW", function() fzf.grep_cWORD() end)
       end
     }
-    use { "nvim-telescope/telescope.nvim",
-      requires = {
-        { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-        { "nvim-telescope/telescope-file-browser.nvim" },
-      },
-      config = function()
-        require("modules._telescope")
-      end
-    }
-    -- use { "jonatan-branting/nvim-treesitter-nodeobject" }
     use { "echasnovski/mini.nvim",
       config = function()
         require("modules.mini")
+      end
+    }
+    use {
+      "smjonas/snippet-converter.nvim",
+      -- SnippetConverter uses semantic versioning. Example: use version = "1.*" to avoid breaking changes on version 1.
+      -- Uncomment the next line to follow stable releases only.
+      -- tag = "*",
+      config = function()
+        local template = {
+          -- name = "t1", (optionally give your template a name to refer to it in the `ConvertSnippets` command)
+          sources = {
+            ultisnips = {
+              -- Add snippets from (plugin) folders or individual files on your runtimepath...
+              "./vim-snippets/UltiSnips",
+              "./latex-snippets/tex.snippets",
+              -- ...or use absolute paths on your system.
+              vim.fn.stdpath("config") .. "/UltiSnips",
+            },
+            snipmate = {
+              "vim-snippets/snippets",
+            },
+          },
+          output = {
+            -- Specify the output formats and paths
+            vscode_luasnip = {
+              vim.fn.stdpath("config") .. "/luasnip_snippets",
+            },
+          },
+        }
+        require("snippet_converter").setup {
+          templates = { template },
+          -- To change the default settings (see configuration section in the documentation)
+          -- settings = {},
+        }
       end
     }
     use { "L3MON4D3/LuaSnip",
@@ -181,14 +227,86 @@ require("packer").startup({
         require("luasnip.loaders.from_snipmate").lazy_load()
       end
     }
-    use { "jonatan-branting/lua-dev.nvim" }
+    use { "folke/neodev.nvim",
+      config = function()
+        require("neodev").setup({
+          library = {
+            enabled = true,
+            runtime = true,
+            types = true,
+            plugins = true,
+            -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
+          },
+          setup_jsonls = true,
+          -- override = function(root_dir, options) end,
+          lspconfig = true,
+          debug = false,
+          experimental = {
+            pathStrict = true
+          }
+        })
+      end
+    }
     use {
       "zbirenbaum/copilot.lua",
       event = "VimEnter",
       config = function()
         vim.defer_fn(function()
-          require("copilot").setup()
+          require("copilot").setup({
+            panel = {
+              enabled = false,
+            },
+            suggestion = {
+              enabled = true,
+              auto_trigger = true,
+              debounce = 75,
+              keymap = {
+                accept = "<c-e>",
+                next = "<c-n>",
+                prev = "<c-p>",
+                dismiss = "<C-]>",
+              },
+            },
+            filetypes = {
+              yaml = false,
+              markdown = false,
+              help = false,
+              gitcommit = false,
+              gitrebase = false,
+              hgcommit = false,
+              norg = false,
+              svn = false,
+              cvs = false,
+              ruby = true,
+              ["."] = false,
+            },
+            copilot_node_command = vim.fn.expand("$HOME") .. "/.local/share/nvm/v16.17.1/bin/node",
+            plugin_manager_path = vim.fn.stdpath("data") .. "/site/pack/packer",
+            server_opts_overrides = {
+              advanced = {
+                length = 1,
+              }
+            },
+          })
         end, 100)
+
+        local suggestion = require("copilot.suggestion")
+
+          -- if suggestion.is_visible() then
+          -- vim.keymap.set("i", "<c-e>", function()
+          --   suggestion.accept()
+          -- else
+          --   return "<c-o>g$"
+          -- end
+        -- end, { expr = true })
+
+        vim.keymap.set("i", "<c-p>", function()
+          suggestion.prev()
+        end)
+
+        vim.keymap.set("i", "<c-n>", function()
+          suggestion.next()
+        end)
       end,
     }
     use { "mrjones2014/smart-splits.nvim" }
@@ -205,18 +323,12 @@ require("packer").startup({
         require("modules.neotest")
       end
     }
-    -- use {
-    --   'samodostal/copilot-client.lua',
-    --   requires = {
-    --     'zbirenbaum/copilot.lua',
-    --     'nvim-lua/plenary.nvim'
-    --   },
-    -- }
     use { "j-hui/fidget.nvim",
       config = function()
         require("fidget").setup({
           window = {
-            blend = 10,
+            blend = 100,
+            relative = "editor",
           },
           fmt = {
             stack_upwards = false
@@ -242,8 +354,6 @@ require("packer").startup({
         require("dressing").setup()
       end
     }
-    -- use { "kyazdani42/nvim-web-devicons" }
-    -- use { "mfussenegger/nvim-treehopper" }
     use { "kylechui/nvim-surround",
       config = function()
         require("nvim-surround").setup({
@@ -254,13 +364,14 @@ require("packer").startup({
             normal_cur = "ss",
             normal_line = "S",
             normal_cur_line = "SS",
-            visual = "s",
-            visual_line = "S",
+            visual = "S",
+            visual_line = "gS",
             delete = "ds",
             change = "cs",
           }
         })
       end
+      -- TODO allow me to specifiy my own keymaps please
     }
     use { "andymass/vim-matchup",
       config = function()
@@ -289,29 +400,7 @@ require("packer").startup({
     use { "jonatan-branting/refactoring.nvim" }
     use { "nvim-treesitter/nvim-treesitter" }
     use { "nvim-treesitter/nvim-treesitter-textobjects" }
-    -- use { "tomtom/tlib_vim" }
-    use { "nvim-neorg/neorg",
-      config = function()
-        require("modules.neorg")
-      end
-    }
     use { "RRethy/nvim-treesitter-textsubjects" }
-    -- use { "rmagatti/goto-preview",
-    --   config = function()
-    --     require("goto-preview").setup({
-    --       width = 120,
-    --       height = 15,
-    --       border = {" ", "─" ,"┐", "│", "┘", "─", "└", "│"},
-    --       default_mappings = false,
-    --       debug = false,
-    --       opacity = nil,
-    --       resizing_mappings = false,
-    --       post_open_hook = nil,
-    --       focus_on_open = true,
-    --       dismiss_on_move = false,
-    --     })
-    --   end
-    -- }
     use { "folke/lsp-colors.nvim" }
     use { "rafamadriz/friendly-snippets" }
     use { "honza/vim-snippets" }
@@ -363,7 +452,6 @@ require("packer").startup({
     --     clearjumps_on_change = true
     --   })
 
-
     --   vim.api.nvim_create_user_command("GW", function(opts)
     --     local branch_name = opts.args
 
@@ -401,7 +489,13 @@ require("packer").startup({
         require("modules.autopairs")
       end
     }
-    use { "samjwill/nvim-unception" }
+    use { "samjwill/nvim-unception",
+      config = function()
+        vim.g.unception_block_while_host_edits = 0
+        vim.g.unception_enable_flavor_text = 0
+        vim.g.unception_open_buffer_in_new_tab = 0
+      end
+    }
     use { "windwp/nvim-ts-autotag",
       config = function()
         require("nvim-ts-autotag").setup({
@@ -415,16 +509,34 @@ require("packer").startup({
       config = function()
         local toggleterm = require("toggleterm")
         toggleterm.setup({
-          -- direction = function ()
-          --   return 'vertical'
-          -- end
+          direction = "horizontal",
+          shade_terminals = false,
+          highlights = {
+            FloatBorder = {
+              link = "FloatBorder"
+            },
+            NormalFloat = {
+              link = "NormalFloat"
+            },
+          },
+          shell = "fish",
+          float_opts = {
+            border = "solid",
+            winblend = 5,
+            -- width = 90,
+            -- height = 80,
+          },
         })
 
-        vim.keymap.set("n", "ys", "<cmd>ToggleTerm<cr>")
+        vim.keymap.set("n", "<leader>l", "<cmd>ToggleTerm<cr>")
       end
     }
     use { "vim-test/vim-test",
       config = function()
+        -- local term_integrations = require("modules.term.integrations")
+
+        -- term_integrations.set_vim_test_strategy()
+
         vim.g["test#strategy"] = "toggleterm"
       end
     }
@@ -454,16 +566,16 @@ require("packer").startup({
         end)
       end
     }
-    use { "tpope/vim-rails", ft="ruby" }
+    use { "tpope/vim-rails", ft = "ruby" }
     use { "vim-ruby/vim-ruby",
-      ft="ruby",
+      ft = "ruby",
       config = function()
         vim.g.ruby_indent_hanging_elements = 0
         vim.g.ruby_indent_assignment_style = "variable"
         vim.g.ruby_indent_block_style = "do"
       end
     }
-    use { "tpope/vim-bundler", ft="ruby" }
+    use { "tpope/vim-bundler", ft = "ruby" }
     use { "nvim-treesitter/playground" }
     use { "mfussenegger/nvim-lint" }
 
@@ -482,6 +594,7 @@ function F.iter_buffer_range(buffer, range, func, opts)
 end
 
 require("modules.core_settings")
+require("modules.colorscheme")
 
 vim.api.nvim_create_autocmd("VimEnter",
   {
@@ -491,15 +604,16 @@ vim.api.nvim_create_autocmd("VimEnter",
       require("modules._lsp")
       require("modules._todo")
       require("modules.treesitter")
-      require("modules.colorscheme")
       require("modules.diagnostics")
 
       require("modules.popup").setup()
       require("modules.visual_command").setup()
       -- require("modules.select_mode").setup()
-      -- require("modules.mouse_hover").setup()
+      require("modules.mouse_hover").setup()
 
       require("modules.ui.heirline")
+
+      require("modules.focus_window_on_hover")
     end
   }
 )
@@ -519,11 +633,18 @@ vim.api.nvim_create_autocmd("BufWritePost",
   {
     pattern = vim.fn.expand("~/git/dotfiles/config/nvim/") .. "**/*.lua",
     callback = function(args)
+      if args.file:match("init.lua") then
+        return
+      end
+
       reload.reload_module(args.file)
       vim.cmd.luafile(args.file)
     end
   }
 )
+
+-- TODO somehow get window below cursor
+-- then both issues are solved, right?
 
 -- local diagnostic_window = nil
 -- vim.api.nvim_create_autocmd(
