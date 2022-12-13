@@ -12,6 +12,67 @@ vim.cmd [[ packadd packer.nvim ]]
 require("packer").startup({
   function(use)
     use { "wbthomason/packer.nvim" }
+    -- use({
+    --   "dnlhc/glance.nvim",
+    --   config = function()
+    --     require("glance").setup({})
+
+    --     vim.keymap.set("n", "gd", "<CMD>Glance definitions<CR>")
+    --     vim.keymap.set("n", "gr", "<CMD>Glance references<CR>")
+    --     vim.keymap.set("n", "gy", "<CMD>Glance type_definitions<CR>")
+    --     vim.keymap.set("n", "gm", "<CMD>Glance implementations<CR>")
+    --   end,
+    -- })
+    use {
+      "nvim-zh/colorful-winsep.nvim",
+      config = function()
+        require("colorful-winsep").setup({
+          highlight = {
+            guibg = "none",
+            guifg = "#957CC6",
+            gui = "bold",
+          },
+          -- timer refresh rate
+          interval = 30,
+          -- This plugin will not be activated for filetype in the following table.
+          no_exec_files = { "packer", "TelescopePrompt", "mason", "CompetiTest", "NvimTree" },
+          -- Symbols for separator lines, the order: horizontal, vertical, top left, top right, bottom left, bottom right.
+          symbols = { "━", "┃", "┏", "┓", "┗", "┛" },
+          close_event = function()
+            -- Executed after closing the window separator
+          end,
+          create_event = function()
+            -- Executed after creating the window separator
+          end,
+        })
+      end
+    }
+    use {
+      "jonatan-branting/ssr.nvim",
+      config = function()
+        require("ssr").setup {
+          min_width = 50,
+          min_height = 5,
+          keymaps = {
+            close = "q",
+            next_match = "n",
+            prev_match = "N",
+            replace_all = "<cr>",
+          },
+        }
+
+        vim.keymap.set({ "n", "x" }, "<c-x>x", function()
+          require("ssr").open()
+        end)
+      end
+    }
+    -- use { "lewis6991/satellite.nvim",
+    --   config = function()
+    --     require("satellite").setup({
+    --       current_only = false,
+    --     })
+    --   end
+    -- }
     -- use { "smjonas/live-command.nvim",
     --   config = function()
     --     require("live-command").setup {
@@ -185,6 +246,8 @@ require("packer").startup({
     use { "echasnovski/mini.nvim",
       config = function()
         require("modules.mini")
+
+        vim.keymap.set("n", "<leader>bh", require("mini.starter").open)
       end
     }
     use {
@@ -505,39 +568,39 @@ require("packer").startup({
       end
     }
     use { "dkarter/bullets.vim" }
-    use { "akinsho/toggleterm.nvim",
-      config = function()
-        local toggleterm = require("toggleterm")
-        toggleterm.setup({
-          direction = "horizontal",
-          shade_terminals = false,
-          highlights = {
-            FloatBorder = {
-              link = "FloatBorder"
-            },
-            NormalFloat = {
-              link = "NormalFloat"
-            },
-          },
-          shell = "fish",
-          float_opts = {
-            border = "solid",
-            winblend = 5,
-            -- width = 90,
-            -- height = 80,
-          },
-        })
+    -- use { "akinsho/toggleterm.nvim",
+    --   config = function()
+    --     local toggleterm = require("toggleterm")
+    --     toggleterm.setup({
+    --       direction = "horizontal",
+    --       shade_terminals = false,
+    --       highlights = {
+    --         FloatBorder = {
+    --           link = "FloatBorder"
+    --         },
+    --         NormalFloat = {
+    --           link = "NormalFloat"
+    --         },
+    --       },
+    --       shell = "fish",
+    --       float_opts = {
+    --         border = "solid",
+    --         winblend = 5,
+    --         -- width = 90,
+    --         -- height = 80,
+    --       },
+    --     })
 
-        vim.keymap.set("n", "<leader>l", "<cmd>ToggleTerm<cr>")
-      end
-    }
+    --     vim.keymap.set("n", "<leader>l", "<cmd>ToggleTerm<cr>")
+    --   end
+    -- }
     use { "vim-test/vim-test",
       config = function()
-        -- local term_integrations = require("modules.term.integrations")
+        local term_integrations = require("modules.term.integrations")
 
-        -- term_integrations.set_vim_test_strategy()
+        term_integrations.set_vim_test_strategy()
 
-        vim.g["test#strategy"] = "toggleterm"
+        -- vim.g["test#strategy"] = ""
       end
     }
     use { "jonatan-branting/nvim-dap",
@@ -614,16 +677,37 @@ vim.api.nvim_create_autocmd("VimEnter",
       require("modules.ui.heirline")
 
       require("modules.focus_window_on_hover")
+
+      require("modules.term").setup()
+
+      vim.keymap.set("n", "<leader>l", function ()
+        require("modules.term"):get_terminal():toggle()
+      end)
+
+      vim.keymap.set("n", "<leader>x", function()
+        require("modules.term"):get_terminal():send("ls")
+      end)
     end
   }
 )
 
+vim.keymap.set("n", "<leader>l", function ()
+  require("modules.term"):get_terminal():toggle()
+end)
+
+local group = vim.api.nvim_create_augroup("AutoReload", {})
+
 vim.api.nvim_create_autocmd("BufWritePost",
   {
-    pattern = vim.fn.expand("~/git/dotfiles/config/nvim/init.lua"),
+    pattern = vim.fn.expand("config/nvim/init.lua"),
+    group = group,
     callback = function(args)
       vim.cmd.luafile(args.file)
       vim.cmd("PackerCompile")
+
+      vim.schedule(function()
+        print("reloaded:", args.file)
+      end)
     end
   }
 )
@@ -632,59 +716,17 @@ local reload = require("plenary.reload")
 vim.api.nvim_create_autocmd("BufWritePost",
   {
     pattern = vim.fn.expand("~/git/dotfiles/config/nvim/") .. "**/*.lua",
+    group = group,
     callback = function(args)
-      if args.file:match("init.lua") then
+      if args.file:match("nvim/init.lua") then
         return
       end
 
       reload.reload_module(args.file)
       vim.cmd.luafile(args.file)
+      vim.schedule(function()
+        print("reloaded:", args.file)
+      end)
     end
   }
 )
-
--- TODO somehow get window below cursor
--- then both issues are solved, right?
-
--- local diagnostic_window = nil
--- vim.api.nvim_create_autocmd(
---   "User", {
---     pattern = "MouseHoverEnter",
---     callback = function (args)
---       vim.schedule(function()
---         local row = args.data.position.line + 1
---         local col = args.data.position.column
-
---         local mouse_pos = vim.fn.getmousepos()
---         local row = mouse_pos.line
---         local col = mouse_pos.column
---         print(row,col)
-
---         local win_id = vim.diagnostic.open_float({
---           -- scope = "cursor",
---           pos = { row, col },
---           row = row,
---           col = col,
---           relative = "win"
---         })
-
---         -- print("winid", win_id)
---         diagnostic_window = vim.fn.win_id2win(win_id)
---         if diagnostic_window == 0 then diagnostic_window = nil end
---       end)
---     end
---   }
--- )
--- )
--- vim.api.nvim_create_autocmd(
---   "User", {
---     pattern = "MouseHoverLeave",
---     callback = function (data)
---       vim.schedule(function()
---         if not diagnostic_window then return end
-
---         vim.api.nvim_win_close(diagnostic_window, false)
---       end)
---     end
---   }
--- )

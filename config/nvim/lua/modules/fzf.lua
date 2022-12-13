@@ -3,6 +3,8 @@ local prompt = "%"
 local color_icons = false
 local file_icons = false
 
+local flip_columns = 120
+
 require("fzf-lua").setup {
   -- fzf_bin         = 'sk',            -- use skim instead of fzf?
   -- https://github.com/lotabout/skim
@@ -18,8 +20,8 @@ require("fzf-lua").setup {
     -- "aboveleft vnew   : split left
     -- Only valid when using a float window
     -- (i.e. when 'split' is not defined, default)
-    height           = 0.90,            -- window height
-    width            = 0.90,            -- window width
+    height           = 0.88,            -- window height
+    width            = 0.88,            -- window width
     row              = 0.35,            -- window row position (0=top, 1=bottom)
     col              = 0.50,            -- window col position (0=left, 1=right)
     -- border argument passthrough to nvim_open_win(), also used
@@ -50,9 +52,9 @@ require("fzf-lua").setup {
       wrap           = 'nowrap',        -- wrap|nowrap
       hidden         = 'nohidden',      -- hidden|nohidden
       vertical       = 'down:45%',      -- up|down:size
-      horizontal     = 'right:60%',     -- right|left:size
+      horizontal     = 'right:52%',     -- right|left:size
       layout         = 'flex',          -- horizontal|vertical|flex
-      flip_columns   = 120,             -- #cols to switch to horizontal on flex
+      flip_columns   = flip_columns,             -- #cols to switch to horizontal on flex
       -- Only valid with the builtin previewer:
       title          = false,            -- preview border title (file/buf)?
       scrollbar      = false,         -- `false` or string:'float|border'
@@ -77,9 +79,26 @@ require("fzf-lua").setup {
       },
     },
     on_create = function()
-      -- vim.api.nvim_win_set_config(0, { winblend = 0.3 })
-      local w = vim.api.nvim_win_get_width(0)
-      vim.api.nvim_win_set_width(0, w - 1)
+      -- TODO: pass winnr as parameter
+      local win = vim.api.nvim_get_current_win()
+
+      local row, col = unpack(vim.api.nvim_win_get_position(win))
+
+      -- Add a small gap between preview and fzf
+      if vim.go.columns < flip_columns then
+        -- vim.api.nvim_win_set_config(win, {
+        --   col = col,
+        --   row = row - 1,
+        --   relative = "editor",
+        -- })
+      else
+        -- vim.api.nvim_win_set_config(win, {
+        --   col = col - 1,
+        --   row = row ,
+        --   relative = "editor",
+        -- })
+      end
+      vim.b.miniindentscope_disable = true
       -- vim.cmd("set winblend=10")
       -- called once upon creation of the fzf main window
       -- can be used to add custom fzf-lua mappings, e.g:
@@ -138,7 +157,7 @@ require("fzf-lua").setup {
       ["default"]     = actions.file_edit_or_qf,
       ["ctrl-s"]      = actions.file_split,
       ["ctrl-v"]      = actions.file_vsplit,
-      ["ctrl-t"]      = actions.file_tabedit,
+      -- ["ctrl-t"]      = actions.file_tabedit,
       ["alt-q"]       = actions.file_sel_to_qf,
     },
     buffers = {
@@ -158,7 +177,7 @@ require("fzf-lua").setup {
     ['--ansi']        = '',
     ['--info']        = 'inline',
     ['--height']      = '100%',
-    ['--layout']      = 'reverse',
+    ['--layout']      = 'default',
     ['--border']      = 'none',
     ['--pointer']     = '\\ '
   },

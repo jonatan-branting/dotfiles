@@ -97,15 +97,18 @@ local filename_component = {
       self.lfilename = vim.fn.pathshorten(self.lfilename)
     end
   end,
-  h_utils.make_flexible_component(2, {
-    provider = function(self)
-      return self.lfilename
-    end,
-  }, {
-    provider = function(self)
-      return vim.fn.pathshorten(self.lfilename)
-    end,
-  }),
+  {
+    flexible = 2,
+    {
+      provider = function(self)
+        return self.lfilename
+      end,
+    }, {
+      provider = function(self)
+        return vim.fn.pathshorten(self.lfilename)
+      end,
+    }
+  },
 }
 
 local file_flags = {
@@ -434,20 +437,23 @@ local work_dir = {
   --   name = "heirline_workdir",
   -- },
 
-  h_utils.make_flexible_component(1, {
-    provider = function(self)
-      local trail = self.cwd:sub(-1) == "/" and "" or "/"
-      return self.cwd .. trail .. " "
-    end,
-  }, {
-    provider = function(self)
-      local cwd = vim.fn.pathshorten(self.cwd)
-      local trail = self.cwd:sub(-1) == "/" and "" or "/"
-      return cwd .. trail .. " "
-    end,
-  }, {
-    provider = "",
-  }),
+  {
+    flexible = 1,
+    {
+      provider = function(self)
+        local trail = self.cwd:sub(-1) == "/" and "" or "/"
+        return self.cwd .. trail .. " "
+      end,
+    }, {
+      provider = function(self)
+        local cwd = vim.fn.pathshorten(self.cwd)
+        local trail = self.cwd:sub(-1) == "/" and "" or "/"
+        return cwd .. trail .. " "
+      end,
+    }, {
+      provider = "",
+    }
+  },
 }
 
 local help_filename = {

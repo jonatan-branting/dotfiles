@@ -1,7 +1,9 @@
 local treesitter = require("nvim-treesitter.configs")
 
 treesitter.setup {
-  ensure_installed = "all",
+  -- ensure_installed = "all",
+  sync_install = false,
+  auto_intsall = true,
   nodeobject = {
     enable = true
   },
@@ -68,7 +70,7 @@ treesitter.setup {
   -- we're only interested in the queries
   textobjects = {
     move = {
-      enable = false,
+      enable = true,
       set_jumps = true,
       goto_next_start = {
         ["]f"] = "@function.outer",
@@ -98,12 +100,12 @@ treesitter.setup {
       },
     },
     swap = {
-      enable = false,
+      enable = true,
       swap_next = {
-        ["g>"] = "@parameter.inner",
+        ["<c-l>"] = "@parameter.inner",
       },
       swap_previous = {
-        ["g<"] = "@parameter.inner",
+        ["<c-h>"] = "@parameter.inner",
       }
     },
     select = {

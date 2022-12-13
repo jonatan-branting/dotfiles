@@ -28,6 +28,7 @@ highlight("MatchParen", { guibg = utils.darken("#c0caf5", 0.10) , guifg=none, gu
 highlight("SignColumn", { guibg = none })
 highlight("LineNr", { guibg = none })
 
+vim.cmd [[ highlight! link CurSearch Search ]]
 vim.cmd [[ highlight! link TelescopeMatching IncSearch ]]
 vim.cmd [[ highlight! link FidgetTask Pmenu ]]
 vim.cmd [[ highlight! link MiniIndentscopeSymbol Comment ]]
@@ -40,12 +41,22 @@ vim.cmd [[ highlight! link TelescopeSelection Visual]]
 vim.cmd [[ highlight! link TelescopeNormal NormalFloat]]
 
 local normal = utils.get_highlight("Normal")
-local bg = utils.lighten(normal.bg, 0.90, normal.fg)
+local bg = utils.darken(normal.bg, 1.065, normal.fg)
 local fg = normal.fg
 local settings = {guibg=bg, guifg=normal.fg}
 highlight("NormalFloat", settings)
+
 highlight("FloatNormal", settings)
+highlight("PMenu", settings)
 highlight("FloatBorder", { guibg=bg, guifg=bg})
+
+local lighterbg = utils.darken(normal.bg, 1.02, normal.fg)
+highlight("NormalFloatLighter", { guibg=lighterbg, guifg=normal.fg})
+highlight("FloatBorderLighter", { guibg=lighterbg, guifg=lighterbg})
+-- highlight("SignColumn", { guifg=fg, guibg=lighterbg})
+-- highlight("SignColumnSB", { guifg=fg, guibg=lighterbg})
+
+-- vim.api.nvim_set_hl(0, 'WinSeparator', { bg = none, fg = '#1a1b26', bold = true })
 
 local prompt_bg = utils.lighten(bg, 0.85, fg)
 highlight("TelescopePromptNormal", {guibg=prompt_bg, guifg=fg})

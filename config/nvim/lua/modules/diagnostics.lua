@@ -39,11 +39,12 @@ vim.diagnostic.config({
     severity = { min = vim.diagnostic.severity.ERROR }
   },
   update_in_insert = false,
-  signs = {
-    severity = { min = vim.diagnostic.severity.INFO, max = vim.diagnostic.severity.WARN },
-    enabled = true,
-    priority = 15
-  },
+  signs = false,
+  -- {
+  --   severity = { min = vim.diagnostic.severity.INFO, max = vim.diagnostic.severity.WARN },
+  --   enabled = false,
+  --   priority = 15
+  -- },
   severity_sort = true,
   float = {
     border = "single",

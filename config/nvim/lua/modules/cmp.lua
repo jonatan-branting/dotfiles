@@ -46,7 +46,7 @@ end
 cmp.setup({
   enabled = function ()
     return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
-    or require("cmp_dap").is_dap_buffer()
+    -- or require("cmp_dap").is_dap_buffer()
   end,
   formatting = {
     format = function(entry, vim_item)
@@ -178,39 +178,6 @@ cmp.setup({
         fallback()
       end
     end),
-    ["<C-n>"] = cmp.mapping({
-      c = function()
-        if cmp.visible() then
-          cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-        else
-          vim.api.nvim_feedkeys(utils.t("<Down>"), "n", true)
-        end
-      end,
-      i = function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-        else
-          fallback()
-        end
-      end
-    }),
-    ["<C-p>"] = cmp.mapping({
-      c = function()
-        if cmp.visible() then
-          cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-        else
-          vim.api.nvim_feedkeys(utils.t("<Up>"), "n", true)
-        end
-      end,
-      i = function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-        else
-          fallback()
-        end
-      end
-    }),
-    ["<c-e>"] = cmp.mapping.close()
   },
   sources = {
     -- { name = "copilot" },
@@ -300,42 +267,41 @@ local handler = function(char, item, bufnr, commit_character)
 end
 
 -- TODO always clear the register...
---cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
---  filetypes = {
---    -- "*" is a alias to all filetypes
---    ["*"] = {
---      ["("] = {
---        kind = {
---          cmp.lsp.CompletionItemKind.Function,
---          cmp.lsp.CompletionItemKind.Method,
---        },
---        handler = handler
---      }
---    },
---    ruby = false,
---    tex = false,
---    -- TODO special ruby handler which doesnt add parenthesis for functions or
---    -- or simply disable it for ruby
---    -- methods with parameters
---    --lua = {
---    --  ["("] = {
---    --    kind = {
---    --      cmp.lsp.CompletionItemKind.Function,
---    --      cmp.lsp.CompletionItemKind.Method
---    --    },
---    --    ---@param char string
---    --    ---@param item item completion
---    --    ---@param bufnr buffer number
---    --    handler = function(char, item, bufnr)
---    --      print(
---    --        cmp.lsp.CompletionItemKind.Function,
---    --        cmp.lsp.CompletionItemKind.Method
---    --      )
---    --      print(vim.inspect{char, item, bufnr})
---    --    end
---    --  }
---    --},
---    -- Disable for tex
---  }
---})
---)
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({
+  filetypes = {
+    -- "*" is a alias to all filetypes
+    ["*"] = {
+      ["("] = {
+        kind = {
+          cmp.lsp.CompletionItemKind.Function,
+          cmp.lsp.CompletionItemKind.Method,
+        },
+        handler = handler
+      }
+    },
+    ruby = false,
+    tex = false,
+    -- TODO special ruby handler which doesnt add parenthesis for functions or
+    -- or simply disable it for ruby
+    -- methods with parameters
+    --lua = {
+    --  ["("] = {
+    --    kind = {
+    --      cmp.lsp.CompletionItemKind.Function,
+    --      cmp.lsp.CompletionItemKind.Method
+    --    },
+    --    ---@param char string
+    --    ---@param item item completion
+    --    ---@param bufnr buffer number
+    --    handler = function(char, item, bufnr)
+    --      print(
+    --        cmp.lsp.CompletionItemKind.Function,
+    --        cmp.lsp.CompletionItemKind.Method
+    --      )
+    --      print(vim.inspect{char, item, bufnr})
+    --    end
+    --  }
+    --},
+    -- Disable for tex
+  }
+}))

@@ -6,7 +6,7 @@ require("mini.ai").setup({
   -- Also use this to disable builtin textobjects. See |MiniAi.config|.
   custom_textobjects = {
     -- argument
-    -- a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separators = { ',', ';' } }),
+    a = gen_spec.argument({ brackets = { "%b()", "%b{}" }, separators = { ',', ';' } }),
     b = { {"%b[]", "%b()", "%b{}" } },
     -- digits
     d = { '%f[%d]%d+' },

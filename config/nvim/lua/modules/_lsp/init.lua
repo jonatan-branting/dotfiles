@@ -29,9 +29,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>la', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>lr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>ll', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  -- buf_set_keymap('n', '<space>la', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  -- buf_set_keymap('n', '<space>lr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  -- buf_set_keymap('n', '<space>ll', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   -- buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -55,7 +55,6 @@ local servers = {
   "cssls",
   "solargraph",
   "html",
-  "rnix",
   "vuels",
 }
 
@@ -91,18 +90,13 @@ lsp_config.vuels.setup {
   }
 }
 
-local lua_config = require("lua-dev").setup({
-  lspconfig = {
-    cmd = {"lua-language-server"},
-    on_attach = on_attach,
-    capabilities = capabilities,
-  },
-  library = {
-    vimruntime = true,
-    types = true,
-    plugins = true,
-  },
-  runtime_path = false,
+lsp_config.sumneko_lua.setup({
+  on_attach = on_attach,
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Disable"
+      }
+    }
+  }
 })
-
-lsp_config.sumneko_lua.setup(lua_config)

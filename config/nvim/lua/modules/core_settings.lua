@@ -7,8 +7,19 @@ vim.g.mapleader = " "
 
 DEFAULT_BORDERS = {  horiz = '━',  vert = '┃',   vertright = '┣', vertleft = '┫', horizdown = "┳", horizup = "┻", verthoriz = "╋" }
 
-vim.opt.fillchars = DEFAULT_BORDERS
+vim.opt.fillchars = {
+  horiz     = '━',
+  horizup   = '┻',
+  horizdown = '┳',
+  vert      = '┃',
+  vertleft  = '┫',
+  vertright = '┣',
+  verthoriz = '╋',
+}
+
+-- vim.opt.fillchars = DEFAULT_BORDERS
 opt.termguicolors = true
+opt.cmdheight = 1
 
 opt.number = true
 opt.relativenumber = true
@@ -18,9 +29,9 @@ opt.list = true
 opt.linebreak = true
 opt.breakindent = true
 opt.showmode = false
-opt.pumblend = 12
+opt.pumblend = 4
 opt.splitkeep = "topline"
-opt.winblend = 4
+opt.winblend = 3
 opt.updatetime = 2000
 opt.shortmess = "filnxtToOFcI"
 opt.hidden = true

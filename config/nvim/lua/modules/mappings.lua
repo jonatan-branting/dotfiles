@@ -120,13 +120,15 @@ vim.api.nvim_set_keymap('v', '<', '<gv', {silent = true, noremap = true, nowait 
 vim.api.nvim_set_keymap('v', '>', '>gv', {silent = true, noremap = true, nowait = true})
 
 -- Allow terminal style navigation in insert mode
-inoremap({ '<c-e>', '<c-o>g$' }, 'end-of-line')
+-- inoremap({ '<c-e>', '<c-o>g$' }, 'end-of-line')
 inoremap({ '<c-a>', '<c-o>g0' }, 'start-of-line')
 
-nnoremap({ 'X', 'vaw' }, 'visual-around-word')
+-- nnoremap({ 'X', 'vaw' }, 'visual-around-word')
 
 -- Search and replace selection
 vnoremap({ '<c-r>', '\"hy:%s/<c-r>h//gc<left><left><left>' }, 'search-and-replace')
+
+-- Delete current line
 
 -- Consistency please!
 nnoremap({ 'vv', '0v$' })
@@ -160,36 +162,35 @@ nnoremap({ 'yu', '<cmd>WindowsMaximize<cr>' }, 'maximize-window')
 
 -- Buffers
 nnoremap({ '<leader>bd', ':bd<cr>' }, 'delete-buffer')
-nnoremap({ '<leader>bh', ':Startify<cr>' }, 'start-screen/home')
 nnoremap({ '<leader>bn', ':bnext<cr>' }, 'next-buffer')
 nnoremap({ '<leader>bp', ':bprev<cr>' }, 'prev-buffer')
 
-local telescope = require("telescope.builtin")
-nnoremap({ '<leader>p', function() telescope.find_files({ hidden = true }) end }, 'find-files')
+-- local telescope = require("telescope.builtin")
+-- nnoremap({ '<leader>p', function() telescope.find_files({ hidden = true }) end }, 'find-files')
 -- nnoremap({ '<leader>f', function() telescope.grep_string({ hidden = true, search = ""}) end }, 'live-grep')
-nnoremap({ '<leader>F', function() telescope.grep_string({ hidden = true, grep_open_files = true }) end }, 'live-grep')
-nnoremap({ '<leader>e', telescope.buffers }, 'list-buffers')
-nnoremap({ '<leader>m', telescope.oldfiles }, 'most-recent')
-nnoremap { "<leader>l", telescope.resume }
-nnoremap { "<leader>c", telescope.command_history }
-nnoremap { "gw", function() telescope.grep_string() end }
+-- nnoremap({ '<leader>F', function() telescope.grep_string({ hidden = true, grep_open_files = true }) end }, 'live-grep')
+-- nnoremap({ '<leader>e', telescope.buffers }, 'list-buffers')
+-- nnoremap({ '<leader>m', telescope.oldfiles }, 'most-recent')
+-- nnoremap { "<leader>l", telescope.resume }
+-- nnoremap { "<leader>c", telescope.command_history }
+-- nnoremap { "gw", function() telescope.grep_string() end }
 
--- If this is not an Ex command Telescope will require me to press <esc> to see the results for no apparentreason
-vnoremap ({ 'gw',
-  function()
-    local search = ":Rg " .. require"utils".get_visual_selection()
+-- -- If this is not an Ex command Telescope will require me to press <esc> to see the results for no apparentreason
+-- vnoremap ({ 'gw',
+--   function()
+--     local search = ":Rg " .. require"utils".get_visual_selection()
 
-    vim.cmd(search)
-    vim.api.nvim_input("<esc>")
-  end
-}, 'grep-selected')
+--     vim.cmd(search)
+--     vim.api.nvim_input("<esc>")
+--   end
+-- }, 'grep-selected')
 
-nnoremap ({
-  '<leader>i',
-  function()
-    telescope.find_files({hidden = true, search_dirs = { vim.fn.expand('%:h') }})
-  end,
-}, 'files-in-folder')
+-- nnoremap ({
+--   '<leader>i',
+--   function()
+--     telescope.find_files({hidden = true, search_dirs = { vim.fn.expand('%:h') }})
+--   end,
+-- }, 'files-in-folder')
 
 vnoremap({ '*',
   function()
@@ -316,7 +317,6 @@ local function delete_surrounding_matches()
   return vim.fn.feedkeys("ds" .. get_current_char())
 end
 
-
 local todo = require("modules._todo")
 
 nnoremap({ "<leader>z", todo.open_branch_todo }, "open-branch-todo")
@@ -366,7 +366,7 @@ vim.keymap.set("n", "<leader>rn", function()
   return ":IncRename " .. vim.fn.expand("<cword>")
 end, { expr = true })
 
-nnoremap { "gd", "gf" }
+-- nnoremap { "gd", "gf" }
 
 -- require('refactoring').setup({
 --   formatting = {
@@ -773,6 +773,7 @@ vim.keymap.set("n", "<cr>", "o<esc>0\"_D")
 vim.keymap.set("n", "<s-cr>", "O<esc>0\"_D")
 
 vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
+vim.keymap.set("n", "X", "ddO<esc>")
 
 return {
   extract_function_callback = extract_function_callback,

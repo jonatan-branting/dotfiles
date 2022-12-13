@@ -15,6 +15,7 @@ function M.setup()
       vim.api.nvim_exec_autocmds(
         "User", {
           pattern = "MouseHoverEnter",
+          -- TODO extract positions instead...
           data = { position = vim.fn.getmousepos() }
         }
       )
