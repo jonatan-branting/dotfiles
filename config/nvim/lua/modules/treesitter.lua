@@ -1,12 +1,18 @@
 local treesitter = require("nvim-treesitter.configs")
 
 treesitter.setup {
-  ensure_installed = "all",
+  -- ensure_installed = "all",
+  sync_install = false,
+  auto_intsall = true,
+  nodeobject = {
+    enable = true
+  },
   textsubjects = {
     enable = true,
     keymaps = {
       ['.'] = 'textsubjects-smart',
-      [';'] = 'textsubjects-big'
+      [']'] = 'textsubjects-container-outer',
+      ['['] = 'textsubjects-container-inner',
     }
   },
   -- context_commentstring = {
@@ -29,7 +35,7 @@ treesitter.setup {
     -- additional_vim_regex_highlighting = true
   },
   incremental_selection = {
-    enable = false,
+    enable = true,
     keymaps = {
       init_selection = "<c-n>",
       node_incremental = "<c-n>",
@@ -60,39 +66,65 @@ treesitter.setup {
       show_help = '?',
     },
   },
+  -- will be handled by mini.ai instead,
+  -- we're only interested in the queries
   textobjects = {
     move = {
-      enable = false,
+      enable = true,
       set_jumps = true,
       goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
+        ["]f"] = "@function.outer",
+        ["]c"] = "@class.outer",
+        ["]a"] = "@parameter.outer",
+        ["]b"] = "@block.outer",
+        -- ["]n"] = "@node",
+        [")"]  = "@node",
       },
       goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
+        ["]F"] = "@function.outer",
+        ["]C"] = "@class.outer",
+        [">"] = "@node",
       },
       goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
+        ["[f"] = "@function.outer",
+        ["[c"] = "@class.outer",
+        ["[a"] = "@parameter.outer",
+        ["[b"] = "@block.outer",
+        -- ["pn"] = "@node", -- TODO inner/outer
+        ["("] =  "@node",
       },
       goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
+        ["[F"] = "@function.outer",
+        ["[C"] = "@class.outer",
+        ["<"] = "@node",
       },
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ["<c-l>"] = "@parameter.inner",
+      },
+      swap_previous = {
+        ["<c-h>"] = "@parameter.inner",
+      }
     },
     select = {
       enable = true,
       lookahead = true,
       keymaps = {
+        -- would be nice with fallbacks here... a lot of keys are required!
+        ["am"] = "@function.outer",
+        ["im"] = "@function.inner",
         ["af"] = "@function.outer",
         ["if"] = "@function.inner",
         ["ac"] = "@class.outer",
         ["ic"] = "@class.inner",
-        ["ab"] = "@block.outer",
-        ["ib"] = "@block.inner",
+        -- ["ab"] = "@block.outer",
+        -- ["ib"] = "@block.inner",
         ["ia"] = "@parameter.inner",
         ["aa"] = "@parameter.outer",
+        ["ao"] = "@node", -- TODO inner/outer
+        ["io"] = "@node", -- TODO inner/outer
       }
     }
   }

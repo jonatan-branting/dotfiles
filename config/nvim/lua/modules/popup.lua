@@ -18,11 +18,11 @@ local popup_config = function(command, buf)
     enter = true,
     focusable = true,
     border = {
-      style = "single",
-      text = {
-        top = command,
-        top_align = "center"
-      }
+      style = "solid", -- TODO make this configurable?
+      -- text = {
+      --   top = command,
+      --   top_align = "center"
+      -- }
     },
     position = "35%",
     size = {
@@ -48,9 +48,16 @@ local function setup_popup_for_buffer(popup, buf, delete_on_close)
 
   local defer_close = function() vim.schedule(close) end
 
-  popup:map("n", "<esc>", close, {}, true)
+  popup:map("n", "q", close, {}, true)
   popup:on(event.WinLeave, defer_close, { nested = true })
   popup:on(event.BufWipeout, defer_close, { nested = true })
+  popup:on(event.WinScrolled, function()
+    if not popup.winid then return end
+
+    -- Make sure the windows aren't downsized
+    vim.api.nvim_win_set_width(popup.winid, math.floor(vim.go.columns * 0.9))
+    vim.api.nvim_win_set_height(popup.winid, math.floor(vim.go.lines * 0.8))
+  end, { nested = true, once = true})
 
   return popup
 end
@@ -67,12 +74,13 @@ local create_popup_for_buffer = function(buf, command, delete_on_close)
 
   vim.api.nvim_create_augroup("_popup_window_local_commands", { clear = true })
 
-  vim.api.nvim_create_autocmd(
-    "BufWinEnter", { group = "_popup_window_local_commands", callback = function()
+  vim.api.nvim_create_autocmd("BufWinEnter", {
+      group = "_popup_window_local_commands",
+      callback = function()
         if vim.api.nvim_get_current_win() == popup.winid then
           setup_popup_for_buffer(popup, vim.fn.expand("<abuf>"), delete_on_close)
         end
-    end
+      end
     }
   )
 
@@ -107,7 +115,7 @@ local popup_next = function(command)
     end
   })
 
-  vim.cmd(command)
+  pcall(function() vim.cmd(command) end)
 
   delete_commands("_popup_autocommands")
 end

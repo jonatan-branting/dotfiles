@@ -1,6 +1,25 @@
 local opt = vim.opt
 
+vim.g.mapleader = " "
+
+-- DEFAULT_BORDERS = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' }
+-- DEFAULT_BORDERS = { topleft = '┏', horiz = '━', topright = '┓', vert = '┃', botright = '┛', botleft ='┗', vertleft = '┣', vertright = '┫', horizup = "┳", horizdown = "┻", verthoriz = "╋" }
+
+DEFAULT_BORDERS = {  horiz = '━',  vert = '┃',   vertright = '┣', vertleft = '┫', horizdown = "┳", horizup = "┻", verthoriz = "╋" }
+
+vim.opt.fillchars = {
+  horiz     = '━',
+  horizup   = '┻',
+  horizdown = '┳',
+  vert      = '┃',
+  vertleft  = '┫',
+  vertright = '┣',
+  verthoriz = '╋',
+}
+
+-- vim.opt.fillchars = DEFAULT_BORDERS
 opt.termguicolors = true
+opt.cmdheight = 1
 
 opt.number = true
 opt.relativenumber = true
@@ -10,20 +29,22 @@ opt.list = true
 opt.linebreak = true
 opt.breakindent = true
 opt.showmode = false
-opt.pumblend = 10
+opt.pumblend = 4
+opt.splitkeep = "topline"
+opt.winblend = 3
 opt.updatetime = 2000
 opt.shortmess = "filnxtToOFcI"
 opt.hidden = true
 opt.mouse = "a"
 
-opt.inccommand = "split"
+opt.inccommand = "nosplit"
 
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
-opt.smarttab = true
+vim.opt.smarttab = true
 
-opt.scrolloff = 7
+opt.scrolloff = 2
 opt.lazyredraw = false
 
 opt.wildignore = "*.swp,*.bak,*.pyc, *.class"
@@ -34,11 +55,11 @@ opt.showmode = false
 opt.cursorline = false
 opt.relativenumber = true
 opt.number = true
-vim.api.nvim_exec([[set fillchars+=vert:\|]], false) -- How do I do this using lua?
 
 opt.history = 10000
 opt.undolevels = 10000
-opt.undodir  = "~/.nvim/undo-dir"
+
+opt.undodir = os.getenv("HOME") .. '/.cache/nvim/undo'
 opt.undofile = true
 opt.swapfile = false
 opt.hidden = true
@@ -46,7 +67,6 @@ opt.backup = false
 opt.writebackup = false
 opt.equalalways = true
 
-opt.foldcolumn = "1"
 opt.foldlevel = 99
 opt.foldenable = true
 
@@ -58,7 +78,7 @@ opt.ignorecase = true
 opt.hlsearch = true
 opt.incsearch = true
 
-opt.shell = "zsh"
+-- opt.shell = "zsh"
 
 opt.timeoutlen = 500
 opt.linebreak = true

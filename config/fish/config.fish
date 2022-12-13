@@ -35,14 +35,24 @@ function fish_error
 end
 
 function fish_prompt
-	fish_error
+	set error_code $status
 	set -g __fish_git_prompt_showupstream auto
 	set_color $fish_color_regular
+	echo
+	printf '%s' $USER
+	printf ' %% '
 	printf '%s' (prompt_pwd)
 	set_color grey -i
 	printf '%s' (fish_git_prompt)
+	echo
+	if [ $error_code -gt 0 ];
+		set fish_color_status red
+		set_color $fish_color_status --bold
+		printf [$error_code]
+		printf " "
+	end
 	set_color $fish_color_normal
-	printf ' $ '
+	printf '› '
 	set_color $fish_color_normal
 end
 
@@ -59,36 +69,30 @@ end
 
 # Paths
 set PATH $PATH $HOME/bin /usr/sbin/ /sbin /usr/local/sbin $HOME/.local/bin
+set PATH /opt/homebrew/bin $PATH
 set -x PATH "$HOME/.cargo/bin" $PATH
 set -x PATH "$HOME/.pyenv/bin" $PATH
 replay source "$HOME/.config/fish/protected.env"
 
-set EDITOR "nvr"
 set FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git --exclude tags'
 set FZF_DEFAULT_OPTS '--margin=1,1 --preview-window="right:50%:noborder" --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up'
-set VISUAL 'nvr'
 
-source $HOME/.hostconfig
+set EDITOR "nvim"
+export EDITOR="$nvim"
+set VISUAL "$EDITOR"
 
-status is-login; and pyenv init --path | source
-set -gx EDITOR nvim
+alias nvim "nvim"
+alias vim "nvim"
 
-if set -q NVIM_LISTEN_ADDRESS
-	alias nvim "nvr"
-	alias vim "nvr"
-	export MANPAGER="nvr +Man! -"
-	export EDITOR="nvr"
-else
-	alias nvim "nvim"
-	alias vim "nvim"
-	export EDITOR="nvim"
-	export MANPAGER="nvim +Man! -"
-end
+#source $HOME/.hostconfig
+
+#status is-login; and pyenv init --path | source
+set -gx EDITOR "nvim"
 
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
 export GIT_PAGER="$EDITOR"
 
-pyenv init - | source
+#pyenv init - | source
 
 function __fish_describe_command; end

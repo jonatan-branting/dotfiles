@@ -5,16 +5,16 @@ fn - l: skhd -k right
 fn - j: skhd -k down
 
 # terminal
-alt - return : $HOME/bin/start_iterm.sh
-# alt - return: alacritty msg create-window || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty
+# alt - return : $HOME/bin/start_iterm.sh
+alt - return: alacritty msg create-window || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty
 
 alt - b: open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 
-# alt - space: alacritty msg create-window -t Floating || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty -t Floating
+alt + shift - return: alacritty msg create-window -t Floating || open -n -a /Applications/Alacritty.app/Contents/MacOS/alacritty -t Floating
 
 # close
-alt - q: yabai -m window --close && yabai -m window --focus recent
-alt - w: yabai -m window --close && yabai -m window --focus recent
+alt - q: yabai -m window --close #&& yabai -m window --focus recent
+alt - w: yabai -m window --close #&& yabai -m window --focus recent
 
 alt - g: yabai -m window --swap largest
 
@@ -23,7 +23,7 @@ alt - c : yabai -m window --focus stack.next || yabai -m window --focus stack.fi
 shift + alt - c : yabai -m window --focus stack.prev || yabai -m window --focus stack.last || yabai -m window --focus prev || yabai -m window --focus last
 
 
-alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end') && yabai -m space --padding $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "abs:10:10:10:10" else "abs:50:75:350:350" end')
+alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end') && yabai -m space --padding $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "abs:10:10:10:10" else "abs:15:30:100:100" end')
 
 # swap monitors / space
 alt - tab : $HOME/bin/focus_recent_monitor.sh || yabai -m space --focus recent
@@ -43,11 +43,11 @@ shift + alt - c : yabai -m query --spaces --space \
                           | xargs -I{} yabai -m window --focus {}
 
 # swap spaces
-alt - right : $HOME/bin/space_dir.sh next
-alt - left : $HOME/bin/space_dir.sh prev
+# alt - right : $HOME/bin/space_dir.sh next
+# alt - left : $HOME/bin/space_dir.sh prev
 
-alt - p :  $HOME/bin/space_dir.sh prev #skhd -k ctrl-left
-alt - n :  $HOME/bin/space_dir.sh next
+alt - p :  yabai -m space --focus prev #$HOME/bin/space_dir.sh prev #skhd -k ctrl-left
+alt - n :  yabai -m space --focus next #$HOME/bin/space_dir.sh next
 
 # focus window
 alt - h : yabai -m window --focus west  || yabai -m display --focus west
@@ -124,10 +124,10 @@ alt - r : yabai -m space --rotate 90
 alt - x : yabai -m space --mirror x-axis
 
 # toggle window parent zoom
-alt - d : yabai -m window --toggle zoom-parent
+alt - d : yabai -m window --toggle zoom-parent --focus
 
 # toggle window fullscreen zoom
-alt - f : yabai -m window --toggle zoom-fullscreen
+alt - f : yabai -m window --toggle zoom-fullscreen --focus
 
 # toggle window native fullscreen
 shift + alt - f : yabai -m window --toggle native-fullscreen
@@ -136,8 +136,8 @@ shift + alt - f : yabai -m window --toggle native-fullscreen
 alt - y : yabai -m window --toggle split
 
 # float / unfloat window and center on screen
-alt - t : yabai -m window --toggle float;\
-          yabai -m window --grid 4:4:1:1:2:2
+alt - t : yabai -m window --toggle float --focus &&\
+          yabai -m window --grid 4:4:1:1:2:2\
 
 # change layout of desktop
 ctrl + alt - a : yabai -m space --layout bsp
