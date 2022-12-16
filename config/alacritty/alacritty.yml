@@ -81,7 +81,7 @@ font:
     style: Italic
 
   # Point size of the font
-  size: 14.5
+  size: 15.5
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -109,7 +109,7 @@ font:
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
   # false.
-  use_thin_strokes: true
+  # use_thin_strokes: true
 
 
 # Should display the render timer
@@ -316,7 +316,13 @@ window.dynamic_title: true
 # - Block
 # - Underline
 # - Beam
-cursor.style: Underline
+cursor:
+  style:
+    shape: Underline
+    blinking: Never
+  blink_interval: 1000
+  unfocused_hollow: true
+  thickness: 0.15
 
 # Whether the cursor should be a hollow block on window focus loss
 cursor.unfocused_hollow: false
@@ -330,7 +336,7 @@ live_config_reload: true
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 shell:
-  program: fish
+  program: /opt/homebrew/bin/fish
   args:
     - --login
 
