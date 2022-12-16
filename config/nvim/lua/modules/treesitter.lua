@@ -83,7 +83,6 @@ treesitter.setup {
       goto_next_end = {
         ["]F"] = "@function.outer",
         ["]C"] = "@class.outer",
-        [">"] = "@node",
       },
       goto_previous_start = {
         ["[f"] = "@function.outer",
@@ -96,7 +95,6 @@ treesitter.setup {
       goto_previous_end = {
         ["[F"] = "@function.outer",
         ["[C"] = "@class.outer",
-        ["<"] = "@node",
       },
     },
     swap = {
