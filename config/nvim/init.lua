@@ -17,12 +17,62 @@ require("packer").startup({
     --   config = function()
     --     require("glance").setup({})
 
-    --     vim.keymap.set("n", "gd", "<CMD>Glance definitions<CR>")
-    --     vim.keymap.set("n", "gr", "<CMD>Glance references<CR>")
-    --     vim.keymap.set("n", "gy", "<CMD>Glance type_definitions<CR>")
-    --     vim.keymap.set("n", "gm", "<CMD>Glance implementations<CR>")
-    --   end,
-    -- })
+    use({
+      "dnlhc/glance.nvim",
+      config = function()
+        local glance = require('glance')
+        local actions = glance.actions
+
+        glance.setup({
+          mappings = {
+            list = {
+              ['j'] = actions.next, -- Bring the cursor to the next item in the list
+              ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
+              ['<Down>'] = actions.next,
+              ['<Up>'] = actions.previous,
+              ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
+              ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
+              ['<C-u>'] = actions.preview_scroll_win(5),
+              ['<C-d>'] = actions.preview_scroll_win(-5),
+              ['v'] = actions.jump_vsplit,
+              ['s'] = actions.jump_split,
+              ['t'] = actions.jump_tab,
+              ['<CR>'] = actions.jump,
+              ['o'] = actions.jump,
+              ['l'] = actions.jump,
+              ['gr'] = actions.enter_win('preview'), -- Focus preview window
+              ['q'] = actions.close,
+              ['Q'] = actions.close,
+              ['<Esc>'] = actions.close,
+              -- ['<Esc>'] = false -- disable a mapping
+            },
+            preview = {
+              ['Q'] = actions.close,
+              ['<Tab>'] = actions.next_location,
+              ['<S-Tab>'] = actions.previous_location,
+              ['gr'] = actions.enter_win('list'), -- Focus list window
+            },
+          },
+          hooks = {
+            hooks = {
+              before_open = function(results, open, jump, method)
+                if #results == 1 then
+                  jump(results[1]) -- argument is optional
+                else
+                  open(results) -- argument is optional
+                end
+              end,
+            }
+          }
+        })
+
+        vim.keymap.set("n", "gd", "<CMD>Glance definitions<CR>")
+        vim.keymap.set("n", "gr", "<CMD>Glance references<CR>")
+        vim.keymap.set("n", "gy", "<CMD>Glance type_definitions<CR>")
+        vim.keymap.set("n", "gm", "<CMD>Glance implementations<CR>")
+
+      end,
+    })
     use {
       "nvim-zh/colorful-winsep.nvim",
       config = function()
