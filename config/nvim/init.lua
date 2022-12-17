@@ -12,10 +12,6 @@ vim.cmd [[ packadd packer.nvim ]]
 require("packer").startup({
   function(use)
     use { "wbthomason/packer.nvim" }
-    -- use({
-    --   "dnlhc/glance.nvim",
-    --   config = function()
-    --     require("glance").setup({})
 
     use({
       "dnlhc/glance.nvim",
@@ -134,11 +130,6 @@ require("packer").startup({
     --     }
     --   end,
     -- }
-    -- use { "chentoast/live.nvim",
-    --   config = function()
-    --     require("live").setup()
-    --   end
-    -- }
     use { "lambdalisue/fern.vim",
       config = function()
         vim.g["fern#hide_cursor"] = 1
@@ -164,41 +155,12 @@ require("packer").startup({
         require("mason-lspconfig").setup()
       end
     }
-    -- use {
-    --   "nvim-neo-tree/neo-tree.nvim",
-    --   branch = "v2.x",
-    --   requires = {
-    --     "nvim-lua/plenary.nvim",
-    --     "MunifTanjim/nui.nvim",
-    --   },
-    --   config = function()
-    --     require("modules.neotree").setup()
-
-    --     vim.keymap.set("n", "<leader>o", function()
-    --       require("neo-tree.command").execute({
-    --         action = "show",
-    --         source = "filesystem",
-    --         position = "current",
-    --         reveal = true,
-    --         toggle = true,
-    --       })
-    --     end)
-    --   end
-    -- }
     use { "nvim-lua/plenary.nvim", run = "make" }
     use { "jedrzejboczar/possession.nvim",
       config = function()
         require("modules.possession")
       end
     }
-    -- use { "anuvyklack/windows.nvim",
-    --   requires = { "anuvyklack/middleclass", "anuvyklack/animation.nvim" },
-    --   config = function()
-    --     vim.o.winwidth = 10
-    --     vim.o.winminwidth = 10
-    --     require("windows").setup()
-    --   end
-    -- }
     use { "ggandor/leap.nvim",
       requires = {
         {"ggandor/leap-spooky.nvim"},
@@ -348,10 +310,8 @@ require("packer").startup({
             runtime = true,
             types = true,
             plugins = true,
-            -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
           },
           setup_jsonls = true,
-          -- override = function(root_dir, options) end,
           lspconfig = true,
           debug = false,
           experimental = {
