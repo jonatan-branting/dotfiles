@@ -460,7 +460,13 @@ require("packer").startup({
     use { "rhysd/conflict-marker.vim" }
     use { "RRethy/nvim-treesitter-endwise" }
     use { "David-Kunz/treesitter-unit" }
-    use { "jonatan-branting/refactoring.nvim" }
+    use { "ThePrimeagen/refactoring.nvim",
+      config = function()
+        require("refactoring").setup()
+
+        vim.keymap.set("v", "<leader>rr", require('refactoring').select_refactor)
+      end
+    }
     use { "nvim-treesitter/nvim-treesitter" }
     use { "nvim-treesitter/nvim-treesitter-textobjects" }
     use { "RRethy/nvim-treesitter-textsubjects" }
