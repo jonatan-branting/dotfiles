@@ -524,19 +524,19 @@ require("packer").startup({
       end
     }
     use { "tpope/vim-fugitive" }
-    -- use { "ThePrimeagen/git-worktree.nvim", config = function()
-    --   local worktree = require("git-worktree")
-    --   worktree.setup({
-    --     update_on_change = true,
-    --     clearjumps_on_change = true
-    --   })
+    use { "ThePrimeagen/git-worktree.nvim", config = function()
+      local worktree = require("git-worktree")
+      worktree.setup({
+        update_on_change = true,
+        clearjumps_on_change = true
+      })
 
-    --   vim.api.nvim_create_user_command("GW", function(opts)
-    --     local branch_name = opts.args
+      vim.api.nvim_create_user_command("GW", function(opts)
+        local branch_name = opts.args
 
-    --     require("git-worktree").create_worktree(branch_name, "develop", "origin")
-    --   end, { nargs = 1 })
-    -- end}
+        require("git-worktree").create_worktree(branch_name, "develop", "origin")
+      end, { nargs = 1 })
+    end}
     use { "tami5/sql.nvim" }
     use { "kevinhwang91/nvim-bqf",
       requires = {
@@ -584,39 +584,11 @@ require("packer").startup({
       end
     }
     use { "dkarter/bullets.vim" }
-    -- use { "akinsho/toggleterm.nvim",
-    --   config = function()
-    --     local toggleterm = require("toggleterm")
-    --     toggleterm.setup({
-    --       direction = "horizontal",
-    --       shade_terminals = false,
-    --       highlights = {
-    --         FloatBorder = {
-    --           link = "FloatBorder"
-    --         },
-    --         NormalFloat = {
-    --           link = "NormalFloat"
-    --         },
-    --       },
-    --       shell = "fish",
-    --       float_opts = {
-    --         border = "solid",
-    --         winblend = 5,
-    --         -- width = 90,
-    --         -- height = 80,
-    --       },
-    --     })
-
-    --     vim.keymap.set("n", "<leader>l", "<cmd>ToggleTerm<cr>")
-    --   end
-    -- }
     use { "vim-test/vim-test",
       config = function()
         local term_integrations = require("modules.term.integrations")
 
         term_integrations.set_vim_test_strategy()
-
-        -- vim.g["test#strategy"] = ""
       end
     }
     use { "jonatan-branting/nvim-dap",
