@@ -90,7 +90,7 @@ opt.splitright = true
 
 opt.laststatus = 3
 
-opt.signcolumn = "auto"
+opt.signcolumn = "yes:1"
 
 opt.exrc = true
 opt.secure = true

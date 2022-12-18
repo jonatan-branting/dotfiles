@@ -1,6 +1,8 @@
 local Hydra = require("hydra")
 local gitsigns = require("gitsigns")
 
+local hydra_entered = false
+
 local config = {
   config = {
     color = "pink",
@@ -12,9 +14,17 @@ local config = {
       offset = 1
     },
     on_enter = function()
-      gitsigns.toggle_linehl(true)
+      hydra_entered = true
+
+      vim.defer_fn(function()
+        if not hydra_entered then return end
+
+        gitsigns.toggle_linehl(true)
+      end, 200)
     end,
     on_exit = function()
+      hydra_entered = false
+
       gitsigns.toggle_linehl(false)
       gitsigns.toggle_deleted(false)
       vim.cmd 'echo' -- clear the echo area
