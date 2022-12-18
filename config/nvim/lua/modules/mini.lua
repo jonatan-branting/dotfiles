@@ -196,7 +196,7 @@ require("mini.indentscope").setup({
       -- and total step numbers, returns wait time (in ms). See
       -- |MiniIndentscope.gen_animation()| for builtin options. To not use
       -- animation, supply `require('mini.indentscope').gen_animation('none')`.
-      animation = require("mini.indentscope").gen_animation("none")
+      animation = require("mini.indentscope").gen_animation.none()
     },
 
     -- Module mappings. Use `''` (empty string) to disable one.
@@ -219,7 +219,7 @@ require("mini.indentscope").setup({
 
       -- Whether to use cursor column when computing reference indent. Useful to
       -- see incremental scopes with horizontal cursor movements.
-      indent_at_cursor = true,
+      indent_at_cursor = false,
 
       -- Whether to first check input line to be a border of adjacent scope.
       -- Use it if you want to place cursor on function header to get scope of
