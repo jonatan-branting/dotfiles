@@ -37,18 +37,11 @@ end
 
 -- Convenience <leader> mappings
 nnoremap({ '<leader>s', ':w<cr>' }, 'save-file')
--- nnoremap({ '<leader>x', ':x<cr>' }, 'save-and-exit')
 
 -- General opinionated behaviour changes
--- Make Enter open a line in normal mode, above or below, respectively
--- nnoremap({ '<c-cr>', 'o<esc>' }, 'open-line-below')
--- nnoremap({ '<s-cr>', 'O<esc>' }, 'open-line-above')
-
 inoremap({ 'jj', '<esc>' }, 'escape')
 snoremap({ 'jj', '<esc>' })
 cnoremap({ 'jj', '<esc>' }, 'escape')
-
--- vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
 
 vim.keymap.set("n", "k", function()
   if vim.v.count == 0 then
@@ -112,7 +105,6 @@ nnoremap({ 'L',
 }, '')
 
 
--- TODO g0 first, then the other behaviour!
 vim.api.nvim_set_keymap('n', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
 vim.api.nvim_set_keymap('v', 'H', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true})
 
@@ -120,10 +112,7 @@ vim.api.nvim_set_keymap('v', '<', '<gv', {silent = true, noremap = true, nowait 
 vim.api.nvim_set_keymap('v', '>', '>gv', {silent = true, noremap = true, nowait = true})
 
 -- Allow terminal style navigation in insert mode
--- inoremap({ '<c-e>', '<c-o>g$' }, 'end-of-line')
 inoremap({ '<c-a>', '<c-o>g0' }, 'start-of-line')
-
--- nnoremap({ 'X', 'vaw' }, 'visual-around-word')
 
 -- Search and replace selection
 vnoremap({ '<c-r>', '\"hy:%s/<c-r>h//gc<left><left><left>' }, 'search-and-replace')
@@ -156,7 +145,6 @@ nnoremap({ '<leader>wH', '<c-w>5<' }, 'enlargen-window-left')
 nnoremap({ '<leader>wL', '<c-w>5>' }, 'enlargen-window-right')
 nnoremap({ '<leader>wy', '<c-w>H' }, 'semi-rotate-layout')
 nnoremap({ '<leader>w=', '<c-w>=' }, 'balance-windows')
-vim.keymap.set("n", "<leader>we", "<cmw>WindowsMaximize<cr>" )
 nnoremap({ 'y=', '<c-w>=' }, 'balance-windows')
 nnoremap({ 'yu', '<cmd>WindowsMaximize<cr>' }, 'maximize-window')
 
@@ -164,33 +152,6 @@ nnoremap({ 'yu', '<cmd>WindowsMaximize<cr>' }, 'maximize-window')
 nnoremap({ '<leader>bd', ':bd<cr>' }, 'delete-buffer')
 nnoremap({ '<leader>bn', ':bnext<cr>' }, 'next-buffer')
 nnoremap({ '<leader>bp', ':bprev<cr>' }, 'prev-buffer')
-
--- local telescope = require("telescope.builtin")
--- nnoremap({ '<leader>p', function() telescope.find_files({ hidden = true }) end }, 'find-files')
--- nnoremap({ '<leader>f', function() telescope.grep_string({ hidden = true, search = ""}) end }, 'live-grep')
--- nnoremap({ '<leader>F', function() telescope.grep_string({ hidden = true, grep_open_files = true }) end }, 'live-grep')
--- nnoremap({ '<leader>e', telescope.buffers }, 'list-buffers')
--- nnoremap({ '<leader>m', telescope.oldfiles }, 'most-recent')
--- nnoremap { "<leader>l", telescope.resume }
--- nnoremap { "<leader>c", telescope.command_history }
--- nnoremap { "gw", function() telescope.grep_string() end }
-
--- -- If this is not an Ex command Telescope will require me to press <esc> to see the results for no apparentreason
--- vnoremap ({ 'gw',
---   function()
---     local search = ":Rg " .. require"utils".get_visual_selection()
-
---     vim.cmd(search)
---     vim.api.nvim_input("<esc>")
---   end
--- }, 'grep-selected')
-
--- nnoremap ({
---   '<leader>i',
---   function()
---     telescope.find_files({hidden = true, search_dirs = { vim.fn.expand('%:h') }})
---   end,
--- }, 'files-in-folder')
 
 vnoremap({ '*',
   function()
@@ -201,19 +162,7 @@ vnoremap({ '*',
   end
 }, 'visual-star')
 
--- Git
--- nnoremap({ '<leader>gc', ':PopupNext Git commit<cr>' }, 'git-commit')
-nnoremap({ '<leader>gl', ':PopupNext Git log --name-only<cr>' }, 'git-log')
-nnoremap({ '<leader>gf', ':PopupNext Git log --name-only --invert-grep --grep="^fixup!" --pretty="format:%h %Cf"<cr>' }, 'git-log')
--- nnoremap({ '<leader>gs', ':PopupNext Git<cr>' }, 'git-status')
--- nnoremap({ '<leader>gg', ':PopupNext Git status<cr>' }, 'neogit')
--- nnoremap({ '<leader>ga', ':Git add %<cr>' }, 'git-add-%')
--- nnoremap({ '<leader>gd', ':Gdiffsplit master<cr>' }, 'git-diff-split')
--- nnoremap({ '<leader>gm', ':Git mergetool<cr>' }, 'git-mergetool')
--- vim.keymap.set("n", "<leader>gw", require("telescope").extensions.git_worktree.git_worktrees, {})
-
 -- GitSigns
--- Use <leader> g instead
 local gitsigns =  require('gitsigns')
 nnoremap({ '<leader>hs', function() gitsigns.stage_hunk() end }, 'stage-hunk')
 nnoremap({ '<leader>hu', function() gitsigns.undo_stage_hunk() end }, 'undo-hunk')
@@ -304,19 +253,6 @@ nnoremap({ '_', '<nop>' })
 -- Begone
 nnoremap({ 'Q', '<nop>' })
 
-local function get_current_char()
-  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
-  return vim.api.nvim_get_current_line():sub(col, col)
-end
-
-local function change_surrounding_matches()
-  return vim.fn.feedkeys("cs" .. get_current_char())
-end
-
-local function delete_surrounding_matches()
-  return vim.fn.feedkeys("ds" .. get_current_char())
-end
-
 local todo = require("modules._todo")
 
 nnoremap({ "<leader>z", todo.open_branch_todo }, "open-branch-todo")
@@ -348,7 +284,6 @@ nnoremap({ "<c-e>", "$" })
 nnoremap({ "<leader>a", "<c-^>" }, "alternate-last-buffer")
 
 nnoremap({"yc", "<c-w>c" }, "close-window")
--- Register keybindings for usage with better-n
 
 inoremap { ";;", "<esc>A;<esc>" }
 inoremap { ",,", "<esc>A,<esc>" }
