@@ -523,6 +523,12 @@ require("packer").startup({
         require("modules.gitsigns")
       end
     }
+    use({
+      "andrewferrier/wrapping.nvim",
+      config = function()
+        require("wrapping").setup()
+      end,
+    })
     use { "tpope/vim-fugitive" }
     use { "ThePrimeagen/git-worktree.nvim", config = function()
       local worktree = require("git-worktree")
