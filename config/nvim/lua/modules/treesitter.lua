@@ -77,24 +77,27 @@ treesitter.setup {
         ["]c"] = "@class.outer",
         ["]a"] = "@parameter.outer",
         ["]b"] = "@block.outer",
-        -- ["]n"] = "@node",
-        [")"]  = "@node",
+        ["]n"] = "@node",
       },
       goto_next_end = {
-        ["]F"] = "@function.outer",
-        ["]C"] = "@class.outer",
+        ["gef"] = "@function.outer",
+        ["gec"] = "@class.outer",
+        ["geb"] = "@block.outer",
+        ["gen"]  = "@node",
       },
       goto_previous_start = {
+        ["gsf"] = "@function.outer",
+        ["gsc"] = "@class.outer",
+        ["gsb"] = "@block.outer",
+        ["gsn"]  = "@node",
+
         ["[f"] = "@function.outer",
         ["[c"] = "@class.outer",
         ["[a"] = "@parameter.outer",
         ["[b"] = "@block.outer",
-        -- ["pn"] = "@node", -- TODO inner/outer
-        ["("] =  "@node",
+        ["[n"] = "@node",
       },
       goto_previous_end = {
-        ["[F"] = "@function.outer",
-        ["[C"] = "@class.outer",
       },
     },
     swap = {
@@ -117,8 +120,8 @@ treesitter.setup {
         ["if"] = "@function.inner",
         ["ac"] = "@class.outer",
         ["ic"] = "@class.inner",
-        -- ["ab"] = "@block.outer",
-        -- ["ib"] = "@block.inner",
+        ["ab"] = "@block.outer",
+        ["ib"] = "@block.inner",
         ["ia"] = "@parameter.inner",
         ["aa"] = "@parameter.outer",
         ["ao"] = "@node", -- TODO inner/outer
