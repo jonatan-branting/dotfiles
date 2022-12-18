@@ -51,13 +51,12 @@ local function setup_popup_for_buffer(popup, buf, delete_on_close)
   popup:map("n", "q", close, {}, true)
   popup:on(event.WinLeave, defer_close, { nested = true })
   popup:on(event.BufWipeout, defer_close, { nested = true })
-  popup:on(event.WinScrolled, function()
-    if not popup.winid then return end
 
-    -- Make sure the windows aren't downsized
-    vim.api.nvim_win_set_width(popup.winid, math.floor(vim.go.columns * 0.9))
-    vim.api.nvim_win_set_height(popup.winid, math.floor(vim.go.lines * 0.8))
-  end, { nested = true, once = true})
+  -- Make sure the windows aren't downsized
+  vim.api.nvim_win_set_width(popup.winid, math.floor(vim.go.columns * 0.9))
+  vim.api.nvim_win_set_height(popup.winid, math.floor(vim.go.lines * 0.8))
+
+  vim.api.nvim_win_set_option(popup.winid, "winbar", "")
 
   return popup
 end
