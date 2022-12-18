@@ -11,11 +11,7 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities(
 )
 
 local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  local opts = { noremap=true, silent=true }
 
   vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, silent = true })
   vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { buffer = bufnr, silent = true })
