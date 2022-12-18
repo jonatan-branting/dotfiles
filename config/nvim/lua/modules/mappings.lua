@@ -1,10 +1,3 @@
-local autocmd = require("modules.autocmd")
-local utils = require("utils")
-
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
 local keymap = vim.keymap
 
 local function nnoremap(opts, desc)
