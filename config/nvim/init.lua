@@ -560,6 +560,49 @@ require("packer").startup({
     }
     use { "JoosepAlviste/nvim-ts-context-commentstring" }
     use { "AndrewRadev/splitjoin.vim" }
+    use({
+      'Wansmer/treesj',
+      requires = { 'nvim-treesitter' },
+      config = function()
+        local langs = require('treesj.langs')['presets']
+
+        require('treesj').setup({
+          use_default_keymaps = false,
+          check_syntax_error = true,
+
+          -- If line after join will be longer than max value,
+          -- node will not be formatted
+          max_join_length = 120,
+
+          -- hold|start|end:
+          -- hold - cursor follows the node/place on which it was called
+          -- start - cursor jumps to the first symbol of the node being formatted
+          -- end - cursor jumps to the last symbol of the node being formatted
+          cursor_behavior = 'hold',
+
+          -- Notify about possible problems or not
+          notify = false,
+          langs = {
+
+          },
+        })
+
+        -- Fallback to SplitJoin
+        vim.api.nvim_create_autocmd({ 'FileType' }, {
+          pattern = '*',
+          callback = function()
+            local opts = { buffer = true }
+            if langs[vim.bo.filetype] then
+              vim.keymap.set('n', 'gS', '<Cmd>TSJSplit<CR>', opts)
+              vim.keymap.set('n', 'gJ', '<Cmd>TSJJoin<CR>', opts)
+            else
+              vim.keymap.set('n', 'gS', '<Cmd>SplitjoinSplit<CR>', opts)
+              vim.keymap.set('n', 'gJ', '<Cmd>SplitjoinJoin<CR>', opts)
+            end
+          end,
+        })
+      end,
+    })
     use { "haya14busa/vim-asterisk" }
     use { "junegunn/vim-easy-align" }
     use { "michaeljsmith/vim-indent-object" }
