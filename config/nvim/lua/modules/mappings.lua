@@ -1,3 +1,4 @@
+local utils = require("utils")
 local keymap = vim.keymap
 
 local function nnoremap(opts, desc)
@@ -293,35 +294,52 @@ vim.keymap.set({"x", "n"}, "p", "p=']", {})
 vim.keymap.set({"x", "n"}, "gh", "^", {})
 vim.keymap.set({"x", "n"}, "gl", "$", {})
 
-vim.api.nvim_create_user_command("AutorunCurrentFile",
-  function()
-    require("modules.autorun").current_lua_file()
-  end,
-  {}
-)
-
-vim.api.nvim_create_user_command("Autorun",
-  function()
-    require("modules.autorun").current_lua_file()
-  end,
-  {}
-)
-
 vim.keymap.set({"n", "x"}, "<s-n>", require("better-n").shift_n, { nowait = true })
 vim.keymap.set({"n", "x"}, "n", require("better-n").n, { nowait = true })
 
 vim.keymap.set({"n", "o", "x"}, "<c-w>", "w")
-
+vim.keymap.set("i", "jj", "<esc>")
 
 -- dont overwrite clipboard when pasting from visual mode
 vim.keymap.set("n", "<cr>", "o<esc>0\"_D")
 vim.keymap.set("n", "<s-cr>", "O<esc>0\"_D")
 
 vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
+
+-- clear line, but keep it
 vim.keymap.set("n", "X", "ddO<esc>")
 
-return {
-  extract_function_callback = extract_function_callback,
-  -- _t = _t
-}
+-- searches for the last text that was changed, and replaces it with the changes made
+-- is dot repeatable
 
+_G.search_and_replace_last_wrapper= function()
+  vim.go.operatorfunc = "v:lua.search_and_replace_last_callback"
+
+  return "g@l"
+end
+
+_G.search_and_replace_last_dummy = function()
+  -- nop
+end
+
+_G.search_and_replace_last_callback = function()
+  vim.fn.execute(utils.t("normal! /<c-r>*<cr>gnc<c-r>.<esc>"))
+
+  -- make sure that . will repeat g@l, instead of the change command
+  -- execute nothing, however
+  vim.go.operatorfunc = "v:lua.search_and_replace_last_dummy"
+  vim.fn.execute("normal g@l")
+
+  -- set the operatorfunc back to the callback, so that dot repeat will work
+  vim.go.operatorfunc = "v:lua.search_and_replace_last_callback"
+end
+
+vim.keymap.set("n", "<leader>.", search_and_replace_last_wrapper, { expr = true })
+
+-- if this is done in a visually selected area, repeat it for all occurrences in that area
+vim.keymap.set("v", "<leader>.", ":s/<c-r>*/<c-r>./gc<cr>")
+
+vim.keymap.set("n", "<leader-b>", function()
+  vim.fn.setreg("/", vim.fn.getreg("*"))
+  vim.cmd [[ set hls ]]
+end)
