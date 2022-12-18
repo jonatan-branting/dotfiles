@@ -5,6 +5,16 @@ local utils = require("utils")
 --
 local function targets_from_rows(rows)
   local targets = {}
+
+  if #rows == 1 then
+    local column = vim.fn.col(".")
+    local row = rows[1]
+
+    table.insert(targets, { pos = { row, column } })
+
+    return targets
+  end
+
   for _, row in ipairs(rows) do
     -- ignore empty lines
     local content = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
