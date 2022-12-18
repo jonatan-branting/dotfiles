@@ -71,6 +71,7 @@ require("packer").startup({
     })
     use {
       "nvim-zh/colorful-winsep.nvim",
+      commit = "bb06c86",
       config = function()
         require("colorful-winsep").setup({
           highlight = {
