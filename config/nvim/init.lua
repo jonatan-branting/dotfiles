@@ -771,3 +771,36 @@ vim.api.nvim_create_autocmd("TextYankPost",
     end
   }
 )
+
+_G.current_macro = vim.fn.getreg("q")
+_G.current_macro_ns = vim.api.nvim_create_namespace("current_macro")
+
+vim.api.nvim_create_autocmd("RecordingEnter",
+  {
+    group = group,
+    callback = function()
+      _G.recording_macro = true
+
+      _G.current_macro = ""
+
+      -- clear namespace
+      vim.api.nvim_buf_clear_namespace(0, _G.current_macro_ns, 0, -1)
+
+      -- create new namespace
+      _G.current_macro_ns = vim.api.nvim_create_namespace("current_macro")
+
+      vim.on_key(function(key)
+        _G.current_macro = _G.current_macro .. key
+      end, _G.current_macro_ns)
+    end
+  }
+)
+
+vim.api.nvim_create_autocmd("RecordingLeave",
+  {
+    group = group,
+    callback = function()
+      _G.recording_macro = false
+    end
+  }
+)
