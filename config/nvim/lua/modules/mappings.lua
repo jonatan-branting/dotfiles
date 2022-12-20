@@ -306,6 +306,9 @@ vim.keymap.set("n", "<s-cr>", "O<esc>0\"_D")
 
 vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
 
+vim.keymap.set("n", "<c-u>", "<c-u>zz")
+vim.keymap.set("n", "<c-d>", "<c-d>zz")
+
 -- clear line, but keep it
 vim.keymap.set("n", "X", "ddO<esc>")
 
@@ -338,6 +341,7 @@ vim.keymap.set("n", "<leader>.", search_and_replace_last_wrapper, { expr = true 
 
 -- if this is done in a visually selected area, repeat it for all occurrences in that area
 vim.keymap.set("v", "<leader>.", ":s/<c-r>*/<c-r>./gc<cr>")
+vim.keymap.set("n", "<c-y>", "<cmd>nohl<cr>")
 
 vim.keymap.set("n", "<leader-b>", function()
   vim.fn.setreg("/", vim.fn.getreg("*"))
