@@ -2,6 +2,15 @@ local lsp_config = require('lspconfig')
 require("lspkind").init()
 require("treesitter-unit")
 
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    -- Leave reflowing text to vim.
+    -- This is used by `gqq`, and if the LSP doesn't properly support it this
+    -- just breaks, which can be very annoying.
+    vim.bo[args.buf].formatexpr = nil
+  end,
+})
+
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   vim.lsp.handlers.hover, { border = nil }
 )
