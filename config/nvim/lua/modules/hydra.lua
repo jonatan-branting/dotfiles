@@ -35,7 +35,7 @@ local config = {
   heads = {
     { "n", function()
       if vim.wo.diff then
-        return "]c"
+        return "]czz"
       end
 
       vim.schedule(function() gitsigns.next_hunk() end)
@@ -43,7 +43,7 @@ local config = {
     end, { expr = true } },
     { "p", function()
       if vim.wo.diff then
-        return "[c"
+        return "[czz"
       end
 
       vim.schedule(function() gitsigns.prev_hunk() end)
