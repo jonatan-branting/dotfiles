@@ -86,25 +86,6 @@ require("packer").startup({
         })
       end
     }
-    use {
-      "jonatan-branting/ssr.nvim",
-      config = function()
-        require("ssr").setup {
-          min_width = 50,
-          min_height = 5,
-          keymaps = {
-            close = "q",
-            next_match = "n",
-            prev_match = "N",
-            replace_all = "<cr>",
-          },
-        }
-
-        vim.keymap.set({ "n", "x" }, "<c-x>x", function()
-          require("ssr").open()
-        end)
-      end
-    }
     -- use { "lewis6991/satellite.nvim",
     --   config = function()
     --     require("satellite").setup({
