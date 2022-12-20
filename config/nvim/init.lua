@@ -22,12 +22,12 @@ require("packer").startup({
         glance.setup({
           mappings = {
             list = {
-              ['j'] = actions.next, -- Bring the cursor to the next item in the list
-              ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
+              ['j'] = actions.next,
+              ['k'] = actions.previous,
               ['<Down>'] = actions.next,
               ['<Up>'] = actions.previous,
-              ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
-              ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
+              ['<Tab>'] = actions.next_location,
+              ['<S-Tab>'] = actions.previous_location,
               ['<C-u>'] = actions.preview_scroll_win(5),
               ['<C-d>'] = actions.preview_scroll_win(-5),
               ['v'] = actions.jump_vsplit,
@@ -36,25 +36,24 @@ require("packer").startup({
               ['<CR>'] = actions.jump,
               ['o'] = actions.jump,
               ['l'] = actions.jump,
-              ['gr'] = actions.enter_win('preview'), -- Focus preview window
+              ['gr'] = actions.enter_win('preview'),
               ['q'] = actions.close,
               ['Q'] = actions.close,
               ['<Esc>'] = actions.close,
-              -- ['<Esc>'] = false -- disable a mapping
             },
             preview = {
               ['Q'] = actions.close,
               ['<Tab>'] = actions.next_location,
               ['<S-Tab>'] = actions.previous_location,
-              ['gr'] = actions.enter_win('list'), -- Focus list window
+              ['gr'] = actions.enter_win('list'),
             },
           },
           hooks = {
             before_open = function(results, open, jump, method)
               if #results == 1 then
-                jump(results[1]) -- argument is optional
+                jump(results[1])
               else
-                open(results) -- argument is optional
+                open(results)
               end
             end,
           }
@@ -153,13 +152,6 @@ require("packer").startup({
     use { "jedrzejboczar/possession.nvim",
       config = function()
         require("modules.possession")
-      end
-    }
-    use { "ggandor/leap.nvim",
-      requires = {
-        {"ggandor/leap-spooky.nvim"},
-      },
-      config = function()
       end
     }
     use { "catppuccin/nvim" }
@@ -438,7 +430,6 @@ require("packer").startup({
           }
         })
       end
-      -- TODO allow me to specifiy my own keymaps please
     }
     use { "andymass/vim-matchup",
       config = function()
@@ -451,16 +442,6 @@ require("packer").startup({
       end
     }
     use { "famiu/bufdelete.nvim" }
-    use { "max397574/better-escape.nvim",
-      config = function()
-        require("better_escape").setup {
-          mapping = {"jk", "jj"},
-          timeout = vim.o.timeoutlen,
-          clear_empty_lines = false,
-          keys = "<esc>",
-        }
-      end
-    }
     use { "rhysd/conflict-marker.vim" }
     use { "RRethy/nvim-treesitter-endwise" }
     use { "David-Kunz/treesitter-unit" }
@@ -712,11 +693,18 @@ vim.api.nvim_create_autocmd("VimEnter",
       require("modules.term").setup()
 
       vim.keymap.set("n", "<leader>l", function ()
-        require("modules.term"):get_terminal():toggle()
+        require("modules.term")
+          :get_terminal()
+          :toggle()
       end)
 
       vim.keymap.set("n", "<leader>x", function()
-        require("modules.term"):get_terminal():send("ls")
+        -- TODO we can likely expand this to language specific mappings, which might wrap things
+        -- to auto-monkey-patch stuff in Ruby, for example, by using Treesitter
+
+        require("modules.term")
+          :get_terminal()
+          :send(vim.fn.getline("."))
       end)
     end
   }
