@@ -86,13 +86,13 @@ require("packer").startup({
         })
       end
     }
-    -- use { "lewis6991/satellite.nvim",
-    --   config = function()
-    --     require("satellite").setup({
-    --       current_only = false,
-    --     })
-    --   end
-    -- }
+    use { "lewis6991/satellite.nvim",
+      config = function()
+        require("satellite").setup({
+          current_only = false,
+        })
+      end
+    }
     -- use { "smjonas/live-command.nvim",
     --   config = function()
     --     require("live-command").setup {
