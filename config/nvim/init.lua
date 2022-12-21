@@ -573,13 +573,6 @@ require("packer").startup({
         require("modules.autopairs")
       end
     }
-    use { "samjwill/nvim-unception",
-      config = function()
-        vim.g.unception_block_while_host_edits = 0
-        vim.g.unception_enable_flavor_text = 0
-        vim.g.unception_open_buffer_in_new_tab = 0
-      end
-    }
     use { "windwp/nvim-ts-autotag",
       config = function()
         require("nvim-ts-autotag").setup({
