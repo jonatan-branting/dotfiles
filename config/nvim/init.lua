@@ -361,6 +361,14 @@ require("packer").startup({
       },
       config = function()
         require("modules.neotest")
+
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = "lua",
+          callback = function(args)
+            vim.keymap.set("n", "<leader>tn", function() require("neotest").run.run() end, { buffer = args.buf })
+            vim.keymap.set("n", "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end, { buffer = args.buf })
+          end
+        })
       end
     }
     use { "j-hui/fidget.nvim",
