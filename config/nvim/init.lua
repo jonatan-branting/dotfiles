@@ -14,6 +14,37 @@ require("packer").startup({
     use { "wbthomason/packer.nvim" }
 
     use({
+      "rgroli/other.nvim",
+
+      config = function()
+        require("other-nvim").setup({
+          mappings = {
+            "rails",
+            {
+              pattern = "/tests/(.*)/(.*)_spec.lua$",
+              target = "/lua/%1/%2.lua",
+              context = "spec",
+            },
+            {
+              pattern = "/lua/(.*)/(.*).lua$",
+              target = "/tests/%1/%2_spec.lua",
+              context = "spec",
+            },
+          },
+          transformers = {
+          },
+          style = {
+            border = "solid",
+            seperator = "|",
+            width = 0.7,
+            minHeight = 2
+          },
+        })
+
+        vim.keymap.set("n", "<leader>r", "<cmd>:Other<CR>", { silent = true })
+      end,
+    })
+    use({
       "dnlhc/glance.nvim",
       config = function()
         local glance = require('glance')
@@ -623,7 +654,6 @@ require("packer").startup({
         end)
       end
     }
-    use { "tpope/vim-rails", ft = "ruby" }
     use { "vim-ruby/vim-ruby",
       ft = "ruby",
       config = function()
@@ -632,7 +662,6 @@ require("packer").startup({
         vim.g.ruby_indent_block_style = "do"
       end
     }
-    use { "tpope/vim-bundler", ft = "ruby" }
     use { "nvim-treesitter/playground" }
     use { "mfussenegger/nvim-lint" }
 
