@@ -20,7 +20,7 @@ describe("#add_cursor", function()
 end)
 
 
-describe("#execute", function()
+describe("#execute_operator", function()
   before_each(function()
     setup_buffer(
       {

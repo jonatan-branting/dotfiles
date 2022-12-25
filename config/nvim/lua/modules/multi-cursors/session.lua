@@ -21,7 +21,7 @@ function Session:add_cursor(pos)
   cursor:activate()
 end
 
-function Session:execute(operator)
+function Session:execute_operator(operator)
   for _, cursor in ipairs(self.cursors) do
     local range = _G.text_object(cursor)
     local result = operator(range)
