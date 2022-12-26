@@ -45,14 +45,14 @@ describe("#execute_operator", function()
       )
     end
 
-    local func = Spy.new(function(cursor) end)
+    _G.operator = Spy.new(function(_cursor) end)
 
-    session:execute(func)
+    session:execute_operator()
 
-    assert.spy(func).was_called_with(
+    assert.spy(_G.operator).was_called_with(
       Range:new({ 1, 1 }, { 1, 2 })
     )
-    assert.spy(func).was_called_with(
+    assert.spy(_G.operator).was_called_with(
       Range:new({ 2, 2 }, { 2, 3 })
     )
   end)
