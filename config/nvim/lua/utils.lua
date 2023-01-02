@@ -272,4 +272,16 @@ function M.seq(a, b)
   return sequence
 end
 
+function M.default_table(callable)
+  return setmetatable({}, {
+    __index = function(t, k)
+      if not rawget(t, k) then
+        rawset(t, k, callable())
+      end
+
+      return rawget(t, k)
+    end
+  })
+end
+
 return M
